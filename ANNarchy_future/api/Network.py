@@ -1,6 +1,8 @@
 from .Population import Population
 from .Projection import Projection
 
+from ANNarchy_future.generator.Compiler import Compiler
+
 import copy
  
 class Network(object):
@@ -86,12 +88,26 @@ class Network(object):
         "Compiles the network."
         self._backend = backend
 
+        compiler = Compiler(
+            self._population_attributes,
+            backend=backend
+        )
+
+        # Sanity check ?
+        compiler.sanity_check()
+
         # Code generation
+        self._simulation_core = compiler.compile()
 
         # Instantiate the network
-        self._instantiate()
+        obj_ids = self._simulation_core._instantiate()
 
-    def _instantiate(self):
+        self._instantiate(obj_ids)
+
+    def _instantiate(self, obj_ids):
+        """
+        Store the object IDs and create links if necessary
+        """
         pass
 
     def _register_population_attribute(self, pop, name, val):

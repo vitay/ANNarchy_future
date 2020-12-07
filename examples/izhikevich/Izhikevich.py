@@ -83,7 +83,7 @@ proj.fill(w=np.ones((pop.size, pop.size)), d=0.0)
 net.monitor([pop.v, proj.w])
 
 # Compile the network
-net.compile(backend='openmp') # single, openmp, mpi, cuda, etc
+net.compile(backend='single') # single, openmp, mpi, cuda, etc
 
 # Simulate
 net.simulate(1000, monitor=True)
