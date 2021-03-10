@@ -1,0 +1,70 @@
+INFO:ANNarchy_future.api.Network:Creating new network with dt=1.0
+INFO:ANNarchy_future.api.Network:Adding Population(100, LIF, None).
+INFO:ANNarchy_future.api.Population:Population created with 100 neurons.
+INFO:ANNarchy_future.api.Population:Found attributes: ['tau', 'V_th', 'ge', 'v']
+INFO:ANNarchy_future.api.Population:Values: ['tau', 'V_th']
+INFO:ANNarchy_future.api.Population:Arrays: ['ge', 'v']
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.update().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:__grad__v = (%(pop_prefix_array)sge%(pop_suffix_array)s - %(pop_prefix_array)sv%(pop_suffix_array)s)/%(pop_prefix_value)stau%(pop_suffix_value)s
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:__grad__v = (ge[i] - v[i])/tau
+
+INFO:ANNarchy_future.parser.PopulationParser:Neuron has a spike() method.
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.spike().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:spike = %(pop_prefix_array)sv%(pop_suffix_array)s >= %(pop_prefix_value)sV_th%(pop_suffix_value)s
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:spike = v[i] >= V_th
+
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.reset().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:%(pop_prefix_array)sv%(pop_suffix_array)s = 0
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:v[i] = 0
+
+INFO:ANNarchy_future.api.Network:Population created.
+INFO:ANNarchy_future.api.Network:Creating new network with dt=1.0
+INFO:ANNarchy_future.api.Network:Adding Population(100, LIF, None).
+INFO:ANNarchy_future.api.Population:Population created with 100 neurons.
+INFO:ANNarchy_future.api.Population:Found attributes: ['tau', 'V_th', 'ge', 'v']
+INFO:ANNarchy_future.api.Population:Values: ['tau', 'V_th']
+INFO:ANNarchy_future.api.Population:Arrays: ['ge', 'v']
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.update().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:__grad__v = (%(pop_prefix_array)sge%(pop_suffix_array)s - %(pop_prefix_array)sv%(pop_suffix_array)s)/%(pop_prefix_value)stau%(pop_suffix_value)s
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:__grad__v = (ge[i] - v[i])/tau
+
+INFO:ANNarchy_future.parser.PopulationParser:Neuron has a spike() method.
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.spike().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:spike = %(pop_prefix_array)sv%(pop_suffix_array)s >= %(pop_prefix_value)sV_th%(pop_suffix_value)s
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:spike = v[i] >= V_th
+
+INFO:ANNarchy_future.parser.PopulationParser:Calling Neuron.reset().
+INFO:ANNarchy_future.parser.Equations:Equations() created.
+INFO:ANNarchy_future.parser.Equations:Neuron symbols: {'t': t, 'dt': dt, 'spike': spike, 'tau': %(pop_prefix_value)stau%(pop_suffix_value)s, 'V_th': %(pop_prefix_value)sV_th%(pop_suffix_value)s, 'ge': %(pop_prefix_array)sge%(pop_suffix_array)s, 'dge_dt': __grad__ge, 'v': %(pop_prefix_array)sv%(pop_suffix_array)s, 'dv_dt': __grad__v}
+INFO:ANNarchy_future.parser.Equations:Raw equations:
+INFO:ANNarchy_future.parser.Equations:%(pop_prefix_array)sv%(pop_suffix_array)s = 0
+
+INFO:ANNarchy_future.parser.Equations:Simplified equations:
+INFO:ANNarchy_future.parser.Equations:v[i] = 0
+
+INFO:ANNarchy_future.api.Network:Population created.

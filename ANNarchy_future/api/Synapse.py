@@ -1,22 +1,21 @@
+import numpy as np
 
+from .Array import Value, Array
 
-class Synapse:
-    "Synapse."
-    def __init__(self, 
-                parameters= {}, 
-                equations = {},
-                psp = "",
-                operator="sum",
-                pre_spike = None,
-                post_spike = None,
-                name = "",
-                description = ""
-            ):
-        self.parameters = parameters
-        self.equations = equations
-        self.psp = psp
-        self.operator = operator
-        self.pre_spike = pre_spike
-        self.post_spike = post_spike
-        self.name = name
-        self.description = description
+class Synapse(object):
+
+    def Value(self, value, dtype=np.float32):
+        "Creates and returns a single value."
+        if not hasattr(self, "_data"):
+            self._data = []
+        val = Value(value, dtype)
+        self._data.append(val)
+        return val
+
+    def Array(self, init=0.0, dtype=np.float32):
+        "Creates and returns an array."
+        if not hasattr(self, "_data"):
+            self._data = []
+        val = Array(init, dtype)
+        self._data.append(val)
+        return val

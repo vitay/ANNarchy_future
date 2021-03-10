@@ -1,6 +1,4 @@
-# ANNarchy 5.0
-
-**This is a mockup, do not use.**
+# ANNarchy
 
 ## About ANNarchy
 
@@ -19,6 +17,11 @@ ANNarchy (Artificial Neural Networks architect) is a neural simulator designed f
 If you use ANNarchy for your research, we would appreciate if you cite the following paper:
 
 > Vitay J, Dinkelbach HÜ and Hamker FH (2015). ANNarchy: a code generation approach to neural simulations on parallel hardware. *Frontiers in Neuroinformatics* 9:19. <http://dx.doi.org/10.3389/fninf.2015.00019>
+
+
+## Dependencies
+
+ANNarchy can be used on any GNU/Linux system, as well as MacOS X.
 
 ## Installation
 

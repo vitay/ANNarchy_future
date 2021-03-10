@@ -1,66 +1,121 @@
+import sys
+import logging
 
+from .Array import Value, Array
+from .Neuron import Neuron
+from ..parser.PopulationParser import PopulationParser
 
-class Population:
+class Population(object):
+    """Population of neurons.
+
+    Populations should not be created explicitly, but returned by `Network.add()`:
+
+    ```python
+    net = Network()
+    pop = net.add(10, LIF())
+    ```
+
+    Attributes:
+        shape: shape of the population.
+        size: number of neurons.
+        name: unique name of the population.
+
+    Additionaly, all values and arrays of the neuron type are accessible as attributes:
+
+    ```python
+    class Leaky(Neuron):
+        def __init__(self):
+            self.tau = self.Value(20.)
+            self.r = self.Array(0.0)
+
+    net = Network()
+    pop = net.add(10, Leaky())
+
+    print(pop.tau) # 20.
+    print(pop.r) # [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    ```
     """
-    Population of neurons.
-    """
 
-    def __init__(self, net, shape, neuron, name):
-        self.attributes = {}
+    def __init__(self, shape : tuple, neuron : Neuron, name : str):
 
-        self.net = net
-        self.shape = shape
-        self.neuron = neuron
-        self.name = name
+        # Shape and size
+        self.shape : tuple = tuple(shape)
+        size = 1
+        for n in shape:
+            size *= n
+        self.size : int = int(size)
 
-        # Geometry
-        if isinstance(shape, int):
-            self.size = shape
-            self.ndim = 1
-        elif isinstance(shape, tuple):
-            self.size = 1
-            self.ndim = len(shape)
-            for dim in shape:
-                self.size *= dim
-        else:
-            raise Exception("wrong size")
+        # Neuron type
+        self._neuron_type = neuron
+        self._spiking = False
 
-        # Initialize the Value and Array instances
-        self.attributes = []
-        self.parameters = []
-        self.variables = []
+        # Name
+        self.name : str = name
 
-    def _init(self):
-        "Called from the network."
-        for param, val in self.neuron.parameters.items():
-            self.net._register_population_attribute(self, param, val)
-            self.attributes.append(param)
-            self.parameters.append(param)
-        for param, val in self.neuron.equations.items():
-            self.net._register_population_attribute(self, param, val)
-            self.attributes.append(param)
-            self.variables.append(param)
+        # Internal stuff
+        self._net = None
+        self._attributes = {}
+        self._values_list = []
+        self._arrays_list = []
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Population created with " + str(self.size) + " neurons.")
+
+    def _register(self, net, id_pop):
+        "Called by Network."
+
+        self.logger.debug("Registering population with ID " + str(id_pop))
+
+        self._net = net
+        self.id_pop = id_pop
+
+        if self.name is None:
+            self.name = "Population " + str(self.id_pop)
+        self.logger.debug("Population's name is set to " + str(self.name))
+
+    def _analyse(self):
+
+        # List attributes
+        current_attributes = list(self._neuron_type.__dict__.keys())
+
+        for attr in current_attributes:
+            if isinstance(getattr(self._neuron_type, attr), (Value, )):
+                self._values_list.append(attr)
+                self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
+                self._attributes[attr]._instantiate(self.shape)
+            if isinstance(getattr(self._neuron_type, attr), (Array, )):
+                self._arrays_list.append(attr)
+                self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
+                self._attributes[attr]._instantiate(self.shape)
+
+        # Get lists of values and arrays
+        self.attributes = list(self._attributes.keys())
+        self.logger.info("Found attributes: " + str(self.attributes))
+
+        # Set the attributes to the neuron
+        self._neuron_type.attributes = self.attributes
+        self._neuron_type._values_list = self._values_list
+        self._neuron_type._arrays_list = self._arrays_list
+        self.logger.info("Values: " + str(self._values_list))
+        self.logger.info("Arrays: " + str(self._arrays_list))
+
+        # Create the population parser
+        self.logger.debug("Creating population parser.")
+        self._parser = PopulationParser(self)
+        self._parser.analyse()
 
 
-    def __getattr__(self, name):
-        " Method called when accessing an attribute."
-        if name == 'attributes' or not hasattr(self, 'attributes'): # Before the end of the constructor
+    def __getattribute__(self, name):
+        if name in ['attributes']:
             return object.__getattribute__(self, name)
-        if hasattr(self, 'attributes'):
-            if name in self.attributes:
-                return self.net._population_attributes[self.name][name].value
-            else:
-                return object.__getattribute__(self, name)
+        else:
+            if hasattr(self, 'attributes') and name in self.attributes:
+                return self._attributes[name].get_value()
         return object.__getattribute__(self, name)
 
     def __setattr__(self, name, value):
-        if name == 'attributes' or not hasattr(self, 'attributes'): # Before the end of the constructor
-            object.__setattr__(self, name, value)
-            return
-        if hasattr(self, 'attributes'):
-            if name in self.attributes:
-                self.net._population_attributes[self.name][name].value = value
-            else:
-                object.__setattr__(self, name, value)
+
+        if hasattr(self, 'attributes') and name in self.attributes:
+            self._attributes[name].set_value(value)
         else:
             object.__setattr__(self, name, value)
