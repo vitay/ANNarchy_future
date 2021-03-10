@@ -33,7 +33,7 @@ class RateCoded(ann.Neuron):
             n.r = sp.tanh(n.v)
 
 
-net = ann.Network(verbose=2)
+net = ann.Network()
 pop = net.add(10, RateCoded(tau=20.))
 
 print("Attributes:", pop.attributes)
@@ -56,3 +56,5 @@ print("v[:3] = 1:", pop.v)
 
 print()
 print(pop._parser)
+
+net.compile()

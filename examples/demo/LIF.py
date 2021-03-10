@@ -34,9 +34,11 @@ class LIF(ann.Neuron):
 
             n.v = 0
 
-net = ann.Network(verbose=2)
+net = ann.Network()
 #net = ann.Network(verbose=3, logfile="test.log") # for debugging
 pop = net.add(100, LIF({'tau': 20., 'V_th': 1.0}))
 
 print()
 print(pop._parser)
+
+net.compile()

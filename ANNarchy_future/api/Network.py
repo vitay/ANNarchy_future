@@ -3,6 +3,7 @@ import logging
 
 from .Population import Population
 from .Neuron import Neuron
+from ..generator.Compiler import Compiler
 
 # Verbosity levels for logging
 verbosity_levels = [
@@ -21,9 +22,10 @@ class Network(object):
     """
 
     def __init__(self, 
-                dt : float =1.0, 
-                verbose : int =1, 
-                logfile : str =None):
+        dt : float =1.0, 
+        verbose : int =1, 
+        logfile : str =None):
+
         """Constructor of the `Network` class.
         
         The discretization time contant `dt` is determined at the network-level and should stay constant during the whole simulation. 
@@ -56,9 +58,10 @@ class Network(object):
         self._populations = []
 
     def add(self, 
-            shape: tuple, 
-            neuron : Neuron, 
-            name : str = None) -> Population:
+        shape: tuple, 
+        neuron : Neuron, 
+        name : str = None) -> Population:
+
         """Adds a population to the network.
 
         Args:
@@ -88,3 +91,37 @@ class Network(object):
 
         return pop
  
+    def compile(self,
+        backend : str = 'single'):
+        
+        """Compiles and instantiates the network.
+
+        Args: 
+            backend: 'single', 'openmp', 'cuda' or 'mpi'.
+        """
+        
+        self._backend = backend
+
+        # Gather all parsed information
+        description = {}
+
+        compiler = Compiler(
+            description,
+            backend=backend
+        )
+
+        # Sanity check ?
+        compiler.sanity_check()
+
+        # Code generation
+        self._simulation_core = compiler.compile()
+
+        # Instantiate the network
+        self._instantiate()
+        self._obj_ids = self._simulation_core._instantiate()
+
+    def _instantiate(self):
+        """
+        Store the object IDs and create links if necessary
+        """
+        pass

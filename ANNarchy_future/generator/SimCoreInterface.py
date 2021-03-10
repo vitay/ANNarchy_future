@@ -12,3 +12,4 @@ class SimCoreInterface(object):
         self._population_instances = {
             "pop0": 0
         }
+        return 0
