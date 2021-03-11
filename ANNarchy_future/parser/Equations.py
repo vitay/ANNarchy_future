@@ -1,4 +1,5 @@
-import sys, logging
+import sys
+import logging
 
 import numpy as np
 import sympy as sp
@@ -7,7 +8,34 @@ from .Config import default_dict
 
 class Equations(object):
 
-    def __init__(self, symbols=None, neuron=None, synapse=None):
+    """Context to define equations. 
+
+    It should be primarily used inside a `Neuron` or `Synapse` class, 
+    but can also be used in a standalone mode by providing a list of attributes:
+
+    ```python
+    with Equations(symbols=['tau', 'v', 'r']) as n:
+        n.dv_dt = (n.cast(1.0) - n.v)/n.tau
+        n.r = sp.tanh(n.v)
+
+    print(n)
+    ```
+
+    """
+
+    def __init__(self, 
+        symbols : list = None, 
+        neuron = None, 
+        synapse=None):
+
+        """Creates the Equations context.
+
+        Args:
+            symbols: list of attributes when in standalone mode.
+            neuron: Neuron instance (passed by the population).
+            synapse: Synapse instance (passed by the projection).
+
+        """
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("Equations() created.")
@@ -99,7 +127,7 @@ class Equations(object):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        "Nothing to be done."
+        
         self.logger.info("Raw equations:")
         self.logger.info(str(self))
         self.logger.info("Simplified equations:")
@@ -128,9 +156,31 @@ class Equations(object):
             object.__setattr__(self, name, value)
 
     def ite(self, cond, then, els):
+        """If-then-else ternary condition.
+
+        Equivalent to:
+
+        ```python
+        def ite(cond, then, els):
+            if cond:
+                return then
+            else:
+                return els
+        ```
+
+        Args: 
+            cond: condition.
+            then: returned value when cond is true.
+            else: returned value when cond is false.
+        """
 
         return sp.Piecewise((then, cond), (els, True))
 
-    def C(self, val):
+    def cast(self, val:float) -> sp.Symbol:
+        """Cast floating point numbers to symbols in order to avoid numerical errors.
+
+        Args:
+            val (float): 
+        """
 
         return sp.Symbol(str(float(val)))

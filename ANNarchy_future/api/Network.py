@@ -17,7 +17,7 @@ class Network(object):
     """Network class containing the complete neural model.
 
     Attributes:
-        dt: simulation time step in ms.
+        dt (float): simulation time step in ms.
 
     """
 
@@ -28,7 +28,8 @@ class Network(object):
 
         """Constructor of the `Network` class.
         
-        The discretization time contant `dt` is determined at the network-level and should stay constant during the whole simulation. 
+        The discretization time contant `dt` is determined at the network-level 
+        and should stay constant during the whole simulation. 
         
         The `verbose` level specifies which logging messages will be shown:
 
@@ -44,6 +45,7 @@ class Network(object):
             verbose: logging level. ERROR=0, WARNING=1, INFO=2, DEBUG=3
             logfile: file to save the logs. stdout if left empty.
         """
+
         self.dt = dt
 
         # Logging module: https://docs.python.org/3/howto/logging.html
@@ -59,8 +61,8 @@ class Network(object):
 
     def add(self, 
         shape: tuple, 
-        neuron : Neuron, 
-        name : str = None) -> Population:
+        neuron: Neuron, 
+        name: str = None) -> Population:
 
         """Adds a population to the network.
 
@@ -72,6 +74,7 @@ class Network(object):
         Returns:
             A population instance.
         """
+
         if isinstance(shape, int):
             shape = (shape,)
         
@@ -92,14 +95,13 @@ class Network(object):
         return pop
  
     def compile(self,
-        backend : str = 'single'):
-        
-        """Compiles and instantiates the network.
+        backend: str = 'single'):
+        """ Compiles and instantiates the network.
 
-        Args: 
-            backend: 'single', 'openmp', 'cuda' or 'mpi'.
+        Args:
+            backend: choose between `'single'`, `'openmp'`, `'cuda'` or `'mpi'`.
         """
-        
+
         self._backend = backend
 
         # Gather all parsed information

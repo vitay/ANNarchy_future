@@ -3,7 +3,7 @@ import logging
 
 from .Array import Value, Array
 from .Neuron import Neuron
-from ..parser.PopulationParser import PopulationParser
+from ..parser.NeuronParser import NeuronParser
 
 class Population(object):
     """Population of neurons.
@@ -19,6 +19,7 @@ class Population(object):
         shape: shape of the population.
         size: number of neurons.
         name: unique name of the population.
+        neuron_class: name of the Neuron class
 
     Additionaly, all values and arrays of the neuron type are accessible as attributes:
 
@@ -47,7 +48,6 @@ class Population(object):
 
         # Neuron type
         self._neuron_type = neuron
-        self._spiking = False
 
         # Name
         self.name : str = name
@@ -55,11 +55,13 @@ class Population(object):
         # Internal stuff
         self._net = None
         self._attributes = {}
-        self._values_list = []
-        self._arrays_list = []
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("Population created with " + str(self.size) + " neurons.")
+
+    def is_spiking(self) -> bool:
+        "Returns True if the neuron type is spiking."
+        return self._neuron_type.is_spiking()
 
     def _register(self, net, id_pop):
         "Called by Network."
@@ -75,34 +77,25 @@ class Population(object):
 
     def _analyse(self):
 
-        # List attributes
-        current_attributes = list(self._neuron_type.__dict__.keys())
-
-        for attr in current_attributes:
-            if isinstance(getattr(self._neuron_type, attr), (Value, )):
-                self._values_list.append(attr)
-                self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
-                self._attributes[attr]._instantiate(self.shape)
-            if isinstance(getattr(self._neuron_type, attr), (Array, )):
-                self._arrays_list.append(attr)
-                self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
-                self._attributes[attr]._instantiate(self.shape)
-
-        # Get lists of values and arrays
-        self.attributes = list(self._attributes.keys())
-        self.logger.info("Found attributes: " + str(self.attributes))
-
-        # Set the attributes to the neuron
-        self._neuron_type.attributes = self.attributes
-        self._neuron_type._values_list = self._values_list
-        self._neuron_type._arrays_list = self._arrays_list
-        self.logger.info("Values: " + str(self._values_list))
-        self.logger.info("Arrays: " + str(self._arrays_list))
-
         # Create the population parser
-        self.logger.debug("Creating population parser.")
-        self._parser = PopulationParser(self)
-        self._parser.analyse()
+        self.logger.debug("Creating neuron parser.")
+        self.parser = NeuronParser(self._neuron_type)
+        
+        # Retrieve attributes
+        self.parser.extract_variables()
+        self.attributes = self.parser.attributes
+
+        # Neuron class name
+        self.neuron_class : str = self.parser.name
+
+        # Instantiate the attributes
+        for attr in self.parser.attributes:
+            self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
+            self._attributes[attr]._instantiate(self.shape)
+        
+        # Analyse the equations
+        self.parser.analyse_equations()
+
 
 
     def __getattribute__(self, name):

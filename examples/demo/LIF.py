@@ -39,6 +39,6 @@ net = ann.Network()
 pop = net.add(100, LIF({'tau': 20., 'V_th': 1.0}))
 
 print()
-print(pop._parser)
+print(pop.parser)
 
 net.compile()

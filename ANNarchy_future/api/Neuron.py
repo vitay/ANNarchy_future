@@ -12,8 +12,9 @@ class Neuron(object):
     """
 
     def Value(self, 
-            value, 
-            dtype=np.float32) -> Value:
+        value:float, 
+        dtype=np.float32) -> Value:
+
         """Defines a Value for the neuron.
 
         Values are defined only once for the whole population. 
@@ -26,24 +27,53 @@ class Neuron(object):
         Returns:
             `Value` instance.
         """
+
         if not hasattr(self, "_data"):
             self._data = []
         val = Value(value, dtype)
         self._data.append(val)
+
         return val
 
     def Array(self, 
-            init=0.0, 
-            dtype=np.float32):
-        "Creates and returns an array."
+        init:float = 0.0, 
+        dtype=np.float32) -> Array:
+
+        """Defines an Array for the neuron.
+
+        Arrays can take a different value for each neuron in the population.
+        If a single value is needed, use `Value` to save some memory.
+
+        Args:
+            value: initial value.
+            dtype: numpy type of the value (e.g. np.int, np.float)
+
+        Returns:
+            `Value` instance.
+        """
+
         if not hasattr(self, "_data"):
             self._data = []
         val = Array(init, dtype)
         self._data.append(val)
+
         return val
 
     def Equations(self):
-        "Returns an Equations context."
+
+        """Returns an Equations context.
+
+        ```python
+        with self.Equations() as n:
+
+            n.dr_dt = (n.ge - n.r)/n.tau
+        ```
+
+        When opening the context as `n`, the variable has all attributes 
+        (values and arrays) of the neuron as symbols, which can be combined in Sympy equations.
+        
+        """
+
         eq = Equations(neuron=self)
         self._current_eq = eq
         return eq

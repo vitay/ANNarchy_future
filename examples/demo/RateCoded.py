@@ -55,6 +55,6 @@ print("v[:3] = 1:", pop.v)
 
 
 print()
-print(pop._parser)
+print(pop.parser)
 
 net.compile()

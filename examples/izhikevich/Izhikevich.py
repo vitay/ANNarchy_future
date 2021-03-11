@@ -26,7 +26,7 @@ class Izhikevich(ann.Neuron):
         with self.Equations() as n:
 
             I = n.ge - n.gi + n.i_offset # + noise
-            n.dv_dt = n.C(4e-2) * n.v**2 + n.C(5.0) * n.v + n.C(140.0) - n.u + I
+            n.dv_dt = n.cast(4e-2) * n.v**2 + n.C(5.0) * n.v + n.C(140.0) - n.u + I
             n.du_dt = n.a * (n.b * n.v - n.u)
 
         return n

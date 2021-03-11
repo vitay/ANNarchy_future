@@ -20,6 +20,12 @@ To generate the static website in `site/`:
 mkdocs build
 ```
 
+To deploy on Github pages:
+
+```bash
+mkdocs gh-deploy
+```
+
 Note that docstrings should use Google's style:
 
 <https://mkdocstrings.github.io/handlers/python/#google-style>

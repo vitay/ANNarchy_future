@@ -1,4 +1,4 @@
-# ANNarchy
+# Overview
 
 ## About ANNarchy
 

@@ -4,6 +4,8 @@
 
 Everything is inside a Network object to avoid global variables and allow for parallel simulations easily. 
 
+Populations are created with `net.add()`, projections with `net.connect()`.
+
 ```python
 net = Network()
 
@@ -21,9 +23,21 @@ net.save("data.h5")
 
 ## Neurons
 
-Neurons have to be defined as classes. 
+Neurons have to be defined as classes. This allows to pass them default parameter values in the constructor and simplify instantiation of populations:
 
-Rate-coded neurons:
+```python
+pop1 = net.add(100, Izhikevich(a = 0.02))
+pop2 = net.add(100, Izhikevich(a = 0.2))
+```
+
+There is no explicit distinction between parameters and variables anymore, but between `Values` and `Arrays`:
+
+* Values take a single value for the whole population.
+* Arrays take one value per neuron.
+
+An attribute is a variable if it is modified in `update()`, otherwise it is a parameter...
+
+Rate-coded neurons only need to define `update()`:
 
 ```python
 class RateCoded(ann.Neuron):
@@ -90,8 +104,13 @@ class LIF(ann.Neuron):
             n.v = 0
 ```
 
-## Areas
+The `Equations()` context provides `sympy` symbols for each value/array of the neuron, plus some specific ones (`t`, `dt`, `spike` for spike emission, etc).
 
+Derivatives are symbolically set as `dX_dt`.
+
+All sympy operations (math `C99`) can be used.
+
+## Areas
 
 We introduce back the notion of Area / node / subnetwork, grouping several populations and their internal connections together:
 
@@ -106,10 +125,10 @@ class BG (ANNarchy.Area):
 	def __init__(self):
 		"Mostly creating the populations and projections."
 		
-		self.striatum = self.add(MSN(1000))
-		self.gpi = self.add(GPI(100))
-		self.gpe = self.add(GPE(100)
-		self.thal = self. add(Thal(100))
+		self.striatum = self.add(1000, MSN())
+		self.gpi = self.add(100, GPI())
+		self.gpe = self.add(100, GPE())
+		self.thal = self. add(100, Thal())
 				
 		self.str_gpi = self.connect(striatum, gpi.gi, Covariance)
 		self.str_gpi.dense(w=1.0)
@@ -118,7 +137,7 @@ class BG (ANNarchy.Area):
 		
 net = Network()
 
-cortex = net.add(Cx(10000))
+cortex = net.add(10000, Cx())
 bg = net.add(BG())
 
 cx_bg = net.connect(cortex, bg.striatum.ge, Corticostriatal)

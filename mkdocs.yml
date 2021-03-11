@@ -2,9 +2,16 @@ site_name: ANNarchy
 
 theme:
   name: material
+
+  features:
+     - toc.integrate
+#    - navigation.tabs
+#    - navigation.expand
+#    - navigation.sections
   
   palette:
     primary: black
+    accent: indigo
 
 plugins:
   - search
@@ -16,6 +23,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.arithmatex:
       generic: true
+  - toc:
+      permalink: true
 
 extra_javascript:
   - javascripts/config.js
@@ -31,3 +40,6 @@ nav:
     - 'api/network.md'
     - 'api/neuron.md'
     - 'api/population.md'
+  - 'Contributing':
+    - 'contributing/structure.md'
+    - 'contributing/parser.md'
