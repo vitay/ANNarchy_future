@@ -17,7 +17,7 @@ class LIF(ann.Neuron):
 
     def update(self):
 
-        with self.Equations() as n:
+        with self.Equations(method='exponential') as n:
 
             n.dv_dt = (n.ge - n.v) / n.tau
 

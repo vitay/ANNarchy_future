@@ -23,6 +23,10 @@ If you use ANNarchy for your research, we would appreciate if you cite the follo
 
 ANNarchy can be used on any GNU/Linux system, as well as MacOS X.
 
+* Python >= 3.7
+* Numpy >= 1.20.0
+* Scipy >= 1.6.0
+
 ## Installation
 
 To install the latest stable release of ANNarchy, `pip` is recommended:

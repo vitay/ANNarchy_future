@@ -21,6 +21,45 @@ net.simulate(1000.)
 net.save("data.h5")
 ```
 
+Networks can be inherited for a better parameterization and to allow finer control of the operations:
+
+```python
+class BG(Network):
+    
+    def __init__(self, N):
+
+        self.N = N
+
+		super(self, BG).__init__(dt=1.0)
+
+    def build(self):
+
+		self.striatum = self.add(N, MSN())
+		self.gpi = self.add(N/10, GPI())
+		self.gpe = self.add(N/10, GPE())
+		self.thal = self. add(N, Thal())
+				
+		self.str_gpi = self.connect(striatum, gpi.gi, Covariance)
+		self.str_gpi.dense(w=1.0)
+
+    def step(self):
+
+        # Transmission
+        for proj in self.projections():
+            proj.transmit()
+
+        # Update neural equations
+        for pop in self.populations():
+            pop.update()
+
+        # Update synaptic equations
+        for proj in self.projections()
+            proj.update()
+		
+
+
+```
+
 ## Neurons
 
 Neurons have to be defined as classes. This allows to pass them default parameter values in the constructor and simplify instantiation of populations:

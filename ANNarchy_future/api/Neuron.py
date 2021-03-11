@@ -59,7 +59,7 @@ class Neuron(object):
 
         return val
 
-    def Equations(self):
+    def Equations(self, method:str = 'euler'):
 
         """Returns an Equations context.
 
@@ -71,9 +71,12 @@ class Neuron(object):
 
         When opening the context as `n`, the variable has all attributes 
         (values and arrays) of the neuron as symbols, which can be combined in Sympy equations.
+
+        Args:
+            method: numerical method (euler, midpoint, exponential, rk4, event-driven)
         
         """
 
-        eq = Equations(neuron=self)
+        eq = Equations(neuron=self, method=method)
         self._current_eq = eq
         return eq

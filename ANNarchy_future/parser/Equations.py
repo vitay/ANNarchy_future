@@ -24,36 +24,48 @@ class Equations(object):
     """
 
     def __init__(self, 
-        symbols : list = None, 
+        symbols : list = None,
+        method : str ='euler',
         neuron = None, 
-        synapse=None):
+        synapse = None ):
 
         """Creates the Equations context.
 
         Args:
             symbols: list of attributes when in standalone mode.
+            method: numerical method (euler, midpoint, exponential, rk4, event-driven)
             neuron: Neuron instance (passed by the population).
             synapse: Synapse instance (passed by the projection).
 
         """
 
+        # Logger
         self.logger = logging.getLogger(__name__)
         self.logger.info("Equations() created.")
 
+        # Objects
         self.neuron = neuron
         self.synapse = synapse
 
+        # Numerical method
+        self.method = method
+
+        # Built-in symbols
         self.symbols = {
             't': sp.Symbol("t"),
             'dt': sp.Symbol("dt"),
             'spike': sp.Symbol("spike"),
         }
         
+        # Standalone mode
         if self.neuron is None and self.synapse is None:
             self._custom_symbols = symbols
             self.logger.info("Custom symbols: " + str(symbols))
         
+        # List of tuples (name, Equation)
         self.equations = []
+
+        # Start recording assignments
         self._started = False
     
     def __enter__(self):
@@ -156,7 +168,7 @@ class Equations(object):
             object.__setattr__(self, name, value)
 
     def ite(self, cond, then, els):
-        """If-then-else ternary condition.
+        """If-then-else ternary operator.
 
         Equivalent to:
 

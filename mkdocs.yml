@@ -5,6 +5,7 @@ theme:
 
   features:
      - toc.integrate
+     - header.autohide
 #    - navigation.tabs
 #    - navigation.expand
 #    - navigation.sections
@@ -12,6 +13,13 @@ theme:
   palette:
     primary: black
     accent: indigo
+
+  icon:
+    repo: fontawesome/brands/github
+
+copyright: Copyright &copy; 2021 Julien Vitay, Helge Ülo Dinkelbach, Fred H. Hamker
+repo_url: https://github.com/vitay/ANNarchy_future
+
 
 plugins:
   - search

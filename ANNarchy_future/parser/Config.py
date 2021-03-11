@@ -1,4 +1,3 @@
-
 # Simple parsing dict for readable equations
 default_dict = {
     'pop_prefix_value': "",

@@ -3,8 +3,9 @@ import numpy as np
 import sympy as sp
 
 from .Config import default_dict
+from .Parser import ccode, Condition, AssignmentBlock, ODEBlock
 from ..api.Array import Value, Array
-from..api.Neuron import Neuron
+from ..api.Neuron import Neuron
 
 class NeuronParser(object):
     """Neuron parser.
@@ -16,7 +17,7 @@ class NeuronParser(object):
         values (list): list of values
         arrays (list): list of arrays
         update_equations (list): update equations.
-        spike_condition (list): spike condition.
+        spike_condition (Condition): spike condition.
         reset_equations (list): reset equations.
     """
 
@@ -48,7 +49,7 @@ class NeuronParser(object):
         self.spike_condition = None
         self.reset_equations = None
 
-    def is_spiking(self):
+    def is_spiking(self) -> bool:
         "Returns True if the Neuron class is spiking."
         return self._spiking
 
@@ -115,7 +116,7 @@ class NeuronParser(object):
             self.logger.exception("Unable to analyse update()")
             sys.exit(1)
 
-        self.update_equations =  self.neuron._current_eq
+        self.update_equations =  self.process_equations(self.neuron._current_eq)
 
         # For spiking neurons only
         if 'spike' in callables:
@@ -131,7 +132,7 @@ class NeuronParser(object):
             except Exception:
                 self.logger.exception("Unable to analyse spike()")
                 sys.exit(1)
-            self.spike_condition = self.neuron._current_eq
+            self.spike_condition = self.process_condition(self.neuron._current_eq)
             
             # Analyse reset()
             self.logger.info("Calling Neuron.reset().")
@@ -140,7 +141,62 @@ class NeuronParser(object):
             except Exception:
                 self.logger.exception("Unable to analyse reset()")
                 sys.exit(1)
-            self.reset_equations = self.neuron._current_eq
+            self.reset_equations = self.process_equations(self.neuron._current_eq)
+
+    def process_condition(self, equations) -> Condition:
+
+        name, eq = equations.equations[0]
+
+        condition = Condition(self.neuron, name, eq)
+        condition.parse()
+
+        return condition
+
+    def process_equations(self, equations) -> list:
+        
+        """Checks all declared equations and applies a numerical method if necessary.
+        
+        Args:
+            equations: tuple (name, equation)
+
+        Returns:
+            a list of blocks, which are lists of equations of three types: assignments, ODEs and conditions.
+        
+        """
+        blocks = []
+        _current_assignment_block = None
+        _current_ODE_block = None
+
+        # Iterate over the equations to group them into blocks
+        for name, eq in equations.equations:
+            # ODE block
+            if name.startswith("d") and name.endswith('_dt'):
+                if _current_assignment_block is not None:
+                    blocks.append(_current_assignment_block)
+                    _current_assignment_block = None
+                if _current_ODE_block is None:
+                    _current_ODE_block = ODEBlock(self, equations.method)
+                _current_ODE_block.add(name[1:-3], eq)
+
+            # Assignment block
+            else:
+                if _current_ODE_block is not None:
+                    blocks.append(_current_ODE_block)
+                    _current_ODE_block = None
+                if _current_assignment_block is None:
+                    _current_assignment_block = AssignmentBlock(self)
+                _current_assignment_block.add(name, eq)
+
+        # Append the last block
+        if _current_assignment_block is not None:
+            blocks.append(_current_assignment_block)
+        if _current_ODE_block is not None:
+            blocks.append(_current_ODE_block)
+
+        for block in blocks:
+            block.parse()
+
+        return blocks
 
     def __str__(self):
 
@@ -151,17 +207,15 @@ class NeuronParser(object):
         code += "Arrays: " + str(self.arrays) + "\n\n"
 
         code += "Neural equations:\n"
-        for var, eq in self.update_equations.equations:
-            code += var + " = "
-            code += sp.ccode(eq).replace("\n", " ") % default_dict + "\n"
+        for block in self.update_equations:
+            code += str(block)
 
         if self._spiking:
             code += "\nSpike condition:\n"
-            code += sp.ccode(self.spike_condition.equations[0][1])% default_dict + "\n"
+            code += str(self.spike_condition) + "\n"
 
             code += "\nReset equations:\n"
-            for var, eq in self.reset_equations.equations:
-                code += var + " = "
-                code += sp.ccode(eq).replace("\n", " ") % default_dict + "\n"
+            for block in self.reset_equations:
+                code += str(block)
 
         return code
