@@ -54,7 +54,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="indigo">
       
   
     
@@ -158,7 +158,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ANNarchy" class="md-nav__button md-logo" aria-label="ANNarchy">
       
@@ -180,7 +182,7 @@
   
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        ANNarchy
+        Overview
       </a>
     </li>
   
@@ -367,6 +369,60 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Contributing
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Contributing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Contributing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/structure/" class="md-nav__link">
+        Structure
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/parser/" class="md-nav__link">
+        Parser
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -374,65 +430,13 @@
               </div>
             
             
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron" class="md-nav__link">
-    ANNarchy_future.api.Neuron.Neuron
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Array" class="md-nav__link">
-    Array()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Equations" class="md-nav__link">
-    Equations()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Value" class="md-nav__link">
-    Value()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                <h1 id="neuron">Neuron</h1>
+                <h1 id="neuron">Neuron<a class="headerlink" href="#neuron" title="Permanent link">&para;</a></h1>
 
 
   <div class="doc doc-object doc-class">
@@ -464,75 +468,13 @@
 <code class="highlight language-python"><span class="n">Array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">numpy</span><span class="o">.</span><span class="n">float32</span><span class="s1">&#39;&gt;)</span></code>
 
 
-</h2>
+<a href="#ANNarchy_future.api.Neuron.Neuron.Array" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
-      <p>Creates and returns an array.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-        <span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> 
-        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
-    <span class="s2">&quot;Creates and returns an array.&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">val</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h2 id="ANNarchy_future.api.Neuron.Neuron.Equations" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
-
-
-</h2>
-
-    <div class="doc doc-contents ">
-
-      <p>Returns an Equations context.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="s2">&quot;Returns an Equations context.&quot;</span>
-    <span class="n">eq</span> <span class="o">=</span> <span class="n">Equations</span><span class="p">(</span><span class="n">neuron</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span> <span class="o">=</span> <span class="n">eq</span>
-    <span class="k">return</span> <span class="n">eq</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h2 id="ANNarchy_future.api.Neuron.Neuron.Value" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">numpy</span><span class="o">.</span><span class="n">float32</span><span class="s1">&#39;&gt;)</span></code>
-
-
-</h2>
-
-    <div class="doc doc-contents ">
-
-      <p>Defines a Value for the neuron.</p>
-<p>Values are defined only once for the whole population. 
-If each neuron should have different values, use an <code>Array</code> instead. </p>
+      <p>Defines an Array for the neuron.</p>
+<p>Arrays can take a different value for each neuron in the population.
+If a single value is needed, use <code>Value</code> to save some memory.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -569,6 +511,143 @@ If each neuron should have different values, use an <code>Array</code> instead. 
   </thead>
   <tbody>
     <tr>
+      <td><code>Array</code></td>
+      <td><p><code>Value</code> instance.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">init</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> 
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Defines an Array for the neuron.</span>
+
+<span class="sd">    Arrays can take a different value for each neuron in the population.</span>
+<span class="sd">    If a single value is needed, use `Value` to save some memory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: initial value.</span>
+<span class="sd">        dtype: numpy type of the value (e.g. np.int, np.float)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `Value` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">val</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h2 id="ANNarchy_future.api.Neuron.Neuron.Equations" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.api.Neuron.Neuron.Equations" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns an Equations context.</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
+
+    <span class="n">n</span><span class="o">.</span><span class="n">dr_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">ge</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="o">.</span><span class="n">tau</span>
+</code></pre></div>
+<p>When opening the context as <code>n</code>, the variable has all attributes 
+(values and arrays) of the neuron as symbols, which can be combined in Sympy equations.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Returns an Equations context.</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    with self.Equations() as n:</span>
+
+<span class="sd">        n.dr_dt = (n.ge - n.r)/n.tau</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    When opening the context as `n`, the variable has all attributes </span>
+<span class="sd">    (values and arrays) of the neuron as symbols, which can be combined in Sympy equations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">Equations</span><span class="p">(</span><span class="n">neuron</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span> <span class="o">=</span> <span class="n">eq</span>
+    <span class="k">return</span> <span class="n">eq</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h2 id="ANNarchy_future.api.Neuron.Neuron.Value" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">numpy</span><span class="o">.</span><span class="n">float32</span><span class="s1">&#39;&gt;)</span></code>
+
+
+<a href="#ANNarchy_future.api.Neuron.Neuron.Value" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines a Value for the neuron.</p>
+<p>Values are defined only once for the whole population. 
+If each neuron should have different values, use an <code>Array</code> instead. </p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>float</code></td>
+        <td><p>initial value.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>dtype</code></td>
+        <td><code></code></td>
+        <td><p>numpy type of the value (e.g. np.int, np.float)</p></td>
+        <td><code>&lt;class &#39;numpy.float32&#39;&gt;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
       <td><code>Value</code></td>
       <td><p><code>Value</code> instance.</p></td>
     </tr>
@@ -577,8 +656,9 @@ If each neuron should have different values, use an <code>Array</code> instead. 
         <details class="quote">
           <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-        <span class="n">value</span><span class="p">,</span> 
-        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Value</span><span class="p">:</span>
+    <span class="n">value</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> 
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Value</span><span class="p">:</span>
+
     <span class="sd">&quot;&quot;&quot;Defines a Value for the neuron.</span>
 
 <span class="sd">    Values are defined only once for the whole population. </span>
@@ -591,10 +671,12 @@ If each neuron should have different values, use an <code>Array</code> instead. 
 <span class="sd">    Returns:</span>
 <span class="sd">        `Value` instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">val</span>
 </code></pre></div>
         </details>
@@ -678,7 +760,7 @@ If each neuron should have different values, use an <code>Array</code> instead. 
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.5cf3e710.min.js"></script>

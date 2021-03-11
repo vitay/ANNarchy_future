@@ -14,7 +14,7 @@
     
     
       
-        <title>Neuron - ANNarchy</title>
+        <title>Structure - ANNarchy</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#neuron" class="md-skip">
+        <a href="#structure" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Neuron
+              Structure
             
           </span>
         </div>
@@ -194,14 +194,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       <label class="md-nav__link" for="__nav_2">
         Manual
@@ -219,7 +217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../structure/" class="md-nav__link">
+      <a href="../../manual/structure/" class="md-nav__link">
         Structure
       </a>
     </li>
@@ -229,20 +227,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../manual/neuron/" class="md-nav__link">
         Neuron
       </a>
-      
     </li>
   
 
@@ -325,12 +314,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       <label class="md-nav__link" for="__nav_4">
         Contributing
@@ -346,11 +337,20 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../contributing/structure/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Structure
       </a>
+      
     </li>
   
 
@@ -360,7 +360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/parser/" class="md-nav__link">
+      <a href="../parser/" class="md-nav__link">
         Parser
       </a>
     </li>
@@ -386,36 +386,7 @@
               
                 
                 
-                <h1 id="neuron">Neuron<a class="headerlink" href="#neuron" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">LIF</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">Neuron</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">V_th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;V_th&#39;</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
-
-            <span class="n">n</span><span class="o">.</span><span class="n">dv_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">ge</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">tau</span>
-
-
-    <span class="k">def</span> <span class="nf">spike</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
-
-            <span class="n">n</span><span class="o">.</span><span class="n">spike</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">v</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="o">.</span><span class="n">V_th</span>
-
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
-
-            <span class="n">n</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div>
+                <h1 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h1>
                 
               
               
@@ -433,7 +404,7 @@
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../structure/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../../api/population/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -442,19 +413,19 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Structure
+              Population
             </div>
           </div>
         </a>
       
       
-        <a href="../../api/network/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../parser/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Network
+              Parser
             </div>
           </div>
           <div class="md-footer__button md-icon">

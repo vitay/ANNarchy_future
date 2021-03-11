@@ -54,7 +54,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="indigo">
       
   
     
@@ -158,7 +158,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ANNarchy" class="md-nav__button md-logo" aria-label="ANNarchy">
       
@@ -180,7 +182,7 @@
   
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        ANNarchy
+        Overview
       </a>
     </li>
   
@@ -367,6 +369,60 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Contributing
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Contributing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Contributing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/structure/" class="md-nav__link">
+        Structure
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/parser/" class="md-nav__link">
+        Parser
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -374,65 +430,13 @@
               </div>
             
             
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Network.Network" class="md-nav__link">
-    ANNarchy_future.api.Network.Network
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Network.Network.__init__" class="md-nav__link">
-    __init__()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Network.Network.add" class="md-nav__link">
-    add()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Network.Network.compile" class="md-nav__link">
-    compile()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                <h1 id="network">Network</h1>
+                <h1 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h1>
 
 
   <div class="doc doc-object doc-class">
@@ -454,7 +458,7 @@
   <tbody>
       <tr>
         <td><code>dt</code></td>
-        <td><code></code></td>
+        <td><code>float</code></td>
         <td><p>simulation time step in ms.</p></td>
       </tr>
   </tbody>
@@ -483,12 +487,13 @@
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-</h2>
+<a href="#ANNarchy_future.api.Network.Network.__init__" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
       <p>Constructor of the <code>Network</code> class.</p>
-<p>The discretization time contant <code>dt</code> is determined at the network-level and should stay constant during the whole simulation. </p>
+<p>The discretization time contant <code>dt</code> is determined at the network-level 
+and should stay constant during the whole simulation. </p>
 <p>The <code>verbose</code> level specifies which logging messages will be shown:</p>
 <ul>
 <li>0 : only errors and exceptions are printed.</li>
@@ -538,7 +543,8 @@
 
     <span class="sd">&quot;&quot;&quot;Constructor of the `Network` class.</span>
 
-<span class="sd">    The discretization time contant `dt` is determined at the network-level and should stay constant during the whole simulation. </span>
+<span class="sd">    The discretization time contant `dt` is determined at the network-level </span>
+<span class="sd">    and should stay constant during the whole simulation. </span>
 
 <span class="sd">    The `verbose` level specifies which logging messages will be shown:</span>
 
@@ -554,6 +560,7 @@
 <span class="sd">        verbose: logging level. ERROR=0, WARNING=1, INFO=2, DEBUG=3</span>
 <span class="sd">        logfile: file to save the logs. stdout if left empty.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
 
     <span class="c1"># Logging module: https://docs.python.org/3/howto/logging.html</span>
@@ -582,7 +589,7 @@
 <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">neuron</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
-</h2>
+<a href="#ANNarchy_future.api.Network.Network.add" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
@@ -638,8 +645,8 @@
           <summary>Source code in <code>ANNarchy_future/api/Network.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
     <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> 
-    <span class="n">neuron</span> <span class="p">:</span> <span class="n">Neuron</span><span class="p">,</span> 
-    <span class="n">name</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Population</span><span class="p">:</span>
+    <span class="n">neuron</span><span class="p">:</span> <span class="n">Neuron</span><span class="p">,</span> 
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Population</span><span class="p">:</span>
 
     <span class="sd">&quot;&quot;&quot;Adds a population to the network.</span>
 
@@ -651,6 +658,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        A population instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">,)</span>
 
@@ -685,23 +693,39 @@
 <code class="highlight language-python"><span class="nb">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span></code>
 
 
-</h2>
+<a href="#ANNarchy_future.api.Network.Network.compile" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
       <p>Compiles and instantiates the network.</p>
-<p>Args: 
-    backend: 'single', 'openmp', 'cuda' or 'mpi'.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>backend</code></td>
+        <td><code>str</code></td>
+        <td><p>choose between <code>'single'</code>, <code>'openmp'</code>, <code>'cuda'</code> or <code>'mpi'</code>.</p></td>
+        <td><code>&#39;single&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>ANNarchy_future/api/Network.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-    <span class="n">backend</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;single&#39;</span><span class="p">):</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;single&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Compiles and instantiates the network.</span>
 
-    <span class="sd">&quot;&quot;&quot;Compiles and instantiates the network.</span>
-
-<span class="sd">    Args: </span>
-<span class="sd">        backend: &#39;single&#39;, &#39;openmp&#39;, &#39;cuda&#39; or &#39;mpi&#39;.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        backend: choose between `&#39;single&#39;`, `&#39;openmp&#39;`, `&#39;cuda&#39;` or `&#39;mpi&#39;`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
@@ -805,7 +829,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.5cf3e710.min.js"></script>
