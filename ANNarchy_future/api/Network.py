@@ -14,6 +14,7 @@ verbosity_levels = [
 ]
 
 class Network(object):
+
     """Network class containing the complete neural model.
 
     Attributes:
@@ -59,6 +60,13 @@ class Network(object):
         # List of populations
         self._populations = []
 
+        # List of used neuron
+        self._neuron_types = {}
+
+    ###########################################################################
+    # Interface
+    ###########################################################################
+
     def add(self, 
         shape: tuple, 
         neuron: Neuron, 
@@ -88,6 +96,10 @@ class Network(object):
         self.logger.debug("Analysing the population.")
         pop._analyse()
 
+        # Store the neuron if not done already
+        if not pop.neuron_class in self._neuron_types.keys():
+            self._neuron_types[pop.neuron_class] = pop.parser
+
         # Store the population
         self._populations.append(pop)
         self.logger.info("Population created.")
@@ -96,7 +108,8 @@ class Network(object):
  
     def compile(self,
         backend: str = 'single'):
-        """ Compiles and instantiates the network.
+
+        """Compiles and instantiates the network.
 
         Args:
             backend: choose between `'single'`, `'openmp'`, `'cuda'` or `'mpi'`.
@@ -105,14 +118,15 @@ class Network(object):
         self._backend = backend
 
         # Gather all parsed information
-        description = {}
+        description = self._gather_generated_code()
 
+        # Create compiler
         compiler = Compiler(
             description,
             backend=backend
         )
 
-        # Sanity check ?
+        # Sanity check
         compiler.sanity_check()
 
         # Code generation
@@ -120,10 +134,18 @@ class Network(object):
 
         # Instantiate the network
         self._instantiate()
-        self._obj_ids = self._simulation_core._instantiate()
 
-    def _instantiate(self):
-        """
-        Store the object IDs and create links if necessary
-        """
-        pass
+    ###########################################################################
+    # Internals
+    ###########################################################################
+    def _gather_generated_code(self):
+        """Returns a dictionary containing all parsed information about the network."""
+
+        description = {}
+
+        return description
+
+    def _instantiate(self):   
+        """Stores the object IDs and create links if necessary."""
+
+        self._obj_ids = self._simulation_core._instantiate()

@@ -3,13 +3,20 @@ from .SingleThread import SingleThreadGenerator
 
 class Compiler(object):
 
-    def __init__(self, populations, backend):
+    """Generates code and compiles it.
+
+    """
+
+    def __init__(self, description, backend):
         """
-        Initilize the code generators.
+        Initializes the code generators.
         """
+        self.backend = backend
+        self.description = description
+
         if backend == "single":
             self._generator = SingleThreadGenerator(
-                populations
+                description
             )
         else:
             raise NotImplementedError
@@ -23,10 +30,17 @@ class Compiler(object):
             * MPI: host available?
             * CUDA: GPU available?
         """
+
+        # If needed: https://github.com/workhorsy/py-cpuinfo
+
         pass
 
-    def compile(self):
-        # call the generator
+    def compile(self) -> SimCoreInterface:
+        """
+        Compiles the generated code.
+        """
+
+        # Calls the generator generator() method
         self._generator.generate()
 
         # compilation

@@ -1,5 +1,9 @@
 import numpy as np
 
+
+###########################################################################
+# Value object
+###########################################################################
 class Value(object):
     "Placeholder for single parameters"
     def __init__(self, value, dtype):
@@ -26,6 +30,9 @@ class Value(object):
         else:
             self._value = val
 
+###########################################################################
+# Array object
+###########################################################################
 class Array(object):
     "Placeholder for arrays"
     def __init__(self, init, dtype):

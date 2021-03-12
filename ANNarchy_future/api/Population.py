@@ -6,6 +6,7 @@ from .Neuron import Neuron
 from ..parser.NeuronParser import NeuronParser
 
 class Population(object):
+
     """Population of neurons.
 
     Populations should not be created explicitly, but returned by `Network.add()`:
@@ -59,10 +60,17 @@ class Population(object):
         self.logger = logging.getLogger(__name__)
         self.logger.info("Population created with " + str(self.size) + " neurons.")
 
+    ###########################################################################
+    # Interface
+    ###########################################################################
     def is_spiking(self) -> bool:
         "Returns True if the neuron type is spiking."
         return self._neuron_type.is_spiking()
 
+
+    ###########################################################################
+    # Internal methods
+    ###########################################################################
     def _register(self, net, id_pop):
         "Called by Network."
 
@@ -96,8 +104,9 @@ class Population(object):
         # Analyse the equations
         self.parser.analyse_equations()
 
-
-
+    ###########################################################################
+    # Hacks for access to attributes
+    ###########################################################################
     def __getattribute__(self, name):
         if name in ['attributes']:
             return object.__getattribute__(self, name)
