@@ -14,7 +14,7 @@
     
     
       
-        <title>Structure - ANNarchy</title>
+        <title>Overview - ANNarchy</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#structure" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Structure
+              Overview
             
           </span>
         </div>
@@ -373,9 +373,59 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Overview
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Structure
+        Overview
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    Contributing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#style" class="md-nav__link">
+    Style
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit-tests" class="md-nav__link">
+    Unit tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-annarchys-structure" class="md-nav__link">
+    Overview of ANNarchy's structure
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -416,8 +466,34 @@
                   </a>
                 
                 
-                <h1 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h1>
-<p>Some words on how to contribute.</p>
+                <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>Some words on how to contribute on github.</p>
+<h2 id="style">Style<a class="headerlink" href="#style" title="Permanent link">&para;</a></h2>
+<p>Attributes and methods must be typed according to PEP 484:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Dummy method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a: first parameter.</span>
+<span class="sd">        b: second parameter.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">c</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> 
+</code></pre></div>
+<p>To facilitate documentation with <code>mkdocstrings</code>, all comments and docstrings must follow the Google style:</p>
+<p><a href="https://google.github.io/styleguide/pyguide.html">https://google.github.io/styleguide/pyguide.html</a></p>
+<p>Example:</p>
+<p><a href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html</a></p>
+<p>Pylint should never have to complain ;)</p>
+<h2 id="unit-tests">Unit tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h2>
+<p>Find a strategy for consistent unit testing.</p>
+<h2 id="overview-of-annarchys-structure">Overview of ANNarchy's structure<a class="headerlink" href="#overview-of-annarchys-structure" title="Permanent link">&para;</a></h2>
 <p>Overview of the architecture:</p>
 <ul>
 <li>api</li>
