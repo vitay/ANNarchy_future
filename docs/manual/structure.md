@@ -69,13 +69,6 @@ pop1 = net.add(100, Izhikevich(a = 0.02))
 pop2 = net.add(100, Izhikevich(a = 0.2))
 ```
 
-There is no explicit distinction between parameters and variables anymore, but between `Values` and `Arrays`:
-
-* Values take a single value for the whole population.
-* Arrays take one value per neuron.
-
-An attribute is a variable if it is modified in `update()`, otherwise it is a parameter...
-
 Rate-coded neurons only need to define `update()`:
 
 ```python
@@ -86,18 +79,18 @@ class RateCoded(ann.Neuron):
 
     def __init__(self, tau):
 
-        self.tau = self.Value(tau)
+        self.tau = self.Parameter(tau)
 
-        self.ge = self.Array(init=0.0)
+        self.ge = self.Variable(init=0.0)
 
-        self.v = self.Array(init=0.0)
-        self.r = self.Array(init=0.0)
+        self.v = self.Variable(init=0.0)
+        self.r = self.Variable(init=0.0)
 
     def update(self):
 
         # n will contain all variables of the model as sympy symbols, 
         # plus some operations (ite = if/then/else)
-        with self.Equations() as n:
+        with self.Equations(method='euler') as n:
 
             # One can declare intermediary variables 
             # that won't be allocated in memory!
@@ -117,17 +110,21 @@ class LIF(ann.Neuron):
 
     def __init__(self, params):
 
-        self.tau = self.Value(params['tau'])
-        self.V_th = self.Value(params['V_th'])
+        self.tau = self.Parameter(params['tau'])
+        self.V_th = self.Parameter(params['V_th'])
 
-        self.ge = self.Array(init=0.0)
-        self.v = self.Array(init=0.0)
+        self.ge = self.Value(init=0.0)
+        self.v = self.Value(init=0.0)
 
     def update(self):
 
-        with self.Equations() as n:
+        with self.Equations(method='euler') as n:
 
             n.dv_dt = (n.ge - n.v) / n.tau
+
+        with self.Equations(method='exponential') as n:
+
+            n.dge_dt = (-n.ge) / n.tau
 
 
     def spike(self):
@@ -143,7 +140,7 @@ class LIF(ann.Neuron):
             n.v = 0
 ```
 
-The `Equations()` context provides `sympy` symbols for each value/array of the neuron, plus some specific ones (`t`, `dt`, `spike` for spike emission, etc).
+The `Equations()` context provides `sympy` symbols for each parameter/variable of the neuron, plus some specific ones (`t`, `dt`, `spike` for spike emission, etc).
 
 Derivatives are symbolically set as `dX_dt`.
 

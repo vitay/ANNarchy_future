@@ -4,23 +4,30 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 
+def f(x):
+    return sp.tanh(sp.cos(x))
 
 class LIF(ann.Neuron):
 
     def __init__(self, params):
 
-        self.tau = self.Value(params['tau'])
-        self.V_th = self.Value(params['V_th'])
+        self.tau = self.Parameter(params['tau'])
+        self.V_th = self.Parameter(params['V_th'])
 
-        self.ge = self.Array(init=0.0)
-        self.v = self.Array(init=0.0)
+        self.ge = self.Variable(init=0.0, input=True)
+        self.v = self.Variable(init=0.0)
+        self.u = self.Variable(init=0.0)
 
     def update(self):
 
+        with self.Equations(method='euler') as n:
+
+            n.dv_dt = (n.ge - n.u - n.v) / n.tau
+            n.du_dt = (n.v - n.u) / n.tau
+
         with self.Equations(method='exponential') as n:
 
-            n.dv_dt = (n.ge - n.v) / n.tau
-
+            n.dge_dt = (-n.ge) / n.tau
 
     def spike(self):
 
@@ -32,7 +39,7 @@ class LIF(ann.Neuron):
 
         with self.Equations() as n:
 
-            n.v = 0
+            n.v = f(n.v)
 
 net = ann.Network()
 #net = ann.Network(verbose=3, logfile="test.log") # for debugging

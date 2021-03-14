@@ -5,11 +5,11 @@ class LIF(ann.Neuron):
 
     def __init__(self, params):
 
-        self.tau = self.Value(params['tau'])
-        self.V_th = self.Value(params['V_th'])
+        self.tau = self.Parameter(params['tau'])
+        self.V_th = self.Parameter(params['V_th'])
 
-        self.ge = self.Array(init=0.0)
-        self.v = self.Array(init=0.0)
+        self.ge = self.Variable(init=0.0)
+        self.v = self.Variable(init=0.0)
 
     def update(self):
 

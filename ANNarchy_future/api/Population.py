@@ -1,7 +1,7 @@
 import sys
 import logging
 
-from .Array import Value, Array
+from .Array import Parameter, Variable
 from .Neuron import Neuron
 from ..parser.NeuronParser import NeuronParser
 
@@ -22,13 +22,13 @@ class Population(object):
         name: unique name of the population.
         neuron_class: name of the Neuron class
 
-    Additionaly, all values and arrays of the neuron type are accessible as attributes:
+    Additionaly, all parameters and variables of the neuron type are accessible as attributes:
 
     ```python
     class Leaky(Neuron):
         def __init__(self):
-            self.tau = self.Value(20.)
-            self.r = self.Array(0.0)
+            self.tau = self.Parameter(20.)
+            self.r = self.Variable(0.0)
 
     net = Network()
     pop = net.add(10, Leaky())

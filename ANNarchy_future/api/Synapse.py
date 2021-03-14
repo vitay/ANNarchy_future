@@ -1,21 +1,21 @@
 import numpy as np
 
-from .Array import Value, Array
+from .Array import Parameter, Variable
 
 class Synapse(object):
 
-    def Value(self, value, dtype=np.float32):
+    def Parameter(self, value, shared=True, dtype=np.float32):
         "Creates and returns a single value."
         if not hasattr(self, "_data"):
             self._data = []
-        val = Value(value, dtype)
+        val = Parameter(value, shared=shared, dtype=dtype)
         self._data.append(val)
         return val
 
-    def Array(self, init=0.0, dtype=np.float32):
+    def Variable(self, init=0.0, shared=True, dtype=np.float32):
         "Creates and returns an array."
         if not hasattr(self, "_data"):
             self._data = []
-        val = Array(init, dtype)
+        val = Variable(init, shared=shared, dtype=dtype)
         self._data.append(val)
         return val

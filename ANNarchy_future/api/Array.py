@@ -1,58 +1,36 @@
+import sys
+import logging
+
 import numpy as np
 
-
 ###########################################################################
-# Value object
-###########################################################################
-class Value(object):
-    "Placeholder for single parameters"
-    def __init__(self, value, dtype):
-        self._init_value = value
-        self._instantiated = False
-        self._dtype = dtype
-
-    def _copy(self):
-        return Value(self._init_value, self._dtype)
-
-    def _instantiate(self, shape):
-        self._instantiated = True
-        self.shape = 1
-        self._value = self._init_value
-    
-    def get_value(self):
-        if not self._instantiated:
-            return self._init_value
-        return self._value
-    
-    def set_value(self, val):
-        if not self._instantiated:
-            self._init_value = val
-        else:
-            self._value = val
-
-###########################################################################
-# Array object
+# Basic Array object
 ###########################################################################
 class Array(object):
-    "Placeholder for arrays"
-    def __init__(self, init, dtype):
+    "Placeholder for neural data."
+
+    def __init__(self, 
+        init:float, 
+        shared:bool, 
+        dtype:np.dtype ):
 
         self._init_value = init
+        self._shared = shared
         self._dtype = dtype
+
+        self.logger = logging.getLogger(__name__)
 
         self._instantiated = False
 
-    def _copy(self):
-        return Array(
-            self._init_value, 
-            self._dtype
-        )
-
     def _instantiate(self, shape):
         self._instantiated = True
-        self._value = np.full(shape, self._init_value, dtype=self._dtype)
-        self.shape = self._value.shape
-    
+        if self._shared:
+            self.shape = 1
+            self._value = self._init_value
+        else:
+            self.shape = shape
+            self._value = np.full(self.shape, self._init_value, dtype=self._dtype)
+
     def get_value(self):
         if not self._instantiated:
             return self._init_value
@@ -68,8 +46,48 @@ class Array(object):
                 elif val.shape == (1,):
                     self._value = np.full(self.shape, val[0], dtype=self._dtype)
                 else:
-                    print("Array assignment error", val, val.shape)
+                    self.logger.error("Shapes do not match: " + str(self.shape) + " <- " + str(val.shape))
+                    sys.exit(1)
             elif isinstance(val, (float, int, bool)):
-                self._value = np.full(self.shape, val)
+                self._value = np.full(self.shape, val, dtype=self._dtype)
             else:
                 print("Array assignment error", val)
+
+###########################################################################
+# Parameter object
+###########################################################################
+class Parameter(Array):
+    "Placeholder for parameters"
+
+    def __init__(self, 
+        init:float, 
+        shared:bool, 
+        dtype:np.dtype ):
+
+        super().__init__(init, shared, dtype)
+
+    def _copy(self):
+        return Parameter(
+            init=self._init_value, 
+            shared=self._shared, 
+            dtype=self._dtype
+        )
+
+###########################################################################
+# Variable object
+###########################################################################
+class Variable(Array):
+    "Placeholder for variables"
+
+    def __init__(self, init, shared, dtype):
+
+        super().__init__(init, shared, dtype)
+
+    def _copy(self):
+        return Variable(
+            init=self._init_value,
+            shared=self._shared, 
+            dtype=self._dtype
+        )
+
+    

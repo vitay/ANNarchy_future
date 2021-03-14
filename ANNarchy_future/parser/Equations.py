@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .Config import default_dict
+from .Config import default_dict, symbols_dict
 
 class Equations(object):
 
@@ -15,7 +15,9 @@ class Equations(object):
 
     ```python
     with Equations(symbols=['tau', 'v', 'r']) as n:
-        n.dv_dt = (n.cast(1.0) - n.v)/n.tau
+
+        n.dv_dt = (n.cast(0.04) - n.v)/n.tau
+        
         n.r = sp.tanh(n.v)
 
     print(n)
@@ -51,11 +53,7 @@ class Equations(object):
         self.method = method
 
         # Built-in symbols
-        self.symbols = {
-            't': sp.Symbol("t"),
-            'dt': sp.Symbol("dt"),
-            'spike': sp.Symbol("spike"),
-        }
+        self.symbols = symbols_dict.copy()
         
         # Standalone mode
         if self.neuron is None and self.synapse is None:
@@ -68,59 +66,32 @@ class Equations(object):
         # Start recording assignments
         self._started = False
     
+    ###########################################################################
+    # Context management
+    ###########################################################################
+
     def __enter__(self):
 
         if self.neuron is not None:
 
             for attr in self.neuron.attributes:
-                if attr in self.neuron._values_list:
-                    # Symbol
-                    symbol = sp.Symbol("%(pop_prefix_value)s"+attr+"%(pop_suffix_value)s")
-                    self.symbols[attr] = symbol
-                    setattr(self, attr, symbol)
+                # Symbol
+                symbol = sp.Symbol(self.neuron._parser.get_symbol(attr))
+                self.symbols[attr] = symbol
+                setattr(self, attr, symbol)
 
-                elif attr in self.neuron._arrays_list:
-                    # Symbol
-                    symbol = sp.Symbol("%(pop_prefix_array)s"+attr+"%(pop_suffix_array)s")
-                    self.symbols[attr] = symbol
-                    setattr(self, attr, symbol)
-
-                    # Derivative if needed
-                    symbol = sp.Symbol("__grad__" + attr)
-                    self.symbols["d"+attr+"_dt"] = symbol
-                    setattr(self, "d"+attr+"_dt", symbol)
-                    
-                else:
-                    self.logger.error(attr + "is not a value or array of the neuron.")
-                    sys.exit()
+                if attr in self.neuron._parser.variables:
+                    # Add derivative
+                    symbol = sp.Symbol('__grad_' + attr)
+                    self.symbols['d'+attr+'_dt'] = symbol
+                    setattr(self, 'd'+attr+'_dt', symbol)
 
             self.logger.info("Neuron symbols: " + str(self.symbols))
 
         elif self.synapse is not None:
 
-            for attr in self.synapse.attributes:
-                if attr in self.synapse._values_list:
-                    # Symbol
-                    symbol = sp.Symbol("%(proj_prefix_value)s"+attr+"%(proj_suffix_value)s")
-                    self.symbols[attr] = symbol
-                    setattr(self, attr, symbol)
-
-                elif attr in self.synapse._arrays_list:
-                    # Symbol
-                    symbol = sp.Symbol("%(proj_prefix_value)s"+attr+"%(proj_suffix_array)s")
-                    self.symbols[attr] = symbol
-                    setattr(self, attr, symbol)
-
-                    # Derivative if needed
-                    symbol = sp.Symbol("__grad__" + attr)
-                    self.symbols["d"+attr+"_dt"] = symbol
-                    setattr(self, "d"+attr+"_dt", symbol)
-                    
-                else:
-                    self.logger.error(attr + "is not a value or array of the synapse.")
-                    sys.exit()
-
-            self.logger.info("Synapse symbols: " + str(self.symbols))
+            self.logger.error("Synapses are not implemented yet.")
+            sys.exit()
 
         else: # Custom set of variables
             for attr in self._custom_symbols:
@@ -167,6 +138,10 @@ class Equations(object):
         else:
             object.__setattr__(self, name, value)
 
+    ###########################################################################
+    # Built-in vocabulary
+    ###########################################################################
+
     def ite(self, cond, then, els):
         """If-then-else ternary operator.
 
@@ -187,6 +162,38 @@ class Equations(object):
         """
 
         return sp.Piecewise((then, cond), (els, True))
+
+
+    def clip(self, val, min, max=None):
+        """Sets the lower and upper bounds of a variable.
+
+        Equivalent to:
+
+        ```python
+        def clip(val, min, max):
+            if val < min:
+                return min
+            elif val > max:
+                return max
+            else:
+                return val
+        ```
+
+        Args: 
+            val: variable.
+            min: lower bound.
+            max: upper bound.
+        
+        """
+        
+        if min is None and max is None: # Do nothing
+            return val
+        elif min is not None and max is None: # Lower bound
+            return sp.Piecewise((min, val<min), (val, True))
+        elif min is None and max is not None: # Upper bound
+            return sp.Piecewise((max, val>max), (val, True))
+        else: # Two-sided clip
+            return sp.Piecewise((min, val<min), (max, val>max), (val, True))
 
     def cast(self, val:float) -> sp.Symbol:
         """Cast floating point numbers to symbols in order to avoid numerical errors.

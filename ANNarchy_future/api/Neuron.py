@@ -1,6 +1,6 @@
 import numpy as np
 
-from .Array import Value, Array
+from .Array import Parameter, Variable
 from ..parser.Equations import Equations
 
 
@@ -11,50 +11,62 @@ class Neuron(object):
 
     """
 
-    def Value(self, 
+    def Parameter(self, 
         value:float, 
-        dtype=np.float32) -> Value:
+        shared:bool = True,
+        dtype=np.float32) -> Parameter:
 
-        """Defines a Value for the neuron.
+        """Defines a parameter for the neuron.
 
-        Values are defined only once for the whole population. 
-        If each neuron should have different values, use an `Array` instead. 
+        Parameters are defined only once for the whole population by default. 
+        If each neuron should have different values, set `shared=False`. 
 
         Args:
             value: initial value.
+            shared: locality of the parameter
             dtype: numpy type of the value (e.g. np.int, np.float)
 
         Returns:
-            `Value` instance.
+            `Parameter` instance.
         """
 
         if not hasattr(self, "_data"):
             self._data = []
-        val = Value(value, dtype)
+        val = Parameter(init=value, shared=shared, dtype=dtype)
         self._data.append(val)
 
         return val
 
-    def Array(self, 
-        init:float = 0.0, 
-        dtype=np.float32) -> Array:
+    def Variable(self, 
+        init:float = 0.0,
+        shared:bool = False, 
+        input:bool = False, 
+        output:bool = False,
+        dtype=np.float32) -> Variable:
 
-        """Defines an Array for the neuron.
+        """Defines a variable for the neuron.
 
-        Arrays can take a different value for each neuron in the population.
-        If a single value is needed, use `Value` to save some memory.
+        Variables take a different value for each neuron in the population.
+        If a single value is needed, set `shared=True` to save some memory.
+
+        Variables receiving inputs from a projection (weighted sums, conductances) should set `input=True`.
+
+        Output variables (e.g. firing rates) that may be used in projections with a delay should set `output=True`.
 
         Args:
             value: initial value.
+            shared: locality of the variable.
+            input: is it an input variable?
+            output: is it an output variable?
             dtype: numpy type of the value (e.g. np.int, np.float)
 
         Returns:
-            `Value` instance.
+            `Variable` instance.
         """
 
         if not hasattr(self, "_data"):
             self._data = []
-        val = Array(init, dtype)
+        val = Variable(init=init, shared=shared, dtype=dtype)
         self._data.append(val)
 
         return val
@@ -70,7 +82,7 @@ class Neuron(object):
         ```
 
         When opening the context as `n`, the variable has all attributes 
-        (values and arrays) of the neuron as symbols, which can be combined in Sympy equations.
+        (parameters and variables) of the neuron as symbols, which can be combined in Sympy equations.
 
         Args:
             method: numerical method (euler, midpoint, exponential, rk4, event-driven)
@@ -78,5 +90,10 @@ class Neuron(object):
         """
 
         eq = Equations(neuron=self, method=method)
-        self._current_eq = eq
+        
+        if not hasattr(self, '_current_eq'):
+            self._current_eq = []
+
+        self._current_eq.append(eq)
+        
         return eq
