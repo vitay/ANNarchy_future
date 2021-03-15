@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .Config import default_dict
+
 from .Parser import ccode, Condition, AssignmentBlock, ODEBlock
 from ..api.Array import Parameter, Variable
 from ..api.Neuron import Neuron
@@ -87,19 +87,6 @@ class NeuronParser(object):
         # Set the attributes to the neuron
         self.neuron.attributes = self.attributes
         self.neuron._parser = self
-
-    def get_symbol(self, attr):
-        """Returns symbol from the attribute's name.
-        """
-        if attr in self.parameters:
-            symbol = "%(pop_prefix_parameter)s"+attr+"%(pop_suffix_parameter)s"
-        elif attr in self.variables:
-            symbol = "%(pop_prefix_variable)s"+attr+"%(pop_suffix_variable)s"
-        else:
-            self.logger.error(attr + " is not a known symbol.")
-            sys.exit(1)
-
-        return symbol
 
     def analyse_equations(self):
 

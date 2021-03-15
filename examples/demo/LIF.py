@@ -20,12 +20,10 @@ class LIF(ann.Neuron):
 
     def update(self):
 
-        with self.Equations(method='euler') as n:
+        with self.Equations(method='rk4') as n:
 
             n.dv_dt = (n.ge - n.u - n.v) / n.tau
             n.du_dt = (n.v - n.u) / n.tau
-
-        with self.Equations(method='exponential') as n:
 
             n.dge_dt = (-n.ge) / n.tau
 

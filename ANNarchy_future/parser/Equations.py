@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .Config import default_dict, symbols_dict
+from .Config import symbols_dict
 
 class Equations(object):
 
@@ -43,7 +43,7 @@ class Equations(object):
 
         # Logger
         self.logger = logging.getLogger(__name__)
-        self.logger.info("Equations() created.")
+        self.logger.debug("Equations() created.")
 
         # Objects
         self.neuron = neuron
@@ -76,13 +76,13 @@ class Equations(object):
 
             for attr in self.neuron.attributes:
                 # Symbol
-                symbol = sp.Symbol(self.neuron._parser.get_symbol(attr))
+                symbol = sp.Symbol(attr)
                 self.symbols[attr] = symbol
                 setattr(self, attr, symbol)
 
                 if attr in self.neuron._parser.variables:
                     # Add derivative
-                    symbol = sp.Symbol('__grad_' + attr)
+                    symbol = sp.Symbol("d" + attr + "/dt")
                     self.symbols['d'+attr+'_dt'] = symbol
                     setattr(self, 'd'+attr+'_dt', symbol)
 
@@ -111,10 +111,8 @@ class Equations(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         
-        self.logger.info("Raw equations:")
+        self.logger.info("Equations:")
         self.logger.info(str(self))
-        self.logger.info("Simplified equations:")
-        self.logger.info(str(self) % default_dict)
 
     def __str__(self):
         string = ""

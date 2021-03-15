@@ -19,18 +19,7 @@ reserved_attributes = [
     'post',
 ]
 
-# Empty parsing dict to retrieve variable names
-empty_dict = {
-    'pop_prefix_parameter': "",
-    'pop_suffix_parameter': "",
-    'pop_prefix_variable': "",
-    'pop_suffix_variable': "",
-}
 
-# Simple parsing dict for human-readable equations
-default_dict = {
-    'pop_prefix_parameter': "",
-    'pop_suffix_parameter': "",
-    'pop_prefix_variable': "",
-    'pop_suffix_variable': "[i]",
-}
+def ccode(eq):
+    eq = sp.ccode(eq)
+    return " ".join(eq.replace('\n', ' ').split())
