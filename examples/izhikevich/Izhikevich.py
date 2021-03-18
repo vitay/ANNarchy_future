@@ -28,7 +28,7 @@ class Izhikevich(ann.Neuron):
 
             I = n.ge - n.gi + n.i_offset # + noise
 
-            n.dv_dt = n.cast(4e-2) * n.v**2 + n.cast(5.0) * n.v + n.cast(140.0) - n.u + I
+            n.dv_dt = n.cast(4e-2) * (n.v-1)**2 + n.cast(5.0) * n.v + n.cast(140.0) - n.u + I
             
             n.du_dt = n.a * (n.b * n.v - n.u)
 
@@ -46,8 +46,10 @@ class Izhikevich(ann.Neuron):
             n.u += n.d
 
 
-net = ann.Network(verbose=2)
+net = ann.Network()
 
 params = {'a': 0.02, 'b': 0.2, 'c': -65., 'd': 8., 'v_thresh': 30., 'i_offset': 0.0}
 
 net.add(1000, Izhikevich(params))
+
+net.compile()

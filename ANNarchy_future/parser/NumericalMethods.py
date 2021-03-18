@@ -1,32 +1,23 @@
 import sympy as sp
 
-from .Config import ccode
+from .CodeGeneration import ccode
 
 def euler(equations):
 
     gradients = []
     updates = []
 
-    for name, eq in equations:
+    if len(equations) == 0:
+        pass
 
-        # Compute the gradient
-        gradient_var = "__k__" + name
-        gradient_hr = gradient_var + " = " + ccode(eq)
+    elif len(equations) == 1:
+
+        name, eq = equations[0]
 
         # Update the variable
-        update = sp.Symbol('dt') * sp.Symbol(gradient_var) 
+        update = sp.Symbol('dt') * eq 
         update_hr = name + " += " + ccode(update)
 
-        gradients.append(
-            {
-            'type': 'tmp',
-            'name': gradient_var,
-            'op': "=",
-            'rhs': eq,
-            'human-readable': gradient_hr,
-
-            }
-        )
         updates.append(
             {
             'type': 'assignment',
@@ -37,6 +28,39 @@ def euler(equations):
 
             }
         )
+    
+    else: # More than one equation
+
+        for name, eq in equations:
+
+            # Compute the gradient
+            gradient_var = "__k__" + name
+            gradient_hr = gradient_var + " = " + ccode(eq)
+
+            # Update the variable
+            update = sp.Symbol('dt') * sp.Symbol(gradient_var) 
+            update_hr = name + " += " + ccode(update)
+
+            gradients.append(
+                {
+                'type': 'tmp',
+                'name': gradient_var,
+                'op': "=",
+                'rhs': eq,
+                'human-readable': gradient_hr,
+
+                }
+            )
+            updates.append(
+                {
+                'type': 'assignment',
+                'name': name,
+                'op': "+=",
+                'rhs': update,
+                'human-readable': update_hr,
+
+                }
+            )
 
     # Gather equations in the right order
     processed_equations = []
@@ -157,9 +181,6 @@ def midpoint(equations):
         )
     
     for name, eq in equations:
-
-        # Gradient v'
-        gradient_var = "__k2__" + name
 
         # Evaluate gradient in v + dt/2*v'
         new_eq = sp.Symbol('dt') * eq.subs(midpoint_vars)

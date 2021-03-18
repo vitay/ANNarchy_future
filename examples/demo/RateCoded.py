@@ -4,6 +4,9 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 
+def f(x):
+    return sp.log(1 + x)
+
 class RateCoded(ann.Neuron):
     """
     Simple rate-coded neuron.
@@ -29,11 +32,13 @@ class RateCoded(ann.Neuron):
             shunting = n.ite(n.ge > 1, n.ge, 0)
             
             # ODEs use the dX_dt trick
-            n.dv_dt = (n.ge + shunting + sp.exp(n.v**2) - n.v) / n.tau
-            n.v = n.clip(n.v, None, 0.0)
+            n.dv_dt = (n.ge + shunting + sp.exp(n.v**3) - n.v) / n.tau
+            n.v = n.clip(n.v, 1.0) # sets minimum bound
+            #n.v = n.clip(n.v, None, 0.0) # sets maximum bound
+            #n.v = n.clip(n.v, 0.0, 1.0) # sets both bounds
             
             # Sympy functions can be used directly
-            n.r = n.clip(n.v, 0.0, 1.0)
+            n.r = f(n.v)
 
 
 net = ann.Network(verbose=2)

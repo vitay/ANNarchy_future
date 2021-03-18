@@ -1,7 +1,7 @@
 import sys
 import sympy as sp
 
-from .Config import ccode
+from .CodeGeneration import ccode
 import ANNarchy_future.parser.NumericalMethods as NM
 
 class Condition(object):
@@ -14,12 +14,12 @@ class Condition(object):
 
     def parse(self):
 
-        code = ccode(self._equation)
+        hr = ccode(self._equation)
 
         self.equation = {
             'name': self.name,
             'eq': self._equation,
-            'human-readable': code ,
+            'human-readable': hr ,
         }
 
     def __str__(self):

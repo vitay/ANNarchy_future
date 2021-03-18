@@ -4,8 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-
-from .Parser import ccode, Condition, AssignmentBlock, ODEBlock
+from .Parser import Condition, AssignmentBlock, ODEBlock
 from ..api.Array import Parameter, Variable
 from ..api.Neuron import Neuron
 
@@ -45,6 +44,7 @@ class NeuronParser(object):
         self.attributes = []
         self.parameters = []
         self.variables = []
+        self.shared = []
 
         # Equations to retrieve
         self.update_equations = None
@@ -65,6 +65,7 @@ class NeuronParser(object):
         * `self.attributes`
         * `self.parameters`
         * `self.variables`
+        * `self.shared`
 
         """
 
@@ -72,12 +73,19 @@ class NeuronParser(object):
         current_attributes = list(self.neuron.__dict__.keys())
 
         for attr in current_attributes:
+            # Parameter
             if isinstance(getattr(self.neuron, attr), (Parameter, )):
                 self.parameters.append(attr)
                 self.attributes.append(attr)
+            # Variable
             if isinstance(getattr(self.neuron, attr), (Variable, )):
                 self.variables.append(attr)
                 self.attributes.append(attr)
+
+        # Shared variables
+        for attr in self.attributes:
+            if getattr(self.neuron, attr)._shared:
+                self.shared.append(attr)
 
         # Get lists of parameters and variables
         self.logger.info("Attributes: " + str(self.attributes))

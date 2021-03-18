@@ -18,8 +18,3 @@ reserved_attributes = [
     'pre',
     'post',
 ]
-
-
-def ccode(eq):
-    eq = sp.ccode(eq)
-    return " ".join(eq.replace('\n', ' ').split())

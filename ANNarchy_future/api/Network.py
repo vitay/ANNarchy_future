@@ -143,6 +143,8 @@ class Network(object):
 
         description = {}
 
+        description['neurons'] = self._neuron_types
+
         return description
 
     def _instantiate(self):   
