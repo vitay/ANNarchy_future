@@ -1,6 +1,6 @@
-# Population
+# Projection
 
-::: ANNarchy_future.api.Population.Population
+::: ANNarchy_future.api.Projection.Projection
     selection:
       docstring_style: google
     rendering:

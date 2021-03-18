@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .Parser import Condition, AssignmentBlock, ODEBlock
+from .EquationParser import Condition, AssignmentBlock, ODEBlock, get_blocks
 from ..api.Array import Parameter, Variable
 from ..api.Neuron import Neuron
 
@@ -47,9 +47,9 @@ class NeuronParser(object):
         self.shared = []
 
         # Equations to retrieve
-        self.update_equations = None
-        self.spike_condition = None
-        self.reset_equations = None
+        self.update_equations = []
+        self.spike_condition = []
+        self.reset_equations = []
 
     def is_spiking(self) -> bool:
         "Returns True if the Neuron class is spiking."
@@ -113,20 +113,19 @@ class NeuronParser(object):
         # List of methods
         callables = [f for f in dir(self.neuron) if callable(getattr(self.neuron, f))]
 
-        if not 'update' in callables:
-            self.logger.error("The Neuron class must implement update(self)")
-            sys.exit(1)
-
         # Analyse update()
-        self.logger.info("Calling Neuron.update().")
-        try:
-            self.neuron.update()
-        except Exception:
-            self.logger.exception("Unable to analyse update()")
-            sys.exit(1)
+        if 'update' in callables:
 
-        self.update_equations =  self.process_equations(self.neuron._current_eq)
-        self.neuron._current_eq = []
+            self.logger.info("Calling Neuron.update().")
+
+            try:
+                self.neuron.update()
+            except Exception:
+                self.logger.exception("Unable to analyse " + self.name + ".update()")
+                sys.exit(1)
+
+            self.update_equations =  self.process_equations(self.neuron._current_eq)
+            self.neuron._current_eq = []
 
         # For spiking neurons only
         if 'spike' in callables:
@@ -140,7 +139,7 @@ class NeuronParser(object):
             try:
                 self.neuron.spike()
             except Exception:
-                self.logger.exception("Unable to analyse spike()")
+                self.logger.exception("Unable to analyse spike().")
                 sys.exit(1)
 
             self.spike_condition = self.process_condition(self.neuron._current_eq)
@@ -151,7 +150,7 @@ class NeuronParser(object):
             try:
                 self.neuron.reset()
             except Exception:
-                self.logger.exception("Unable to analyse reset()")
+                self.logger.exception("Unable to analyse reset().")
                 sys.exit(1)
 
             self.reset_equations = self.process_equations(self.neuron._current_eq)
@@ -181,39 +180,7 @@ class NeuronParser(object):
             a list of blocks, which are lists of equations of three types: assignments, ODEs and conditions.
         
         """
-        blocks = []
-
-        # Iterate over the equations to group them into blocks
-        for context in equations:
-
-            _current_assignment_block = None
-            _current_ODE_block = None
-            
-            for name, eq in context.equations:
-                
-                # ODE block
-                if name.startswith("d") and name.endswith('_dt'):
-                    if _current_assignment_block is not None:
-                        blocks.append(_current_assignment_block)
-                        _current_assignment_block = None
-                    if _current_ODE_block is None:
-                        _current_ODE_block = ODEBlock(self, context.method)
-                    _current_ODE_block.add(name[1:-3], eq)
-
-                # Assignment block
-                else:
-                    if _current_ODE_block is not None:
-                        blocks.append(_current_ODE_block)
-                        _current_ODE_block = None
-                    if _current_assignment_block is None:
-                        _current_assignment_block = AssignmentBlock(self)
-                    _current_assignment_block.add(name, eq)
-
-            # Append the last block
-            if _current_assignment_block is not None:
-                blocks.append(_current_assignment_block)
-            if _current_ODE_block is not None:
-                blocks.append(_current_ODE_block)
+        blocks = get_blocks(self, equations)
 
         for block in blocks:
             block.dependencies()
@@ -223,22 +190,21 @@ class NeuronParser(object):
 
     def __str__(self):
 
-        code = "Neuron " + self.name + "\n"
-        code += "*"*60 + "\n"
+        code = ""
 
         code += "Parameters: " + str(self.parameters) + "\n"
         code += "Variables: " + str(self.variables) + "\n\n"
 
         code += "Neural equations:\n"
         for block in self.update_equations:
-            code += str(block)
+            code += block.raw()
 
         if self._spiking:
-            code += "\nSpike condition:\n"
-            code += str(self.spike_condition) + "\n"
+            code += "\nSpike emission:\n"
+            code += self.spike_condition.raw() + "\n"
 
             code += "\nReset equations:\n"
             for block in self.reset_equations:
-                code += str(block)
+                code += block.raw()
 
         return code

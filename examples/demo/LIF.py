@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import ANNarchy_future as ann
 
 import numpy as np

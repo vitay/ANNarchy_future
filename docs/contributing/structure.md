@@ -47,3 +47,7 @@ Overview of the architecture:
 * api
 * parser
 * generator
+
+## Publishing Cython extensions
+
+<https://levelup.gitconnected.com/how-to-deploy-a-cython-package-to-pypi-8217a6581f09>

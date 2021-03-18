@@ -1,10 +1,10 @@
-# ANNarchy 5.0
+# ANNarchy
 
 **This is a mockup, do not use.**
 
 ## About ANNarchy
 
-ANNarchy (Artificial Neural Networks architect) is a neural simulator designed for distributed rate-coded or spiking neural networks. The core of the library is written in C++ and distributed using openMP, CUDA and MPI. It provides an interface in Python for the definition of the networks. It is released under the [GNU GPL v2 or later](http://www.gnu.org/licenses/gpl.html).
+ANNarchy (Artificial Neural Networks architect) is a neural simulator designed for distributed rate-coded or spiking neural networks. The core of the library is written in C++ and distributed using openMP, CUDA and MPI. It provides an interface in Python for the definition of the networks. It is released under the [MIT license](https://opensource.org/licenses/MIT).
 
 * Source code: <http://bitbucket.org/annarchy/annarchy>
 

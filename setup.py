@@ -35,13 +35,16 @@ package_data = []
 release = '5.0.0b'
 print("Installing ANNarchy", release)
 
+with open("README.md", 'r') as f:
+    long_description = f.read()
+
 setup(  name='ANNarchy_future',
         version=release,
         download_url = 'https://bitbucket.org/annarchy/annarchy',
         license='GPLv2+',
         platforms='GNU/Linux; MacOSX',
         description='Artificial Neural Networks architect',
-        long_description="""ANNarchy (Artificial Neural Networks architect) is a parallel simulator for distributed rate-coded or spiking neural networks. The core of the library is generated in C++ and distributed using openMP or CUDA. It provides an interface in Python for the definition of the networks.""",
+        long_description=long_description,
         author='Julien Vitay, Helge Uelo Dinkelbach and Fred Hamker',
         author_email='julien.vitay@informatik.tu-chemnitz.de',
         url='http://www.tu-chemnitz.de/informatik/KI/projects/ANNarchy/index.php',

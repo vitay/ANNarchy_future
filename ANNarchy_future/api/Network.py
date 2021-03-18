@@ -2,7 +2,9 @@ import sys
 import logging
 
 from .Population import Population
+from .Projection import Projection
 from .Neuron import Neuron
+from .Synapse import Synapse
 from ..generator.Compiler import Compiler
 
 # Verbosity levels for logging
@@ -60,8 +62,14 @@ class Network(object):
         # List of populations
         self._populations = []
 
-        # List of used neuron
+        # List of projections
+        self._projections = []
+
+        # List of used neurons
         self._neuron_types = {}
+
+        # List of used synapses
+        self._synapse_types = {}
 
     ###########################################################################
     # Interface
@@ -80,7 +88,7 @@ class Network(object):
             name: optional name. 
 
         Returns:
-            A population instance.
+            A `Population` instance.
         """
 
         if isinstance(shape, int):
@@ -98,13 +106,50 @@ class Network(object):
 
         # Store the neuron if not done already
         if not pop.neuron_class in self._neuron_types.keys():
-            self._neuron_types[pop.neuron_class] = pop.parser
+            self._neuron_types[pop.neuron_class] = pop._parser
 
         # Store the population
         self._populations.append(pop)
         self.logger.info("Population created.")
 
         return pop
+
+    def connect(self, 
+        pre:Population, 
+        post:Population, 
+        target:str, 
+        synapse:Synapse = None, 
+        name: str = None) -> Projection:
+
+        """Creates a projection by connecting two populations.
+
+        Args:
+            pre: pre-synaptic population.
+            post: post-synaptic population.
+            target: postsynaptic variable receving the projection.
+            synapse: Synapse instance.
+            name: optional name. 
+
+        Returns:
+            A `Projection` instance.
+        """
+
+        self.logger.info("Adding Projection(" + pre.name + ", " + post.name + ", " + target + ").")
+        proj = Projection(pre, post, target, synapse, name)
+        id_proj = len(self._projections)
+        proj._register(self, id_proj)
+
+        # Have the projection analyse its attributes
+        self.logger.debug("Analysing the projection.")
+        proj._analyse()
+
+        # Store the neuron if not done already
+        if not proj.synapse_class in self._synapse_types.keys():
+            self._synapse_types[proj.synapse_class] = proj._parser
+
+        self._projections.append(proj)
+
+        return proj
  
     def compile(self,
         backend: str = 'single'):
@@ -144,6 +189,8 @@ class Network(object):
         description = {}
 
         description['neurons'] = self._neuron_types
+
+        description['synapses'] = self._synapse_types
 
         return description
 

@@ -1,5 +1,6 @@
 import sys
 import logging
+import textwrap
 
 from .Array import Parameter, Variable
 from .Neuron import Neuron
@@ -57,8 +58,8 @@ class Population(object):
         self._net = None
         self._attributes = {}
 
-        self.logger = logging.getLogger(__name__)
-        self.logger.info("Population created with " + str(self.size) + " neurons.")
+        self._logger = logging.getLogger(__name__)
+        self._logger.info("Population created with " + str(self.size) + " neurons.")
 
     ###########################################################################
     # Interface
@@ -74,35 +75,35 @@ class Population(object):
     def _register(self, net, id_pop):
         "Called by Network."
 
-        self.logger.debug("Registering population with ID " + str(id_pop))
+        self._logger.debug("Registering population with ID " + str(id_pop))
 
         self._net = net
-        self.id_pop = id_pop
+        self._id_pop = id_pop
 
         if self.name is None:
-            self.name = "Population " + str(self.id_pop)
-        self.logger.debug("Population's name is set to " + str(self.name))
+            self.name = "Population " + str(self._id_pop)
+        self._logger.debug("Population's name is set to " + str(self.name))
 
     def _analyse(self):
 
         # Create the population parser
-        self.logger.debug("Creating neuron parser.")
-        self.parser = NeuronParser(self._neuron_type)
+        self._logger.debug("Creating neuron parser.")
+        self._parser = NeuronParser(self._neuron_type)
         
         # Retrieve attributes
-        self.parser.extract_variables()
-        self.attributes = self.parser.attributes
+        self._parser.extract_variables()
+        self.attributes = self._parser.attributes
 
         # Neuron class name
-        self.neuron_class : str = self.parser.name
+        self.neuron_class : str = self._parser.name
 
         # Instantiate the attributes
-        for attr in self.parser.attributes:
+        for attr in self._parser.attributes:
             self._attributes[attr] = getattr(self._neuron_type, attr)._copy()
             self._attributes[attr]._instantiate(self.shape)
         
         # Analyse the equations
-        self.parser.analyse_equations()
+        self._parser.analyse_equations()
 
     ###########################################################################
     # Hacks for access to attributes
@@ -121,3 +122,12 @@ class Population(object):
             self._attributes[name].set_value(value)
         else:
             object.__setattr__(self, name, value)
+
+    def __str__(self):
+        s = str("Population at " + hex(id(self))) + "\n"
+        s += "    Name: " + self.name + "\n"
+        s += "    Size: " + str(self.size) + " ; Shape: " + str(self.shape) + "\n"
+        s += "    Neuron type: " + self._parser.name + "\n"
+        s += textwrap.indent(str(self._parser), '    ') + "\n"
+
+        return s

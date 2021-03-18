@@ -6,6 +6,18 @@ import sympy as sp
 
 from .Config import symbols_dict
 
+class PreNeuron(object):
+    """
+    Placeholder for presynaptic attributes.
+    """
+    pass
+
+class PostNeuron(object):
+    """
+    Placeholder for postsynaptic attributes.
+    """
+    pass
+
 class Equations(object):
 
     """Context to define equations. 
@@ -46,8 +58,8 @@ class Equations(object):
         self.logger.debug("Equations() created.")
 
         # Objects
-        self.neuron = neuron
-        self.synapse = synapse
+        self._neuron = neuron
+        self._synapse = synapse
 
         # Numerical method
         self.method = method
@@ -56,7 +68,7 @@ class Equations(object):
         self.symbols = symbols_dict.copy()
         
         # Standalone mode
-        if self.neuron is None and self.synapse is None:
+        if self._neuron is None and self._synapse is None:
             self._custom_symbols = symbols
             self.logger.info("Custom symbols: " + str(symbols))
         
@@ -72,15 +84,15 @@ class Equations(object):
 
     def __enter__(self):
 
-        if self.neuron is not None:
+        if self._neuron is not None:
 
-            for attr in self.neuron.attributes:
+            for attr in self._neuron.attributes:
                 # Symbol
                 symbol = sp.Symbol(attr)
                 self.symbols[attr] = symbol
                 setattr(self, attr, symbol)
 
-                if attr in self.neuron._parser.variables:
+                if attr in self._neuron._parser.variables:
                     # Add derivative
                     symbol = sp.Symbol("d" + attr + "/dt")
                     self.symbols['d'+attr+'_dt'] = symbol
@@ -88,10 +100,36 @@ class Equations(object):
 
             self.logger.info("Neuron symbols: " + str(self.symbols))
 
-        elif self.synapse is not None:
+        elif self._synapse is not None:
 
-            self.logger.error("Synapses are not implemented yet.")
-            sys.exit()
+            for attr in self._synapse.attributes:
+                # Symbol
+                symbol = sp.Symbol(attr)
+                self.symbols[attr] = symbol
+                setattr(self, attr, symbol)
+
+                if attr in self._synapse._parser.variables:
+                    # Add derivative
+                    symbol = sp.Symbol("d" + attr + "/dt")
+                    self.symbols['d'+attr+'_dt'] = symbol
+                    setattr(self, 'd'+attr+'_dt', symbol)
+            
+            self.pre = PreNeuron()
+            self.post = PostNeuron()
+
+            for attr in self._synapse.pre_attributes:
+                # Symbol
+                symbol = sp.Symbol("pre."+attr)
+                self.symbols["pre."+attr] = symbol
+                setattr(self.pre, attr, symbol)
+
+            for attr in self._synapse.post_attributes:
+                # Symbol
+                symbol = sp.Symbol("post."+attr)
+                self.symbols["post."+attr] = symbol
+                setattr(self.post, attr, symbol)
+
+            self.logger.info("Synapse symbols: " + str(self.symbols))
 
         else: # Custom set of variables
             for attr in self._custom_symbols:
@@ -162,7 +200,7 @@ class Equations(object):
         return sp.Piecewise((then, cond), (els, True))
 
 
-    def clip(self, val, min, max=None):
+    def clip(self, val:sp.Symbol, min:sp.Symbol, max:sp.Symbol = None):
         """Sets the lower and upper bounds of a variable.
 
         Equivalent to:

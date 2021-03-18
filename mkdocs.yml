@@ -47,7 +47,12 @@ nav:
   - 'Reference':
     - 'api/network.md'
     - 'api/neuron.md'
+    - 'api/synapse.md'
+    - 'api/equations.md'
     - 'api/population.md'
+    - 'api/projection.md'
   - 'Contributing':
     - 'contributing/structure.md'
     - 'contributing/parser.md'
+  - 'CHANGELOG.md'
+  - 'License.md'

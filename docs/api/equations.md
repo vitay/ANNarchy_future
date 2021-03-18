@@ -1,6 +1,6 @@
-# Population
+# Equations
 
-::: ANNarchy_future.api.Population.Population
+::: ANNarchy_future.parser.Equations.Equations
     selection:
       docstring_style: google
     rendering:

@@ -4,6 +4,7 @@ import logging
 import sympy as sp
 
 from .PopulationGenerator import PopulationGenerator
+from .ProjectionGenerator import ProjectionGenerator
 
 
 class SingleThreadGenerator(object):
@@ -20,6 +21,16 @@ class SingleThreadGenerator(object):
         for name, parser in neurons.items():
 
             parser = PopulationGenerator(name, parser)
+            code = parser.generate()
+
+            print(code)
+
+        # Generate Projections        
+        synapses = self.description['synapses']
+
+        for name, parser in synapses.items():
+
+            parser = ProjectionGenerator(name, parser)
             code = parser.generate()
 
             print(code)

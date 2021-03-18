@@ -1,6 +1,6 @@
-# Population
+# Synapse
 
-::: ANNarchy_future.api.Population.Population
+::: ANNarchy_future.api.Synapse.Synapse
     selection:
       docstring_style: google
     rendering:

@@ -12,11 +12,18 @@ class Array(object):
     def __init__(self, 
         init:float, 
         shared:bool, 
-        dtype:np.dtype ):
+        dtype:str ):
 
         self._init_value = init
         self._shared = shared
-        self._dtype = dtype
+
+        dtypes = {
+            'float': np.float,
+            'int': np.int,
+            'bool': np.bool,
+        }
+        self._dtype_string = dtype
+        self._dtype = dtypes[dtype]
 
         self.logger = logging.getLogger(__name__)
 
@@ -62,7 +69,7 @@ class Parameter(Array):
     def __init__(self, 
         init:float, 
         shared:bool, 
-        dtype:np.dtype ):
+        dtype:str ):
 
         super().__init__(init, shared, dtype)
 
@@ -70,7 +77,7 @@ class Parameter(Array):
         return Parameter(
             init=self._init_value, 
             shared=self._shared, 
-            dtype=self._dtype
+            dtype=self._dtype_string,
         )
 
 ###########################################################################
@@ -79,7 +86,10 @@ class Parameter(Array):
 class Variable(Array):
     "Placeholder for variables"
 
-    def __init__(self, init, shared, dtype):
+    def __init__(self, 
+        init:float, 
+        shared:bool, 
+        dtype:str):
 
         super().__init__(init, shared, dtype)
 
@@ -87,7 +97,7 @@ class Variable(Array):
         return Variable(
             init=self._init_value,
             shared=self._shared, 
-            dtype=self._dtype
+            dtype=self._dtype_string,
         )
 
     

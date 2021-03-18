@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import ANNarchy_future as ann
 
 import numpy as np
@@ -33,36 +34,61 @@ class RateCoded(ann.Neuron):
             
             # ODEs use the dX_dt trick
             n.dv_dt = (n.ge + shunting + sp.exp(n.v**3) - n.v) / n.tau
-            n.v = n.clip(n.v, 1.0) # sets minimum bound
-            #n.v = n.clip(n.v, None, 0.0) # sets maximum bound
+            n.v = n.clip(n.v, 0.0) # sets minimum bound
+            #n.v = n.clip(n.v, None, 1.0) # sets maximum bound
             #n.v = n.clip(n.v, 0.0, 1.0) # sets both bounds
             
             # Sympy functions can be used directly
             n.r = f(n.v)
 
 
-net = ann.Network(verbose=2)
-pop = net.add(10, RateCoded(tau=20.))
 
-print("Attributes:", pop.attributes)
+class Hebb(ann.Synapse):
+    """
+    Default rate-coded synapse.
+    """
 
-print("Tau:", pop.tau)
-print("v = 0:", pop.v)
+    def __init__(self, eta):
 
-pop.v = 1.
+        self.eta = self.Parameter(eta)
 
-print("v = 1:", pop.v)
+        self.alpha = self.Parameter(0.1)
 
-pop.v *= 5.
+        self.w = self.Variable(init=0.0)
 
-print("v = 5:", pop.v)
+        self.mw = self.Variable(init=0.0)
 
-pop.v[:3] = 1.
+    def update(self):
 
-print("v[:3] = 1:", pop.v)
+        with self.Equations() as s:
+
+            s.w += s.eta * s.pre.r * s.post.r 
+
+            s.mw += s.alpha * s.mw + (1 - s.alpha)*s.w
+
+    def transmit(self):
+
+        with self.Equations() as s:
+            
+            s.target += s.w * s.pre.r
+
+        with self.Equations() as s:
+            
+            s.target[0] += s.w * s.pre.r
+            
+            s.target[1] += s.mw * s.pre.r
 
 
-print()
-print(pop.parser)
+net = ann.Network()
+
+neur = RateCoded(tau=20.)
+print(neur)
+
+pop = net.add(10, neur)
+print(pop)
+
+proj = net.connect(pop, pop, 'ge', Hebb(eta=0.01))
+print(proj)
 
 net.compile()
+

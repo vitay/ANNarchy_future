@@ -14,7 +14,7 @@ class Neuron(object):
     def Parameter(self, 
         value:float, 
         shared:bool = True,
-        dtype=np.float32) -> Parameter:
+        dtype:str='float') -> Parameter:
 
         """Defines a parameter for the neuron.
 
@@ -23,8 +23,8 @@ class Neuron(object):
 
         Args:
             value: initial value.
-            shared: locality of the parameter
-            dtype: numpy type of the value (e.g. np.int, np.float)
+            shared: locality of the parameter.
+            dtype: numerical type of the value ('float', 'int', 'bool').
 
         Returns:
             `Parameter` instance.
@@ -32,6 +32,9 @@ class Neuron(object):
 
         if not hasattr(self, "_data"):
             self._data = []
+            self._inputs = []
+            self._outputs = []
+            
         val = Parameter(init=value, shared=shared, dtype=dtype)
         self._data.append(val)
 
@@ -42,7 +45,7 @@ class Neuron(object):
         shared:bool = False, 
         input:bool = False, 
         output:bool = False,
-        dtype=np.float32) -> Variable:
+        dtype:str='float') -> Variable:
 
         """Defines a variable for the neuron.
 
@@ -58,7 +61,7 @@ class Neuron(object):
             shared: locality of the variable.
             input: is it an input variable?
             output: is it an output variable?
-            dtype: numpy type of the value (e.g. np.int, np.float)
+            dtype: numerical type of the variable ('float', 'int', 'bool').
 
         Returns:
             `Variable` instance.
@@ -66,8 +69,15 @@ class Neuron(object):
 
         if not hasattr(self, "_data"):
             self._data = []
+            self._inputs = []
+            self._outputs = []
+
         val = Variable(init=init, shared=shared, dtype=dtype)
         self._data.append(val)
+        if input:
+            self._inputs.append(val)
+        if output:
+            self._outputs.append(val)
 
         return val
 
