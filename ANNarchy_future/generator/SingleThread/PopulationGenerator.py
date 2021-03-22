@@ -1,18 +1,36 @@
 import sys
 import logging
+import importlib
 from string import Template
 
 import sympy as sp
 
+import ANNarchy_future
 from ANNarchy_future.parser.CodeGeneration import code_generation
 from ANNarchy_future.parser.NeuronParser import NeuronParser
 
 
 class PopulationGenerator(object):
 
+    """Generates a C++ file corresponding to a Neuron description.
+
+    Attributes:
+
+        name: name of the class.
+        parser: instance of NeuronParser.
+        correspondences: dictionary of pairs (symbol -> implementation).
+
+    """
 
     def __init__(self, name:str, parser:NeuronParser):
         
+        """
+        Args:
+
+            name (str): name of the class.
+            parser (NeuronParser): parser for the neuron.
+        """
+
         self.name:str = name
         self.parser:NeuronParser = parser
 
@@ -27,10 +45,23 @@ class PopulationGenerator(object):
             else:
                 self.correspondences[attr] = "this->" + attr + "[i]"
 
-    def generate(self):
+    def generate(self) -> str:
+        
+        """Generates the C++ code. 
 
-        # Hack: get the template
-        tpl = __file__.replace('PopulationGenerator.py', 'Population.h')
+        Calls:
+
+            `self.update()`
+            `self.spike()`
+            `self.reset()`
+        
+        Returns:
+        
+            a multiline string for the .h header file.
+        """
+
+        # Get the template
+        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Population.h'
 
         # Open the template
         with open(tpl, 'r') as f:
@@ -72,16 +103,21 @@ class PopulationGenerator(object):
         declared_spiking = ""
         spike_method = ""
         reset_method = ""
+
         if self.parser.is_spiking():
+
             # Declare spike arrays
             declared_spiking = """
     // Spiking neuron
     std::vector<int> spike;"""
+
             initialize_spiking = """
         // Spiking neuron
         this->spike = std::vector<int>(0)"""
+
             # Spike method
             spike_method = self.spike()
+        
             # Reset method
             reset_method = self.reset()
 
@@ -102,6 +138,14 @@ class PopulationGenerator(object):
         return code
 
     def update(self) -> str:
+
+        """Processes the Neuron.update() field.
+        
+        Returns:
+
+            the content of the `update()` C++ method.
+
+        """
 
         # Block template
         tlp_block = Template("""
@@ -140,6 +184,14 @@ $update
 
     def spike(self) -> str:
 
+        """Processes the Neuron.spike() field.
+        
+        Returns:
+
+            the whole `spike()` C++ method.
+
+        """
+
         tpl_spike = Template("""
     // Spike emission
     void spike(){
@@ -156,6 +208,14 @@ $update
         return tpl_spike.substitute(condition=cond)
 
     def reset(self) -> str:
+
+        """Processes the Neuron.reset() field.
+        
+        Returns:
+
+            the whole `reset()` C++ method.
+
+        """
 
         tpl_reset = Template("""
     // Reset

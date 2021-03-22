@@ -54,5 +54,6 @@ nav:
   - 'Contributing':
     - 'contributing/structure.md'
     - 'contributing/parser.md'
+    - 'contributing/generator.md'
   - 'CHANGELOG.md'
   - 'License.md'

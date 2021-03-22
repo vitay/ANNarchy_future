@@ -22,6 +22,11 @@ except:
     print('You can install it from pip or: http://pypi.python.org/pypi/setuptools')
     exit(0)
 
+# Additional files
+package_data = [
+]
+
+# Dependencies
 dependencies = [
     'numpy',
     'scipy',
@@ -30,9 +35,7 @@ dependencies = [
     'sympy'
 ]
 
-package_data = []
-
-release = '5.0.0b'
+release = '5.0.0b0'
 print("Installing ANNarchy", release)
 
 with open("README.md", 'r') as f:
@@ -52,7 +55,7 @@ setup(  name='ANNarchy_future',
             'Development Status :: 5 - Production/Stable',
             'Environment :: Console',
             'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
+            'License :: OSI Approved :: MIT License',
             'Operating System :: POSIX :: Linux',
             'Operating System :: MacOS :: MacOS X',
             'Programming Language :: Python :: 3.7',
@@ -65,7 +68,7 @@ setup(  name='ANNarchy_future',
         packages=find_packages(),
         package_data={'ANNarchy_future': package_data},
         install_requires=dependencies,
-        #ext_modules = cythonize(extensions, language_level=int(sys.version_info[0])),
+        #ext_modules = cythonize(extensions, language_level=3),
         #include_dirs = [np.get_include()],
-        zip_safe = False
+        #zip_safe = False
 )

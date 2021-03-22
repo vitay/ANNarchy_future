@@ -4,14 +4,32 @@ from string import Template
 
 import sympy as sp
 
+import ANNarchy_future
 from ANNarchy_future.parser.CodeGeneration import code_generation
 from ANNarchy_future.parser.SynapseParser import SynapseParser
 
 
 class ProjectionGenerator(object):
 
+    """Generates a C++ file corresponding to a Synapse description.
+
+    Attributes:
+
+        name: name of the class.
+        parser: instance of SynapseParser.
+        correspondences: dictionary of pairs (symbol -> implementation).
+
+    """
+
 
     def __init__(self, name:str, parser:SynapseParser):
+
+        """
+        Args:
+
+            name (str): name of the class.
+            parser (SynapseParser): parser for the synapse.
+        """
         
         self.name:str = name
         self.parser:SynapseParser = parser
@@ -40,10 +58,21 @@ class ProjectionGenerator(object):
             else:
                 self.correspondences["post."+attr] = "this->post->" + attr + "[j]"
 
-    def generate(self):
+    def generate(self) -> str:
 
-        # Hack: get the template
-        tpl = __file__.replace('ProjectionGenerator.py', 'Projection.h')
+        """Generates the C++ code. 
+
+        Calls:
+
+            `self.update()`
+        
+        Returns:
+        
+            a multiline string for the .h header file.
+        """
+
+        # Get the template
+        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Projection.h'
 
         # Open the template
         with open(tpl, 'r') as f:
@@ -93,6 +122,14 @@ class ProjectionGenerator(object):
         return code
 
     def update(self) -> str:
+        
+        """Processes the Synapse.update() field.
+        
+        Returns:
+
+            the content of the `update()` C++ method.
+
+        """
 
         # Block template
         tlp_block = Template("""

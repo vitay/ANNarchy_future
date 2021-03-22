@@ -22,8 +22,8 @@ class Projection(object):
         self._net = None
         self._attributes = {}
 
-        self.logger = logging.getLogger(__name__)
-        self.logger.info("Projection created between " + self.pre.name + " and " + self.post.name)
+        self._logger = logging.getLogger(__name__)
+        self._logger.info("Projection created between " + self.pre.name + " and " + self.post.name)
 
     ###########################################################################
     # Internal methods
@@ -31,20 +31,20 @@ class Projection(object):
     def _register(self, net, id_proj):
         "Called by Network."
 
-        self.logger.debug("Registering projection with ID " + str(id_proj))
+        self._logger.debug("Registering projection with ID " + str(id_proj))
 
         self._net = net
         self.id_proj = id_proj
 
         if self.name is None:
             self.name = "Projection " + str(self.id_proj)
-        self.logger.debug("Projection's name is set to " + str(self.name))
+        self._logger.debug("Projection's name is set to " + str(self.name))
 
 
     def _analyse(self):
 
         # Create the projection parser
-        self.logger.debug("Creating synapse parser.")
+        self._logger.debug("Creating synapse parser.")
         self._parser = SynapseParser(self._synapse_type, self.pre._neuron_type, self.post._neuron_type)
         
         # Retrieve attributes

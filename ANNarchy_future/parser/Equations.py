@@ -54,8 +54,8 @@ class Equations(object):
         """
 
         # Logger
-        self.logger = logging.getLogger(__name__)
-        self.logger.debug("Equations() created.")
+        self._logger = logging.getLogger(__name__)
+        self._logger.debug("Equations() created.")
 
         # Objects
         self._neuron = neuron
@@ -70,7 +70,7 @@ class Equations(object):
         # Standalone mode
         if self._neuron is None and self._synapse is None:
             self._custom_symbols = symbols
-            self.logger.info("Custom symbols: " + str(symbols))
+            self._logger.info("Custom symbols: " + str(symbols))
         
         # List of tuples (name, Equation)
         self.equations = []
@@ -98,7 +98,7 @@ class Equations(object):
                     self.symbols['d'+attr+'_dt'] = symbol
                     setattr(self, 'd'+attr+'_dt', symbol)
 
-            self.logger.info("Neuron symbols: " + str(self.symbols))
+            self._logger.info("Neuron symbols: " + str(self.symbols))
 
         elif self._synapse is not None:
 
@@ -129,7 +129,7 @@ class Equations(object):
                 self.symbols["post."+attr] = symbol
                 setattr(self.post, attr, symbol)
 
-            self.logger.info("Synapse symbols: " + str(self.symbols))
+            self._logger.info("Synapse symbols: " + str(self.symbols))
 
         else: # Custom set of variables
             for attr in self._custom_symbols:
@@ -149,8 +149,8 @@ class Equations(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         
-        self.logger.info("Equations:")
-        self.logger.info(str(self))
+        self._logger.info("Equations:")
+        self._logger.info(str(self))
 
     def __str__(self):
         string = ""

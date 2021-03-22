@@ -47,8 +47,8 @@ class SynapseParser(object):
         self.name = self.synapse.__class__.__name__
 
         # Logging
-        self.logger = logging.getLogger(__name__)
-        self.logger.debug("Synapse parser created.")
+        self._logger = logging.getLogger(__name__)
+        self._logger.debug("Synapse parser created.")
 
         # Attributes
         self.attributes = []
@@ -96,9 +96,9 @@ class SynapseParser(object):
                 self.shared.append(attr)
 
         # Get lists of parameters and variables
-        self.logger.info("Attributes: " + str(self.attributes))
-        self.logger.info("Parameters: " + str(self.parameters))
-        self.logger.info("Variables: " + str(self.variables))
+        self._logger.info("Attributes: " + str(self.attributes))
+        self._logger.info("Parameters: " + str(self.parameters))
+        self._logger.info("Variables: " + str(self.variables))
 
         # Set the attributes to the synapse
         self.synapse.attributes = self.attributes
@@ -124,11 +124,11 @@ class SynapseParser(object):
         callables = [f for f in dir(self.synapse) if callable(getattr(self.synapse, f))]
 
         if 'update' in callables:
-            self.logger.info("Calling Synapse.update().")
+            self._logger.info("Calling Synapse.update().")
             try:
                 self.synapse.update()
             except Exception:
-                self.logger.exception("Error when parsing " + self.name + ".update().")
+                self._logger.exception("Error when parsing " + self.name + ".update().")
                 sys.exit(1)
             else:
                 self.update_equations =  self.process_equations(self.synapse._current_eq)

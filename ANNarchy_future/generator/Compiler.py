@@ -1,18 +1,28 @@
-from .SimCoreInterface import SimCoreInterface
+
 from .SingleThread import SingleThreadGenerator
+
+from ..communicator.SimulationInterface import SimulationInterface
+from ..communicator.CythonInterface import CythonInterface
+
+
 
 class Compiler(object):
 
     """Generates code and compiles it.
 
+    Attributes:
+
+        backend: 'single', 'openmp', 'cuda' or 'mpi'.
+        description: network description passed by the `Network()` instance.
+
     """
 
-    def __init__(self, description, backend):
+    def __init__(self, description:dict, backend:str):
         """
         Initializes the code generators.
         """
-        self.backend = backend
-        self.description = description
+        self.backend:str = backend
+        self.description:dict = description
 
         if backend == "single":
             self._generator = SingleThreadGenerator(
@@ -21,11 +31,12 @@ class Compiler(object):
         else:
             raise NotImplementedError
 
-    def sanity_check(self):
-        """
-        Verify if the provided network can be compiled, e. g.
+    def hardware_check(self):
+        """Checks whether the provided network can be compiled on the current hardware.
+        
+        Checks whether:
 
-        * projection formats available
+        * the projection formats are available for the backend.
         * fitting hardware?
             * MPI: host available?
             * CUDA: GPU available?
@@ -35,17 +46,26 @@ class Compiler(object):
 
         pass
 
-    def compile(self) -> SimCoreInterface:
+    def compile(self) -> SimulationInterface:
         """
         Compiles the generated code.
+
+        Returns:
+
+            a `SimulationInterface` instance allowing Python to communicate with the C++ kernel.
         """
 
         # Calls the generator generator() method
         self._generator.generate()
 
-        # compilation
+        # Compilation
         
-        # import lib
+        # Import shared library
         library = None
 
-        return SimCoreInterface(library)
+        if self.backend == "single":
+            interface = CythonInterface(library)
+        else:
+            raise NotImplementedError
+
+        return interface

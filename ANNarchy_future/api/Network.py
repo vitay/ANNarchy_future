@@ -56,8 +56,8 @@ class Network(object):
             logging.basicConfig(filename=logfile, level=verbosity_levels[verbose])
         else:
             logging.basicConfig(level=verbosity_levels[verbose])
-        self.logger = logging.getLogger(__name__)
-        self.logger.info("Creating new network with dt="+str(self.dt))
+        self._logger = logging.getLogger(__name__)
+        self._logger.info("Creating new network with dt="+str(self.dt))
 
         # List of populations
         self._populations = []
@@ -95,13 +95,13 @@ class Network(object):
             shape = (shape,)
         
         # Create the population
-        self.logger.info("Adding Population(" + str(shape) + ", " + type(neuron).__name__ + ", " + str(name) + ").")
+        self._logger.info("Adding Population(" + str(shape) + ", " + type(neuron).__name__ + ", " + str(name) + ").")
         pop = Population(shape, neuron, name)
         id_pop = len(self._populations)
         pop._register(self, id_pop)
 
         # Have the population analyse its attributes
-        self.logger.debug("Analysing the population.")
+        self._logger.debug("Analysing the population.")
         pop._analyse()
 
         # Store the neuron if not done already
@@ -110,7 +110,7 @@ class Network(object):
 
         # Store the population
         self._populations.append(pop)
-        self.logger.info("Population created.")
+        self._logger.info("Population created.")
 
         return pop
 
@@ -134,13 +134,13 @@ class Network(object):
             A `Projection` instance.
         """
 
-        self.logger.info("Adding Projection(" + pre.name + ", " + post.name + ", " + target + ").")
+        self._logger.info("Adding Projection(" + pre.name + ", " + post.name + ", " + target + ").")
         proj = Projection(pre, post, target, synapse, name)
         id_proj = len(self._projections)
         proj._register(self, id_proj)
 
         # Have the projection analyse its attributes
-        self.logger.debug("Analysing the projection.")
+        self._logger.debug("Analysing the projection.")
         proj._analyse()
 
         # Store the neuron if not done already
@@ -163,19 +163,19 @@ class Network(object):
         self._backend = backend
 
         # Gather all parsed information
-        description = self._gather_generated_code()
+        self._description = self._gather_generated_code()
 
         # Create compiler
-        compiler = Compiler(
-            description,
+        self._compiler = Compiler(
+            self._description,
             backend=backend
         )
 
-        # Sanity check
-        compiler.sanity_check()
+        # Hardware check
+        self._compiler.hardware_check()
 
         # Code generation
-        self._simulation_core = compiler.compile()
+        self._simulation_core = self._compiler.compile()
 
         # Instantiate the network
         self._instantiate()
@@ -195,6 +195,11 @@ class Network(object):
         return description
 
     def _instantiate(self):   
-        """Stores the object IDs and create links if necessary."""
+        """Instantiates the C++ kernel."""
 
-        self._obj_ids = self._simulation_core._instantiate()
+        # Instantiate the kernel
+        self._simulation_core.instantiate()
+
+        # Initialize attributes
+
+        # Tell all objects (pop or proj) that they should use the SimulationInterface from now on.

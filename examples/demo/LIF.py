@@ -38,7 +38,7 @@ class LIF(ann.Neuron):
 
         with self.Equations() as n:
 
-            n.v = 0.0
+            n.v = 0.04
 
 net = ann.Network()
 #net = ann.Network(verbose=3, logfile="test.log") # for debugging
