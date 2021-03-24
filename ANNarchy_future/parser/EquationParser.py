@@ -1,8 +1,7 @@
 import sys
 import sympy as sp
 
-from .CodeGeneration import ccode
-import ANNarchy_future.parser.NumericalMethods as NM
+import ANNarchy_future.parser as parser
 
 def get_blocks(parser, equations:list) -> list:
     """Splits multiple Equations() calls into blocks of AssignmentBlocks and ODEBlocks.
@@ -74,7 +73,7 @@ class Condition(object):
     def parse(self):
         "Parses the boolean condition."
 
-        hr = ccode(self._equation)
+        hr = parser.ccode(self._equation)
 
         self.equation = {
             'name': self.name,
@@ -167,7 +166,7 @@ class AssignmentBlock(Block):
 
         for name, eq in self._equations:
             
-            hr = name + " = " + ccode(eq)
+            hr = name + " = " + parser.ccode(eq)
 
             self.equations.append(
                 {
@@ -201,19 +200,19 @@ class ODEBlock(Block):
 
         if self.method == 'euler':
 
-            self.equations = NM.euler(self._equations)
+            self.equations = parser.NM.euler(self._equations)
 
         elif self.method == 'exponential':
 
-            self.equations = NM.exponential(self._equations)
+            self.equations = parser.NM.exponential(self._equations)
 
         elif self.method == 'midpoint':
 
-            self.equations = NM.midpoint(self._equations)
+            self.equations = parser.NM.midpoint(self._equations)
 
         elif self.method == 'rk4':
 
-            self.equations = NM.rk4(self._equations)
+            self.equations = parser.NM.rk4(self._equations)
 
         else:
             self.parser.logger.error(self.method + " is not implemented yet.")

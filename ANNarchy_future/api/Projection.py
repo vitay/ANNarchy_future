@@ -1,22 +1,30 @@
 import sys
 import logging
 
-from .Array import Parameter, Variable
-from .Synapse import Synapse
+import ANNarchy_future.api as api
+
 from ..parser.SynapseParser import SynapseParser
 
 class Projection(object):
     """
-    Projection.
+    Projection between two populations.
+
     """
-    def __init__(self, pre, post, target, synapse, name):
+    def __init__(self, 
+        pre : 'api.Population', 
+        post : 'api.Population', 
+        target : str, 
+        synapse : 'api.Synapse', 
+        name : str):
 
         self.pre = pre
         self.post = post
         self.target = target
-        self._synapse_type = synapse
         self.name = name
 
+        # Synapse instance
+        self._synapse_type = synapse
+        self.synapse_class : str = synapse.__class__.__name__
 
         # Internal stuff
         self._net = None
@@ -28,8 +36,8 @@ class Projection(object):
     ###########################################################################
     # Internal methods
     ###########################################################################
-    def _register(self, net, id_proj):
-        "Called by Network."
+    def _register(self, net:api.Network, id_proj:int):
+        "Called by Network with the ID of the projection."
 
         self._logger.debug("Registering projection with ID " + str(id_proj))
 
@@ -42,6 +50,12 @@ class Projection(object):
 
 
     def _analyse(self):
+        """Creates a SynapseParser and calls:
+
+        * `parser.extract_variables()`
+        * `parser.analyse_equations()`
+
+        """
 
         # Create the projection parser
         self._logger.debug("Creating synapse parser.")
@@ -50,9 +64,6 @@ class Projection(object):
         # Retrieve attributes
         self._parser.extract_variables()
         self.attributes = self._parser.attributes
-
-        # Synapse class name
-        self.synapse_class : str = self._parser.name
 
         # Instantiate the attributes
         for attr in self._parser.attributes:

@@ -1,3 +1,3 @@
 from .Compiler import Compiler
 
-__all__ = ["Compiler"]
+from ANNarchy_future.generator import SingleThread

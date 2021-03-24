@@ -1,11 +1,8 @@
 import sys
 import logging
 
-from .Population import Population
-from .Projection import Projection
-from .Neuron import Neuron
-from .Synapse import Synapse
-from ..generator.Compiler import Compiler
+import ANNarchy_future.api as api
+import ANNarchy_future.generator as generator
 
 # Verbosity levels for logging
 verbosity_levels = [
@@ -77,14 +74,14 @@ class Network(object):
 
     def add(self, 
         shape: tuple, 
-        neuron: Neuron, 
-        name: str = None) -> Population:
+        neuron: 'api.Neuron', 
+        name: str = None) -> 'api.Population':
 
         """Adds a population to the network.
 
         Args:
             shape: shape of the population as a single integer or tuple. 
-            neuron: Neuron instance. 
+            neuron: `Neuron` instance. 
             name: optional name. 
 
         Returns:
@@ -96,7 +93,7 @@ class Network(object):
         
         # Create the population
         self._logger.info("Adding Population(" + str(shape) + ", " + type(neuron).__name__ + ", " + str(name) + ").")
-        pop = Population(shape, neuron, name)
+        pop = api.Population(shape, neuron, name)
         id_pop = len(self._populations)
         pop._register(self, id_pop)
 
@@ -115,11 +112,11 @@ class Network(object):
         return pop
 
     def connect(self, 
-        pre:Population, 
-        post:Population, 
+        pre:'api.Population', 
+        post:'api.Population', 
         target:str, 
-        synapse:Synapse = None, 
-        name: str = None) -> Projection:
+        synapse:'api.Synapse' = None, 
+        name: str = None) -> 'api.Projection':
 
         """Creates a projection by connecting two populations.
 
@@ -135,7 +132,8 @@ class Network(object):
         """
 
         self._logger.info("Adding Projection(" + pre.name + ", " + post.name + ", " + target + ").")
-        proj = Projection(pre, post, target, synapse, name)
+        
+        proj = api.Projection(pre, post, target, synapse, name)
         id_proj = len(self._projections)
         proj._register(self, id_proj)
 
@@ -166,7 +164,7 @@ class Network(object):
         self._description = self._gather_generated_code()
 
         # Create compiler
-        self._compiler = Compiler(
+        self._compiler = generator.Compiler(
             self._description,
             backend=backend
         )

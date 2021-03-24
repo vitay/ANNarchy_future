@@ -1,6 +1,6 @@
 import sympy as sp
 
-from .CodeGeneration import ccode
+import ANNarchy_future.parser as parser
 
 def euler(equations):
 
@@ -16,7 +16,7 @@ def euler(equations):
 
         # Update the variable
         update = sp.Symbol('dt') * eq 
-        update_hr = name + " += " + ccode(update)
+        update_hr = name + " += " + parser.ccode(update)
 
         updates.append(
             {
@@ -35,11 +35,11 @@ def euler(equations):
 
             # Compute the gradient
             gradient_var = "__k__" + name
-            gradient_hr = gradient_var + " = " + ccode(eq)
+            gradient_hr = gradient_var + " = " + parser.ccode(eq)
 
             # Update the variable
             update = sp.Symbol('dt') * sp.Symbol(gradient_var) 
-            update_hr = name + " += " + ccode(update)
+            update_hr = name + " += " + parser.ccode(update)
 
             gradients.append(
                 {
@@ -110,7 +110,7 @@ def exponential(equations):
         
         # Compute the gradient v' = (1- exp(-dt/tau))*(A - v)
         gradient = step_size * steady 
-        gradient_hr = gradient_var + " = " + ccode(gradient)
+        gradient_hr = gradient_var + " = " + parser.ccode(gradient)
 
         # Update the variable r += v'
         update_hr = name + " += " + gradient_var
@@ -168,7 +168,7 @@ def midpoint(equations):
         # Compute v + dt/2*v'
         midpoint = var + sp.Symbol('dt') * eq / 2.0
 
-        midpoint_hr = midpoint_var + " = " + ccode(midpoint)
+        midpoint_hr = midpoint_var + " = " + parser.ccode(midpoint)
 
         midpoints.append(
             {
@@ -186,7 +186,7 @@ def midpoint(equations):
         new_eq = sp.Symbol('dt') * eq.subs(midpoint_vars)
 
         # Human readable
-        update_hr = name + " += " + ccode(new_eq)
+        update_hr = name + " += " + parser.ccode(new_eq)
 
         updates.append(
             {
@@ -239,8 +239,8 @@ def rk4(equations):
         k2_vars[var] = sp.Symbol(p2_var)
         p2 = var + sp.Symbol('dt') * sp.Symbol(k1_var) / 2.0
 
-        k1_hr = k1_var + " = " + ccode(eq)
-        p2_hr = p2_var + " = " + ccode(p2)
+        k1_hr = k1_var + " = " + parser.ccode(eq)
+        p2_hr = p2_var + " = " + parser.ccode(p2)
 
         k1s.append(
             {
@@ -277,8 +277,8 @@ def rk4(equations):
         k3_vars[var] = sp.Symbol(p3_var)
         p3 = var + sp.Symbol('dt') * sp.Symbol(k2_var) / 2.0
 
-        k2_hr = k2_var + " = " + ccode(k2)
-        p3_hr = p3_var + " = " + ccode(p3)
+        k2_hr = k2_var + " = " + parser.ccode(k2)
+        p3_hr = p3_var + " = " + parser.ccode(p3)
 
         k2s.append(
             {
@@ -317,8 +317,8 @@ def rk4(equations):
         p4 = var + sp.Symbol('dt') * sp.Symbol(k3_var)
 
 
-        k3_hr = k3_var + " = " + ccode(k3)
-        p4_hr = p4_var + " = " + ccode(p4)
+        k3_hr = k3_var + " = " + parser.ccode(k3)
+        p4_hr = p4_var + " = " + parser.ccode(p4)
 
         k3s.append(
             {
@@ -351,7 +351,7 @@ def rk4(equations):
         # k4
         k4_var = "__k4__" + name
 
-        k4_hr = k4_var + " = " + ccode(k4)
+        k4_hr = k4_var + " = " + parser.ccode(k4)
 
         k4s.append(
             {
@@ -376,7 +376,7 @@ def rk4(equations):
         new_eq = sp.Symbol('dt') * (k1 + 2*k2 + 2*k3 + k4)/sp.Symbol("6.0")
 
         # Human readable
-        update_hr = name + " += " + ccode(new_eq)
+        update_hr = name + " += " + parser.ccode(new_eq)
 
         updates.append(
             {

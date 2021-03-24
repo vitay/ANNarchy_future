@@ -1,6 +1,7 @@
 import numpy as np
 
-from .Array import Parameter, Variable
+import ANNarchy_future.api as api
+
 from ..parser.Equations import Equations
 
 
@@ -14,7 +15,7 @@ class Synapse(object):
     def Parameter(self, 
         value:float, 
         shared:bool = True,
-        dtype:str = 'float') -> Parameter:
+        dtype:str = 'float') -> api.Parameter:
 
         """Defines a parameter for the synapse.
 
@@ -23,8 +24,8 @@ class Synapse(object):
 
         Args:
             value: initial value.
-            shared: locality of the parameter
-            dtype: numpy type of the value (e.g. np.int, np.float)
+            shared: locality of the parameter.
+            dtype: numerical type of the value ('float'', 'int', 'bool')
 
         Returns:
             `Parameter` instance.
@@ -32,7 +33,7 @@ class Synapse(object):
 
         if not hasattr(self, "_data"):
             self._data = []
-        val = Parameter(init=value, shared=shared, dtype=dtype)
+        val = api.Parameter(init=value, shared=shared, dtype=dtype)
         self._data.append(val)
 
         return val
@@ -40,7 +41,7 @@ class Synapse(object):
     def Variable(self, 
         init:float = 0.0,
         shared:bool = False, 
-        dtype:str = 'float') -> Variable:
+        dtype:str = 'float') -> api.Variable:
 
         """Defines a variable for the synapse.
 
@@ -48,7 +49,7 @@ class Synapse(object):
         If a single value for the whole projection is needed, set `shared=True` to save some memory.
 
         Args:
-            value: initial value.
+            init: initial value.
             shared: locality of the variable.
             dtype: numerical type of the value ('float', 'int', 'bool').
 
@@ -58,7 +59,7 @@ class Synapse(object):
 
         if not hasattr(self, "_data"):
             self._data = []
-        val = Variable(init=init, shared=shared, dtype=dtype)
+        val = api.Variable(init=init, shared=shared, dtype=dtype)
         self._data.append(val)
 
         return val

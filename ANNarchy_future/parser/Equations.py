@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .Config import symbols_dict
+import ANNarchy_future.parser as parser
 
 class PreNeuron(object):
     """
@@ -65,7 +65,7 @@ class Equations(object):
         self.method = method
 
         # Built-in symbols
-        self.symbols = symbols_dict.copy()
+        self.symbols = parser.symbols_dict.copy()
         
         # Standalone mode
         if self._neuron is None and self._synapse is None:

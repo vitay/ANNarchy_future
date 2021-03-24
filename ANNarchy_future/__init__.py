@@ -1,5 +1,3 @@
-from .api.Network import Network
-from .api.Neuron import Neuron
-from .api.Synapse import Synapse
+from .api import *
 
 __version__ = "5.0.0"

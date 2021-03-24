@@ -4,15 +4,15 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .EquationParser import Condition, AssignmentBlock, ODEBlock, get_blocks
-from ..api.Array import Parameter, Variable
-from ..api.Neuron import Neuron
+import ANNarchy_future.api as api
+import ANNarchy_future.parser as parser
+
 
 class NeuronParser(object):
     """Neuron parser.
 
     Attributes:
-        neuron (Neuron): Neuron class.
+        neuron (api.Neuron): Neuron class.
         name (str): name of the Neuron class.
         attributes (list): list of attributes (parameters and variables).
         parameters (list): list of parameters.
@@ -24,7 +24,7 @@ class NeuronParser(object):
         reset_equations (list): reset equations.
     """
 
-    def __init__(self, neuron:Neuron):
+    def __init__(self, neuron:'api.Neuron'):
 
         """Initializes the parser.
 
@@ -57,6 +57,7 @@ class NeuronParser(object):
 
     def is_spiking(self) -> bool:
         "Returns True if the Neuron class is spiking."
+
         return self._spiking
 
     def extract_variables(self):
@@ -81,11 +82,11 @@ class NeuronParser(object):
         for attr in current_attributes:
             var = getattr(self.neuron, attr)
             # Parameter
-            if isinstance(var, (Parameter, )):
+            if isinstance(var, (api.Parameter, )):
                 self.parameters.append(attr)
                 self.attributes.append(attr)
             # Variable
-            if isinstance(var, (Variable, )):
+            if isinstance(var, (api.Variable, )):
                 self.variables.append(attr)
                 self.attributes.append(attr)
                 if var in self.neuron._inputs:
@@ -167,7 +168,7 @@ class NeuronParser(object):
             self.reset_equations = self.process_equations(self.neuron._current_eq)
             self.neuron._current_eq = []
 
-    def process_condition(self, equations) -> Condition:
+    def process_condition(self, equations) -> 'parser.Condition':
 
         if len(equations) > 1:
             self._logger.error("Neuron.spike() must define only one Equations context.")
@@ -175,7 +176,7 @@ class NeuronParser(object):
 
         name, eq = equations[0].equations[0]
 
-        condition = Condition(self.neuron, name, eq)
+        condition = parser.Condition(self.neuron, name, eq)
         condition.parse()
 
         return condition
@@ -191,7 +192,7 @@ class NeuronParser(object):
             a list of blocks, which are lists of equations of three types: assignments, ODEs and conditions.
         
         """
-        blocks = get_blocks(self, equations)
+        blocks = parser.get_blocks(self, equations)
 
         for block in blocks:
             block.dependencies()

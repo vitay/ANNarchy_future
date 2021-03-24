@@ -18,7 +18,7 @@ class SimulationInterface(object):
 
         raise NotImplementedError
 
-    def get(self, name:str, attribute:str) ->np.ndarray:
+    def get(self, name:str, attribute:str) -> np.ndarray:
 
         """Returns the value of the `attribute` for the object 
         (Population or Projection) specified by `name`.

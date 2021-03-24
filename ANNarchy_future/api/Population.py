@@ -2,8 +2,7 @@ import sys
 import logging
 import textwrap
 
-from .Array import Parameter, Variable
-from .Neuron import Neuron
+import ANNarchy_future.api as api
 from ..parser.NeuronParser import NeuronParser
 
 class Population(object):
@@ -39,7 +38,10 @@ class Population(object):
     ```
     """
 
-    def __init__(self, shape : tuple, neuron : Neuron, name : str):
+    def __init__(self, 
+        shape : tuple, 
+        neuron : 'api.Neuron', 
+        name : str):
 
         # Shape and size
         self.shape : tuple = tuple(shape)
@@ -50,6 +52,7 @@ class Population(object):
 
         # Neuron type
         self._neuron_type = neuron
+        self.neuron_class:str = neuron.__class__.__name__
 
         # Name
         self.name : str = name
@@ -93,9 +96,6 @@ class Population(object):
         # Retrieve attributes
         self._parser.extract_variables()
         self.attributes = self._parser.attributes
-
-        # Neuron class name
-        self.neuron_class : str = self._parser.name
 
         # Instantiate the attributes
         for attr in self._parser.attributes:

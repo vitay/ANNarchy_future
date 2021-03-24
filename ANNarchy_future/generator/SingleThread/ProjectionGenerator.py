@@ -5,8 +5,7 @@ from string import Template
 import sympy as sp
 
 import ANNarchy_future
-from ANNarchy_future.parser.CodeGeneration import code_generation
-from ANNarchy_future.parser.SynapseParser import SynapseParser
+import ANNarchy_future.parser as parser
 
 
 class ProjectionGenerator(object):
@@ -22,17 +21,19 @@ class ProjectionGenerator(object):
     """
 
 
-    def __init__(self, name:str, parser:SynapseParser):
+    def __init__(self, 
+        name : str, 
+        parser : 'parser.SynapseParser'):
 
         """
         Args:
 
             name (str): name of the class.
-            parser (SynapseParser): parser for the synapse.
+            parser (parser.SynapseParser): parser for the synapse.
         """
         
         self.name:str = name
-        self.parser:SynapseParser = parser
+        self.parser:'parser.SynapseParser' = parser
 
         # Build a correspondance dictionary
         self.correspondences = {
@@ -122,7 +123,7 @@ class ProjectionGenerator(object):
         return code
 
     def update(self) -> str:
-        
+
         """Processes the Synapse.update() field.
         
         Returns:
@@ -153,14 +154,14 @@ $update
                     code += tpl_eq.substitute(
                         lhs = "double " + eq['name'],
                         op = eq['op'],
-                        rhs = code_generation(eq['rhs'], self.correspondences),
+                        rhs = parser.code_generation(eq['rhs'], self.correspondences),
                         hr = eq['human-readable']
                     )
                 else:
                     code += tpl_eq.substitute(
                         lhs = eq['name'] if eq['name'] in self.parser.shared else eq['name'] + "[i]",
                         op = eq['op'],
-                        rhs = code_generation(eq['rhs'], self.correspondences),
+                        rhs = parser.code_generation(eq['rhs'], self.correspondences),
                         hr = eq['human-readable']
                     )
 

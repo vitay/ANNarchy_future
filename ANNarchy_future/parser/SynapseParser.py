@@ -4,18 +4,18 @@ import logging
 import numpy as np
 import sympy as sp
 
-from .EquationParser import Condition, AssignmentBlock, ODEBlock
-from ..api.Array import Parameter, Variable
-from ..api.Neuron import Neuron
-from ..api.Synapse import Synapse
+
+import ANNarchy_future.api as api
+import ANNarchy_future.parser as parser
+
 
 class SynapseParser(object):
     """Synapse parser.
 
     Attributes:
-        synapse (Synapse): Synapse class.
-        pre(Neuron): pre-synaptic Neuron class.
-        post(Neuron); post.synaptic Neuron class.
+        synapse (api.Synapse): Synapse class.
+        pre (api.Neuron): pre-synaptic Neuron class.
+        post (api.Neuron): post-synaptic Neuron class.
         name (str): name of the Neuron class
         attributes (list): list of attributes (parameters and variables)
         parameters (list): list of parameters
@@ -28,9 +28,9 @@ class SynapseParser(object):
     """
 
     def __init__(self, 
-        synapse:Synapse,
-        pre:Neuron,
-        post:Neuron):
+        synapse:'api.Synapse',
+        pre:'api.Neuron',
+        post:'api.Neuron'):
 
         """Initializes the parser.
 
@@ -82,11 +82,11 @@ class SynapseParser(object):
 
         for attr in current_attributes:
             # Parameter
-            if isinstance(getattr(self.synapse, attr), (Parameter, )):
+            if isinstance(getattr(self.synapse, attr), (api.Parameter, )):
                 self.parameters.append(attr)
                 self.attributes.append(attr)
             # Variable
-            if isinstance(getattr(self.synapse, attr), (Variable, )):
+            if isinstance(getattr(self.synapse, attr), (api.Variable, )):
                 self.variables.append(attr)
                 self.attributes.append(attr)
 
@@ -161,7 +161,7 @@ class SynapseParser(object):
                         blocks.append(_current_assignment_block)
                         _current_assignment_block = None
                     if _current_ODE_block is None:
-                        _current_ODE_block = ODEBlock(self, context.method)
+                        _current_ODE_block = parser.ODEBlock(self, context.method)
                     _current_ODE_block.add(name[1:-3], eq)
 
                 # Assignment block
@@ -170,7 +170,7 @@ class SynapseParser(object):
                         blocks.append(_current_ODE_block)
                         _current_ODE_block = None
                     if _current_assignment_block is None:
-                        _current_assignment_block = AssignmentBlock(self)
+                        _current_assignment_block = parser.AssignmentBlock(self)
                     _current_assignment_block.add(name, eq)
 
             # Append the last block

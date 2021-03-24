@@ -1,6 +1,6 @@
 import numpy as np
 
-from .Array import Parameter, Variable
+import ANNarchy_future.api as api
 from ..parser.Equations import Equations
 
 
@@ -14,7 +14,7 @@ class Neuron(object):
     def Parameter(self, 
         value:float, 
         shared:bool = True,
-        dtype:str='float') -> Parameter:
+        dtype:str='float') -> api.Parameter:
 
         """Defines a parameter for the neuron.
 
@@ -35,7 +35,7 @@ class Neuron(object):
             self._inputs = []
             self._outputs = []
             
-        val = Parameter(init=value, shared=shared, dtype=dtype)
+        val = api.Parameter(init=value, shared=shared, dtype=dtype)
         self._data.append(val)
 
         return val
@@ -45,7 +45,7 @@ class Neuron(object):
         shared:bool = False, 
         input:bool = False, 
         output:bool = False,
-        dtype:str='float') -> Variable:
+        dtype:str='float') -> api.Variable:
 
         """Defines a variable for the neuron.
 
@@ -57,7 +57,7 @@ class Neuron(object):
         Output variables (e.g. firing rates) that may be used in projections with a delay should set `output=True`.
 
         Args:
-            value: initial value.
+            init: initial value.
             shared: locality of the variable.
             input: is it an input variable?
             output: is it an output variable?
@@ -72,10 +72,13 @@ class Neuron(object):
             self._inputs = []
             self._outputs = []
 
-        val = Variable(init=init, shared=shared, dtype=dtype)
+        val = api.Variable(init=init, shared=shared, dtype=dtype)
+        
         self._data.append(val)
+        
         if input:
             self._inputs.append(val)
+        
         if output:
             self._outputs.append(val)
 

@@ -1,6 +1,8 @@
 import sys
 import logging
 
+import numpy as np
+
 from .SimulationInterface import SimulationInterface
 
 class CythonInterface(SimulationInterface):
@@ -29,9 +31,9 @@ class CythonInterface(SimulationInterface):
         """Creates the C++ simulation core instance.
         """
 
-        raise NotImplementedError
+        pass
 
-    def get(self, name:str, attribute:str) ->np.ndarray:
+    def get(self, name:str, attribute:str) -> np.ndarray:
 
         """Returns the value of the `attribute` for the object 
         (Population or Projection) specified by `name`.

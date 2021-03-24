@@ -1,10 +1,6 @@
 
-from .SingleThread import SingleThreadGenerator
-
-from ..communicator.SimulationInterface import SimulationInterface
-from ..communicator.CythonInterface import CythonInterface
-
-
+import ANNarchy_future.generator as generator
+import ANNarchy_future.communicator as communicator
 
 class Compiler(object):
 
@@ -25,7 +21,7 @@ class Compiler(object):
         self.description:dict = description
 
         if backend == "single":
-            self._generator = SingleThreadGenerator(
+            self._generator = generator.SingleThread.SingleThreadGenerator(
                 description
             )
         else:
@@ -46,7 +42,7 @@ class Compiler(object):
 
         pass
 
-    def compile(self) -> SimulationInterface:
+    def compile(self) -> 'communicator.SimulationInterface':
         """
         Compiles the generated code.
 
@@ -64,7 +60,7 @@ class Compiler(object):
         library = None
 
         if self.backend == "single":
-            interface = CythonInterface(library)
+            interface = communicator.CythonInterface(library)
         else:
             raise NotImplementedError
 
