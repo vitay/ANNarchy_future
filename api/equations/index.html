@@ -14,7 +14,7 @@
     
     
       
-        <title>Neuron - ANNarchy</title>
+        <title>Equations - ANNarchy</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#neuron" class="md-skip">
+        <a href="#equations" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Neuron
+              Equations
             
           </span>
         </div>
@@ -309,70 +309,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Neuron
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../neuron/" class="md-nav__link">
         Neuron
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron" class="md-nav__link">
-    ANNarchy_future.api.Neuron.Neuron
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Equations" class="md-nav__link">
-    Equations()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Parameter" class="md-nav__link">
-    Parameter()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Neuron.Neuron.Variable" class="md-nav__link">
-    Variable()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -392,11 +333,77 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../equations/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Equations
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Equations
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.parser.Equations.Equations" class="md-nav__link">
+    ANNarchy_future.parser.Equations.Equations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.parser.Equations.Equations.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.parser.Equations.Equations.cast" class="md-nav__link">
+    cast()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.parser.Equations.Equations.clip" class="md-nav__link">
+    clip()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.parser.Equations.Equations.ite" class="md-nav__link">
+    ite()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -539,21 +546,30 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/vitay/ANNarchy_future/edit/master/docs/api/neuron.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/vitay/ANNarchy_future/edit/master/docs/api/equations.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="neuron">Neuron<a class="headerlink" href="#neuron" title="Permanent link">&para;</a></h1>
+                <h1 id="equations">Equations<a class="headerlink" href="#equations" title="Permanent link">&para;</a></h1>
 
 
   <div class="doc doc-object doc-class">
 
-<a id="ANNarchy_future.api.Neuron.Neuron"></a>
+<a id="ANNarchy_future.parser.Equations.Equations"></a>
     <div class="doc doc-contents first">
 
-      <p>Abstract class defining single neurons.</p>
-<p>TODO</p>
+      <p>Context to define equations. </p>
+<p>It should be primarily used inside a <code>Neuron</code> or <code>Synapse</code> class, 
+but can also be used in a standalone mode by providing a list of attributes:</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">Equations</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">])</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
+
+    <span class="n">n</span><span class="o">.</span><span class="n">dv_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="mf">0.04</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">v</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="o">.</span><span class="n">tau</span>
+
+    <span class="n">n</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">v</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
 
 
 
@@ -568,25 +584,25 @@
 
 
 
+
+
+
   <div class="doc doc-object doc-method">
 
 
 
-<h3 id="ANNarchy_future.api.Neuron.Neuron.Equations" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">)</span></code>
+<h3 id="ANNarchy_future.parser.Equations.Equations.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span> <span class="n">neuron</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">synapse</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
 
-<a href="#ANNarchy_future.api.Neuron.Neuron.Equations" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ANNarchy_future.parser.Equations.Equations.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Returns an Equations context.</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
-
-    <span class="n">n</span><span class="o">.</span><span class="n">dr_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">ge</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="o">.</span><span class="n">tau</span>
-</code></pre></div>
-<p>When opening the context as <code>n</code>, the variable has all attributes 
-(parameters and variables) of the neuron as symbols, which can be combined in Sympy equations.</p>
+      <p>Creates the Equations context.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -599,42 +615,74 @@
     </tr>
   </thead>
   <tbody>
+      <tr>
+        <td><code>symbols</code></td>
+        <td><code>list</code></td>
+        <td><p>list of attributes when in standalone mode.</p></td>
+        <td><code>None</code></td>
+      </tr>
       <tr>
         <td><code>method</code></td>
         <td><code>str</code></td>
         <td><p>numerical method (euler, midpoint, exponential, rk4, event-driven)</p></td>
         <td><code>&#39;euler&#39;</code></td>
       </tr>
+      <tr>
+        <td><code>neuron</code></td>
+        <td><code></code></td>
+        <td><p>Neuron instance (passed by the population).</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>synapse</code></td>
+        <td><code></code></td>
+        <td><p>Synapse instance (passed by the projection).</p></td>
+        <td><code>None</code></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;euler&#39;</span><span class="p">):</span>
+          <summary>Source code in <code>ANNarchy_future/parser/Equations.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">symbols</span> <span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">method</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span>
+    <span class="n">neuron</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+    <span class="n">synapse</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Returns an Equations context.</span>
-
-<span class="sd">    ```python</span>
-<span class="sd">    with self.Equations() as n:</span>
-
-<span class="sd">        n.dr_dt = (n.ge - n.r)/n.tau</span>
-<span class="sd">    ```</span>
-
-<span class="sd">    When opening the context as `n`, the variable has all attributes </span>
-<span class="sd">    (parameters and variables) of the neuron as symbols, which can be combined in Sympy equations.</span>
+    <span class="sd">&quot;&quot;&quot;Creates the Equations context.</span>
 
 <span class="sd">    Args:</span>
+<span class="sd">        symbols: list of attributes when in standalone mode.</span>
 <span class="sd">        method: numerical method (euler, midpoint, exponential, rk4, event-driven)</span>
+<span class="sd">        neuron: Neuron instance (passed by the population).</span>
+<span class="sd">        synapse: Synapse instance (passed by the projection).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">eq</span> <span class="o">=</span> <span class="n">Equations</span><span class="p">(</span><span class="n">neuron</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+    <span class="c1"># Logger</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Equations() created.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_current_eq&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Objects</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_neuron</span> <span class="o">=</span> <span class="n">neuron</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_synapse</span> <span class="o">=</span> <span class="n">synapse</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+    <span class="c1"># Numerical method</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
 
-    <span class="k">return</span> <span class="n">eq</span>
+    <span class="c1"># Built-in symbols</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">symbols_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Standalone mode</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neuron</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synapse</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_symbols</span> <span class="o">=</span> <span class="n">symbols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Custom symbols: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">))</span>
+
+    <span class="c1"># List of tuples (name, Equation)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">equations</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Start recording assignments</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_started</span> <span class="o">=</span> <span class="kc">False</span>
 </code></pre></div>
         </details>
     </div>
@@ -643,21 +691,21 @@
 
 
 
+
+
   <div class="doc doc-object doc-method">
 
 
 
-<h3 id="ANNarchy_future.api.Neuron.Neuron.Parameter" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span></code>
+<h3 id="ANNarchy_future.parser.Equations.Equations.cast" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></code>
 
 
-<a href="#ANNarchy_future.api.Neuron.Neuron.Parameter" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ANNarchy_future.parser.Equations.Equations.cast" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Defines a parameter for the neuron.</p>
-<p>Parameters are defined only once for the whole population by default. 
-If each neuron should have different values, set <code>shared=False</code>. </p>
+      <p>Cast floating point numbers to symbols in order to avoid numerical errors.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -671,70 +719,23 @@ If each neuron should have different values, set <code>shared=False</code>. </p>
   </thead>
   <tbody>
       <tr>
-        <td><code>value</code></td>
+        <td><code>val</code></td>
         <td><code>float</code></td>
-        <td><p>initial value.</p></td>
+        <td></td>
         <td><em>required</em></td>
       </tr>
-      <tr>
-        <td><code>shared</code></td>
-        <td><code>bool</code></td>
-        <td><p>locality of the parameter.</p></td>
-        <td><code>True</code></td>
-      </tr>
-      <tr>
-        <td><code>dtype</code></td>
-        <td><code>str</code></td>
-        <td><p>numerical type of the value ('float', 'int', 'bool').</p></td>
-        <td><code>&#39;float&#39;</code></td>
-      </tr>
-  </tbody>
-</table>
-<p><strong>Returns:</strong></p>
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>Parameter</code></td>
-      <td><p><code>Parameter</code> instance.</p></td>
-    </tr>
   </tbody>
 </table>
         <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-    <span class="n">value</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> 
-    <span class="n">shared</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">Parameter</span><span class="p">:</span>
-
-    <span class="sd">&quot;&quot;&quot;Defines a parameter for the neuron.</span>
-
-<span class="sd">    Parameters are defined only once for the whole population by default. </span>
-<span class="sd">    If each neuron should have different values, set `shared=False`. </span>
+          <summary>Source code in <code>ANNarchy_future/parser/Equations.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span><span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Cast floating point numbers to symbols in order to avoid numerical errors.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value: initial value.</span>
-<span class="sd">        shared: locality of the parameter.</span>
-<span class="sd">        dtype: numerical type of the value (&#39;float&#39;, &#39;int&#39;, &#39;bool&#39;).</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        `Parameter` instance.</span>
+<span class="sd">        val (float): </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_inputs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">val</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
 </code></pre></div>
         </details>
     </div>
@@ -747,123 +748,116 @@ If each neuron should have different values, set <code>shared=False</code>. </p>
 
 
 
-<h3 id="ANNarchy_future.api.Neuron.Neuron.Variable" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span></code>
+<h3 id="ANNarchy_future.parser.Equations.Equations.clip" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
-<a href="#ANNarchy_future.api.Neuron.Neuron.Variable" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ANNarchy_future.parser.Equations.Equations.clip" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Defines a variable for the neuron.</p>
-<p>Variables take a different value for each neuron in the population.
-If a single value is needed, set <code>shared=True</code> to save some memory.</p>
-<p>Variables receiving inputs from a projection (weighted sums, conductances) should set <code>input=True</code>.</p>
-<p>Output variables (e.g. firing rates) that may be used in projections with a delay should set <code>output=True</code>.</p>
+      <p>Sets the lower and upper bounds of a variable.</p>
+<p>Equivalent to:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">min</span>
+    <span class="k">elif</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">max</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">val</span>
+</code></pre></div>
+<p>Args: 
+    val: variable.
+    min: lower bound.
+    max: upper bound.</p>
 
-<p><strong>Parameters:</strong></p>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Default</th>
-    </tr>
-  </thead>
-  <tbody>
-      <tr>
-        <td><code>init</code></td>
-        <td><code>float</code></td>
-        <td><p>initial value.</p></td>
-        <td><code>0.0</code></td>
-      </tr>
-      <tr>
-        <td><code>shared</code></td>
-        <td><code>bool</code></td>
-        <td><p>locality of the variable.</p></td>
-        <td><code>False</code></td>
-      </tr>
-      <tr>
-        <td><code>input</code></td>
-        <td><code>bool</code></td>
-        <td><p>is it an input variable?</p></td>
-        <td><code>False</code></td>
-      </tr>
-      <tr>
-        <td><code>output</code></td>
-        <td><code>bool</code></td>
-        <td><p>is it an output variable?</p></td>
-        <td><code>False</code></td>
-      </tr>
-      <tr>
-        <td><code>dtype</code></td>
-        <td><code>str</code></td>
-        <td><p>numerical type of the variable ('float', 'int', 'bool').</p></td>
-        <td><code>&#39;float&#39;</code></td>
-      </tr>
-  </tbody>
-</table>
-<p><strong>Returns:</strong></p>
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>Variable</code></td>
-      <td><p><code>Variable</code> instance.</p></td>
-    </tr>
-  </tbody>
-</table>
         <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Neuron.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-    <span class="n">init</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">shared</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-    <span class="nb">input</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-    <span class="n">output</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">Variable</span><span class="p">:</span>
+          <summary>Source code in <code>ANNarchy_future/parser/Equations.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span> <span class="nb">min</span><span class="p">:</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span> <span class="nb">max</span><span class="p">:</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sets the lower and upper bounds of a variable.</span>
 
-    <span class="sd">&quot;&quot;&quot;Defines a variable for the neuron.</span>
+<span class="sd">    Equivalent to:</span>
 
-<span class="sd">    Variables take a different value for each neuron in the population.</span>
-<span class="sd">    If a single value is needed, set `shared=True` to save some memory.</span>
+<span class="sd">    ```python</span>
+<span class="sd">    def clip(val, min, max):</span>
+<span class="sd">        if val &lt; min:</span>
+<span class="sd">            return min</span>
+<span class="sd">        elif val &gt; max:</span>
+<span class="sd">            return max</span>
+<span class="sd">        else:</span>
+<span class="sd">            return val</span>
+<span class="sd">    ```</span>
 
-<span class="sd">    Variables receiving inputs from a projection (weighted sums, conductances) should set `input=True`.</span>
+<span class="sd">    Args: </span>
+<span class="sd">        val: variable.</span>
+<span class="sd">        min: lower bound.</span>
+<span class="sd">        max: upper bound.</span>
 
-<span class="sd">    Output variables (e.g. firing rates) that may be used in projections with a delay should set `output=True`.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        init: initial value.</span>
-<span class="sd">        shared: locality of the variable.</span>
-<span class="sd">        input: is it an input variable?</span>
-<span class="sd">        output: is it an output variable?</span>
-<span class="sd">        dtype: numerical type of the variable (&#39;float&#39;, &#39;int&#39;, &#39;bool&#39;).</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        `Variable` instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_inputs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># Do nothing</span>
+        <span class="k">return</span> <span class="n">val</span>
+    <span class="k">elif</span> <span class="nb">min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># Lower bound</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="nb">min</span><span class="p">,</span> <span class="n">val</span><span class="o">&lt;</span><span class="nb">min</span><span class="p">),</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># Upper bound</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="nb">max</span><span class="p">,</span> <span class="n">val</span><span class="o">&gt;</span><span class="nb">max</span><span class="p">),</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Two-sided clip</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="nb">min</span><span class="p">,</span> <span class="n">val</span><span class="o">&lt;</span><span class="nb">min</span><span class="p">),</span> <span class="p">(</span><span class="nb">max</span><span class="p">,</span> <span class="n">val</span><span class="o">&gt;</span><span class="nb">max</span><span class="p">),</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</code></pre></div>
+        </details>
+    </div>
 
-    <span class="n">val</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+  </div>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">input</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+  <div class="doc doc-object doc-method">
 
-    <span class="k">return</span> <span class="n">val</span>
+
+
+<h3 id="ANNarchy_future.parser.Equations.Equations.ite" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">ite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">els</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.parser.Equations.Equations.ite" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>If-then-else ternary operator.</p>
+<p>Equivalent to:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">ite</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">els</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">cond</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">then</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">els</span>
+</code></pre></div>
+<p>Args: 
+    cond: condition.
+    then: returned value when cond is true.
+    else: returned value when cond is false.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/parser/Equations.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">ite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">els</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;If-then-else ternary operator.</span>
+
+<span class="sd">    Equivalent to:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    def ite(cond, then, els):</span>
+<span class="sd">        if cond:</span>
+<span class="sd">            return then</span>
+<span class="sd">        else:</span>
+<span class="sd">            return els</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Args: </span>
+<span class="sd">        cond: condition.</span>
+<span class="sd">        then: returned value when cond is true.</span>
+<span class="sd">        else: returned value when cond is false.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="n">then</span><span class="p">,</span> <span class="n">cond</span><span class="p">),</span> <span class="p">(</span><span class="n">els</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
 </code></pre></div>
         </details>
     </div>
@@ -896,7 +890,7 @@ If a single value is needed, set <code>shared=True</code> to save some memory.</
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../network/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../synapse/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -905,19 +899,19 @@ If a single value is needed, set <code>shared=True</code> to save some memory.</
               <span class="md-footer__direction">
                 Previous
               </span>
-              Network
+              Synapse
             </div>
           </div>
         </a>
       
       
-        <a href="../synapse/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../population/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Synapse
+              Population
             </div>
           </div>
           <div class="md-footer__button md-icon">

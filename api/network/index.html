@@ -208,7 +208,7 @@
   
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        Overview
+        ANNarchy
       </a>
     </li>
   
@@ -357,6 +357,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Network.Network.connect" class="md-nav__link">
+    connect()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Network.Network.step" class="md-nav__link">
+    step()
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -382,8 +396,44 @@
   
   
     <li class="md-nav__item">
+      <a href="../synapse/" class="md-nav__link">
+        Synapse
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../equations/" class="md-nav__link">
+        Equations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../population/" class="md-nav__link">
         Population
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projection/" class="md-nav__link">
+        Projection
       </a>
     </li>
   
@@ -443,8 +493,50 @@
   
 
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+          
         </ul>
       </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../License/" class="md-nav__link">
+        License
+      </a>
     </li>
   
 
@@ -510,14 +602,14 @@
 
 
 
-<h2 id="ANNarchy_future.api.Network.Network.__init__" class="doc doc-heading">
+<h3 id="ANNarchy_future.api.Network.Network.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
   </span>
 
-<a href="#ANNarchy_future.api.Network.Network.__init__" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#ANNarchy_future.api.Network.Network.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -591,21 +683,37 @@ and should stay constant during the whole simulation. </p>
 <span class="sd">        logfile: file to save the logs. stdout if left empty.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="n">dt</span>
 
     <span class="c1"># Logging module: https://docs.python.org/3/howto/logging.html</span>
     <span class="k">if</span> <span class="n">logfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">verbosity_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">])</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="se">\n</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> 
+            <span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> 
+            <span class="n">level</span><span class="o">=</span><span class="n">verbosity_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">]</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">verbosity_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating new network with dt=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="se">\n</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> 
+            <span class="n">level</span><span class="o">=</span><span class="n">verbosity_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating network with dt=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">))</span>
 
     <span class="c1"># List of populations</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># List of used neuron</span>
+    <span class="c1"># List of projections</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_projections</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># List of used neurons</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_neuron_types</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># List of used synapses</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_synapse_types</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Communicator</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div>
         </details>
     </div>
@@ -618,11 +726,11 @@ and should stay constant during the whole simulation. </p>
 
 
 
-<h2 id="ANNarchy_future.api.Network.Network.add" class="doc doc-heading">
+<h3 id="ANNarchy_future.api.Network.Network.add" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">neuron</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
-<a href="#ANNarchy_future.api.Network.Network.add" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#ANNarchy_future.api.Network.Network.add" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -647,8 +755,8 @@ and should stay constant during the whole simulation. </p>
       </tr>
       <tr>
         <td><code>neuron</code></td>
-        <td><code>Neuron</code></td>
-        <td><p>Neuron instance. </p></td>
+        <td><code>api.Neuron</code></td>
+        <td><p><code>Neuron</code> instance. </p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -669,8 +777,8 @@ and should stay constant during the whole simulation. </p>
   </thead>
   <tbody>
     <tr>
-      <td><code>Population</code></td>
-      <td><p>A population instance.</p></td>
+      <td><code>api.Population</code></td>
+      <td><p>A <code>Population</code> instance.</p></td>
     </tr>
   </tbody>
 </table>
@@ -678,40 +786,40 @@ and should stay constant during the whole simulation. </p>
           <summary>Source code in <code>ANNarchy_future/api/Network.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
     <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> 
-    <span class="n">neuron</span><span class="p">:</span> <span class="n">Neuron</span><span class="p">,</span> 
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Population</span><span class="p">:</span>
+    <span class="n">neuron</span><span class="p">:</span> <span class="s1">&#39;api.Neuron&#39;</span><span class="p">,</span> 
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;api.Population&#39;</span><span class="p">:</span>
 
     <span class="sd">&quot;&quot;&quot;Adds a population to the network.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        shape: shape of the population as a single integer or tuple. </span>
-<span class="sd">        neuron: Neuron instance. </span>
+<span class="sd">        neuron: `Neuron` instance. </span>
 <span class="sd">        name: optional name. </span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A population instance.</span>
+<span class="sd">        A `Population` instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">,)</span>
 
     <span class="c1"># Create the population</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding Population(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;).&quot;</span><span class="p">)</span>
-    <span class="n">pop</span> <span class="o">=</span> <span class="n">Population</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">neuron</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding Population(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">neuron</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;).&quot;</span><span class="p">)</span>
+    <span class="n">pop</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">neuron</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">id_pop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="p">)</span>
     <span class="n">pop</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_pop</span><span class="p">)</span>
 
     <span class="c1"># Have the population analyse its attributes</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Analysing the population.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Analysing the population.&quot;</span><span class="p">)</span>
     <span class="n">pop</span><span class="o">.</span><span class="n">_analyse</span><span class="p">()</span>
 
     <span class="c1"># Store the neuron if not done already</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pop</span><span class="o">.</span><span class="n">neuron_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neuron_types</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_neuron_types</span><span class="p">[</span><span class="n">pop</span><span class="o">.</span><span class="n">neuron_class</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_neuron_types</span><span class="p">[</span><span class="n">pop</span><span class="o">.</span><span class="n">neuron_class</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">_parser</span>
 
     <span class="c1"># Store the population</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Population created.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Population created.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pop</span>
 </code></pre></div>
@@ -726,11 +834,11 @@ and should stay constant during the whole simulation. </p>
 
 
 
-<h2 id="ANNarchy_future.api.Network.Network.compile" class="doc doc-heading">
+<h3 id="ANNarchy_future.api.Network.Network.compile" class="doc doc-heading">
 <code class="highlight language-python"><span class="nb">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span></code>
 
 
-<a href="#ANNarchy_future.api.Network.Network.compile" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#ANNarchy_future.api.Network.Network.compile" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -769,22 +877,173 @@ and should stay constant during the whole simulation. </p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
 
     <span class="c1"># Gather all parsed information</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gather_generated_code</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gather_generated_code</span><span class="p">()</span>
 
     <span class="c1"># Create compiler</span>
-    <span class="n">compiler</span> <span class="o">=</span> <span class="n">Compiler</span><span class="p">(</span>
-        <span class="n">description</span><span class="p">,</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_compiler</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">Compiler</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
         <span class="n">backend</span><span class="o">=</span><span class="n">backend</span>
     <span class="p">)</span>
 
-    <span class="c1"># Sanity check</span>
-    <span class="n">compiler</span><span class="o">.</span><span class="n">sanity_check</span><span class="p">()</span>
+    <span class="c1"># Hardware check</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_compiler</span><span class="o">.</span><span class="n">hardware_check</span><span class="p">()</span>
 
     <span class="c1"># Code generation</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_simulation_core</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 
     <span class="c1"># Instantiate the network</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_instantiate</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="ANNarchy_future.api.Network.Network.connect" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">synapse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.api.Network.Network.connect" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Creates a projection by connecting two populations.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>pre</code></td>
+        <td><code>api.Population</code></td>
+        <td><p>pre-synaptic population.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>post</code></td>
+        <td><code>api.Population</code></td>
+        <td><p>post-synaptic population.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>target</code></td>
+        <td><code>str</code></td>
+        <td><p>postsynaptic variable receving the projection.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>synapse</code></td>
+        <td><code>api.Synapse</code></td>
+        <td><p>Synapse instance.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>str</code></td>
+        <td><p>optional name. </p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>api.Projection</code></td>
+      <td><p>A <code>Projection</code> instance.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Network.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">pre</span><span class="p">:</span><span class="s1">&#39;api.Population&#39;</span><span class="p">,</span> 
+    <span class="n">post</span><span class="p">:</span><span class="s1">&#39;api.Population&#39;</span><span class="p">,</span> 
+    <span class="n">target</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> 
+    <span class="n">synapse</span><span class="p">:</span><span class="s1">&#39;api.Synapse&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;api.Projection&#39;</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Creates a projection by connecting two populations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pre: pre-synaptic population.</span>
+<span class="sd">        post: post-synaptic population.</span>
+<span class="sd">        target: postsynaptic variable receving the projection.</span>
+<span class="sd">        synapse: Synapse instance.</span>
+<span class="sd">        name: optional name. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `Projection` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding Projection(&quot;</span> <span class="o">+</span> <span class="n">pre</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">post</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s2">&quot;).&quot;</span><span class="p">)</span>
+
+    <span class="n">proj</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">synapse</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">id_proj</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_projections</span><span class="p">)</span>
+    <span class="n">proj</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_proj</span><span class="p">)</span>
+
+    <span class="c1"># Have the projection analyse its attributes</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Analysing the projection.&quot;</span><span class="p">)</span>
+    <span class="n">proj</span><span class="o">.</span><span class="n">_analyse</span><span class="p">()</span>
+
+    <span class="c1"># Store the neuron if not done already</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">proj</span><span class="o">.</span><span class="n">synapse_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_synapse_types</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_synapse_types</span><span class="p">[</span><span class="n">proj</span><span class="o">.</span><span class="n">synapse_class</span><span class="p">]</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">_parser</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_projections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">proj</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="ANNarchy_future.api.Network.Network.step" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.api.Network.Network.step" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Single simulation step.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Network.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Single simulation step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;step(): the network is not compiled yet.&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </code></pre></div>
         </details>
     </div>

@@ -14,7 +14,7 @@
     
     
       
-        <title>Population - ANNarchy</title>
+        <title>Synapse - ANNarchy</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#population" class="md-skip">
+        <a href="#synapse" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Population
+              Synapse
             
           </span>
         </div>
@@ -321,11 +321,70 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../synapse/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Synapse
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Synapse
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Synapse.Synapse" class="md-nav__link">
+    ANNarchy_future.api.Synapse.Synapse
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Synapse.Synapse.Equations" class="md-nav__link">
+    Equations()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Synapse.Synapse.Parameter" class="md-nav__link">
+    Parameter()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ANNarchy_future.api.Synapse.Synapse.Variable" class="md-nav__link">
+    Variable()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -345,56 +404,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Population
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../population/" class="md-nav__link">
         Population
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Population.Population" class="md-nav__link">
-    ANNarchy_future.api.Population.Population
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ANNarchy_future.api.Population.Population.is_spiking" class="md-nav__link">
-    is_spiking()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -525,68 +539,21 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/vitay/ANNarchy_future/edit/master/docs/api/population.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/vitay/ANNarchy_future/edit/master/docs/api/synapse.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="population">Population<a class="headerlink" href="#population" title="Permanent link">&para;</a></h1>
+                <h1 id="synapse">Synapse<a class="headerlink" href="#synapse" title="Permanent link">&para;</a></h1>
 
 
   <div class="doc doc-object doc-class">
 
-<a id="ANNarchy_future.api.Population.Population"></a>
+<a id="ANNarchy_future.api.Synapse.Synapse"></a>
     <div class="doc doc-contents first">
 
-      <p>Population of neurons.</p>
-<p>Populations should not be created explicitly, but returned by <code>Network.add()</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
-<span class="n">pop</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">LIF</span><span class="p">())</span>
-</code></pre></div>
-
-<p><strong>Attributes:</strong></p>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-      <tr>
-        <td><code>shape</code></td>
-        <td><code>tuple</code></td>
-        <td><p>shape of the population.</p></td>
-      </tr>
-      <tr>
-        <td><code>size</code></td>
-        <td><code>int</code></td>
-        <td><p>number of neurons.</p></td>
-      </tr>
-      <tr>
-        <td><code>name</code></td>
-        <td><code>str</code></td>
-        <td><p>unique name of the population.</p></td>
-      </tr>
-      <tr>
-        <td><code>neuron_class</code></td>
-        <td><code>str</code></td>
-        <td><p>name of the Neuron class</p></td>
-      </tr>
-  </tbody>
-</table>      <p>Additionaly, all parameters and variables of the neuron type are accessible as attributes:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Leaky</span><span class="p">(</span><span class="n">Neuron</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="mf">20.</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-
-<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
-<span class="n">pop</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Leaky</span><span class="p">())</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="c1"># 20.</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">r</span><span class="p">)</span> <span class="c1"># [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</span>
-</code></pre></div>
+      <p>Abstract class defining single synapses.</p>
+<p>TODO</p>
 
 
 
@@ -601,7 +568,81 @@
 
 
 
+  <div class="doc doc-object doc-method">
 
+
+
+<h3 id="ANNarchy_future.api.Synapse.Synapse.Equations" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.api.Synapse.Synapse.Equations" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns an Equations context.</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+
+    <span class="n">s</span><span class="o">.</span><span class="n">w</span> <span class="o">+=</span> <span class="n">s</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="o">.</span><span class="n">r</span>
+</code></pre></div>
+<p>When opening the context as <code>s</code>, the variable has all attributes 
+(parameters and variables) of the synapse as symbols, which can be combined in Sympy equations.</p>
+<p>The attributes of the pre- and post-synaptic neurons are accessible under <code>s.pre</code> and <code>s.post</code>.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>method</code></td>
+        <td><code>str</code></td>
+        <td><p>numerical method (euler, midpoint, exponential, rk4, event-driven)</p></td>
+        <td><code>&#39;euler&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Synapse.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Equations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;euler&#39;</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Returns an Equations context.</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    with self.Equations() as s:</span>
+
+<span class="sd">        s.w += s.eta * s.pre.r * s.post.r</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    When opening the context as `s`, the variable has all attributes </span>
+<span class="sd">    (parameters and variables) of the synapse as symbols, which can be combined in Sympy equations.</span>
+
+<span class="sd">    The attributes of the pre- and post-synaptic neurons are accessible under `s.pre` and `s.post`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method: numerical method (euler, midpoint, exponential, rk4, event-driven)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">Equations</span><span class="p">(</span><span class="n">synapse</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_current_eq&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_eq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">eq</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
@@ -609,21 +650,188 @@
 
 
 
-<h3 id="ANNarchy_future.api.Population.Population.is_spiking" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">is_spiking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+<h3 id="ANNarchy_future.api.Synapse.Synapse.Parameter" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span></code>
 
 
-<a href="#ANNarchy_future.api.Population.Population.is_spiking" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ANNarchy_future.api.Synapse.Synapse.Parameter" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
-      <p>Returns True if the neuron type is spiking.</p>
+      <p>Defines a parameter for the synapse.</p>
+<p>Parameters are defined only once for the whole projection by default. 
+If each neuron should have different values, set <code>shared=False</code>. </p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>float</code></td>
+        <td><p>initial value.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>shared</code></td>
+        <td><code>bool</code></td>
+        <td><p>locality of the parameter.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>dtype</code></td>
+        <td><code>str</code></td>
+        <td><p>numerical type of the value ('float'', 'int', 'bool')</p></td>
+        <td><code>&#39;float&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Parameter</code></td>
+      <td><p><code>Parameter</code> instance.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
-          <summary>Source code in <code>ANNarchy_future/api/Population.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">is_spiking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="s2">&quot;Returns True if the neuron type is spiking.&quot;</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neuron_type</span><span class="o">.</span><span class="n">is_spiking</span><span class="p">()</span>
+          <summary>Source code in <code>ANNarchy_future/api/Synapse.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">value</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> 
+    <span class="n">shared</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">Parameter</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Defines a parameter for the synapse.</span>
+
+<span class="sd">    Parameters are defined only once for the whole projection by default. </span>
+<span class="sd">    If each neuron should have different values, set `shared=False`. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: initial value.</span>
+<span class="sd">        shared: locality of the parameter.</span>
+<span class="sd">        dtype: numerical type of the value (&#39;float&#39;&#39;, &#39;int&#39;, &#39;bool&#39;)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `Parameter` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">val</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="ANNarchy_future.api.Synapse.Synapse.Variable" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span></code>
+
+
+<a href="#ANNarchy_future.api.Synapse.Synapse.Variable" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Defines a variable for the synapse.</p>
+<p>Variables take a different value for each synapse in the projection by default.
+If a single value for the whole projection is needed, set <code>shared=True</code> to save some memory.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>init</code></td>
+        <td><code>float</code></td>
+        <td><p>initial value.</p></td>
+        <td><code>0.0</code></td>
+      </tr>
+      <tr>
+        <td><code>shared</code></td>
+        <td><code>bool</code></td>
+        <td><p>locality of the variable.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>dtype</code></td>
+        <td><code>str</code></td>
+        <td><p>numerical type of the value ('float', 'int', 'bool').</p></td>
+        <td><code>&#39;float&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Variable</code></td>
+      <td><p><code>Variable</code> instance.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>ANNarchy_future/api/Synapse.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">Variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">init</span><span class="p">:</span><span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">shared</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="n">dtype</span><span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">Variable</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Defines a variable for the synapse.</span>
+
+<span class="sd">    Variables take a different value for each synapse in the projection by default.</span>
+<span class="sd">    If a single value for the whole projection is needed, set `shared=True` to save some memory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        init: initial value.</span>
+<span class="sd">        shared: locality of the variable.</span>
+<span class="sd">        dtype: numerical type of the value (&#39;float&#39;, &#39;int&#39;, &#39;bool&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `Variable` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="n">shared</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">val</span>
 </code></pre></div>
         </details>
     </div>
@@ -656,7 +864,7 @@
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../equations/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../neuron/" class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -665,19 +873,19 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Equations
+              Neuron
             </div>
           </div>
         </a>
       
       
-        <a href="../projection/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../equations/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Projection
+              Equations
             </div>
           </div>
           <div class="md-footer__button md-icon">

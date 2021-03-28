@@ -208,7 +208,7 @@
   
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        Overview
+        ANNarchy
       </a>
     </li>
   
@@ -375,8 +375,44 @@
   
   
     <li class="md-nav__item">
+      <a href="../../api/synapse/" class="md-nav__link">
+        Synapse
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/equations/" class="md-nav__link">
+        Equations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api/population/" class="md-nav__link">
         Population
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/projection/" class="md-nav__link">
+        Projection
       </a>
     </li>
   
@@ -436,8 +472,50 @@
   
 
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+          
         </ul>
       </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../License/" class="md-nav__link">
+        License
+      </a>
     </li>
   
 
@@ -514,12 +592,6 @@
 <div class="highlight"><pre><span></span><code><span class="n">pop1</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">Izhikevich</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">))</span>
 <span class="n">pop2</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">Izhikevich</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">))</span>
 </code></pre></div>
-<p>There is no explicit distinction between parameters and variables anymore, but between <code>Values</code> and <code>Arrays</code>:</p>
-<ul>
-<li>Values take a single value for the whole population.</li>
-<li>Arrays take one value per neuron.</li>
-</ul>
-<p>An attribute is a variable if it is modified in <code>update()</code>, otherwise it is a parameter...</p>
 <p>Rate-coded neurons only need to define <code>update()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">RateCoded</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">Neuron</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -528,18 +600,18 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># n will contain all variables of the model as sympy symbols, </span>
         <span class="c1"># plus some operations (ite = if/then/else)</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
 
             <span class="c1"># One can declare intermediary variables </span>
             <span class="c1"># that won&#39;t be allocated in memory!</span>
@@ -556,17 +628,21 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">V_th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;V_th&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V_th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;V_th&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">()</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
 
             <span class="n">n</span><span class="o">.</span><span class="n">dv_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">ge</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">tau</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">Equations</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;exponential&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">n</span><span class="p">:</span>
+
+            <span class="n">n</span><span class="o">.</span><span class="n">dge_dt</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="o">.</span><span class="n">ge</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">tau</span>
 
 
     <span class="k">def</span> <span class="nf">spike</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -581,7 +657,7 @@
 
             <span class="n">n</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div>
-<p>The <code>Equations()</code> context provides <code>sympy</code> symbols for each value/array of the neuron, plus some specific ones (<code>t</code>, <code>dt</code>, <code>spike</code> for spike emission, etc).</p>
+<p>The <code>Equations()</code> context provides <code>sympy</code> symbols for each parameter/variable of the neuron, plus some specific ones (<code>t</code>, <code>dt</code>, <code>spike</code> for spike emission, etc).</p>
 <p>Derivatives are symbolically set as <code>dX_dt</code>.</p>
 <p>All sympy operations (math <code>C99</code>) can be used.</p>
 <h2 id="areas">Areas<a class="headerlink" href="#areas" title="Permanent link">&para;</a></h2>
@@ -641,7 +717,7 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Overview
+              ANNarchy
             </div>
           </div>
         </a>
