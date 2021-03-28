@@ -60,6 +60,7 @@ class Population(object):
         # Internal stuff
         self._net = None
         self._attributes = {}
+        self._instantiated = False
 
         self._logger = logging.getLogger(__name__)
         self._logger.info("Population created with " + str(self.size) + " neurons.")
@@ -109,10 +110,14 @@ class Population(object):
     # Hacks for access to attributes
     ###########################################################################
     def __getattribute__(self, name):
-        if name in ['attributes']:
+        if name in ['attributes', '_instantiated']:
             return object.__getattribute__(self, name)
         else:
-            if hasattr(self, 'attributes') and name in self.attributes:
+            # After compile()
+            if self._instantiated and name in self.attributes:
+                return self._net._interface.get_population(self._id_pop, name)
+            # Before compile()
+            elif hasattr(self, 'attributes') and name in self.attributes:
                 return self._attributes[name].get_value()
         return object.__getattribute__(self, name)
 

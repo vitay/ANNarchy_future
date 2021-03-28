@@ -46,15 +46,22 @@ class Network(object):
             logfile: file to save the logs. stdout if left empty.
         """
 
-        self.dt = dt
+        self.dt:float = dt
 
         # Logging module: https://docs.python.org/3/howto/logging.html
         if logfile is not None:
-            logging.basicConfig(filename=logfile, level=verbosity_levels[verbose])
+            logging.basicConfig(
+                format='%(levelname)s - %(name)s\n%(message)s', 
+                filename=logfile, 
+                level=verbosity_levels[verbose]
+            )
         else:
-            logging.basicConfig(level=verbosity_levels[verbose])
+            logging.basicConfig(
+                format='%(levelname)s - %(name)s\n%(message)s', 
+                level=verbosity_levels[verbose]
+            )
         self._logger = logging.getLogger(__name__)
-        self._logger.info("Creating new network with dt="+str(self.dt))
+        self._logger.info("Creating network with dt="+str(self.dt))
 
         # List of populations
         self._populations = []
@@ -67,6 +74,9 @@ class Network(object):
 
         # List of used synapses
         self._synapse_types = {}
+
+        # Communicator
+        self._interface = None
 
     ###########################################################################
     # Interface
@@ -165,7 +175,7 @@ class Network(object):
 
         # Create compiler
         self._compiler = generator.Compiler(
-            self._description,
+            self,
             backend=backend
         )
 
@@ -173,10 +183,19 @@ class Network(object):
         self._compiler.hardware_check()
 
         # Code generation
-        self._simulation_core = self._compiler.compile()
+        self._interface = self._compiler.compile()
 
         # Instantiate the network
         self._instantiate()
+
+    def step(self):
+        """Single simulation step.
+        """
+        if self._interface is None:
+            self._logger.error("step(): the network is not compiled yet.")
+            sys.exit(1)
+
+        self._interface.step()
 
     ###########################################################################
     # Internals
@@ -196,8 +215,16 @@ class Network(object):
         """Instantiates the C++ kernel."""
 
         # Instantiate the kernel
-        self._simulation_core.instantiate()
+        self._interface.instantiate()
 
-        # Initialize attributes
+        # Create C++ populations and initialize attributes
+        for pop in self._populations:
+            self._interface.add_population(pop)
+            for attribute in pop.attributes:
+                self._interface.set_population(pop._id_pop, attribute, getattr(pop, attribute))
+
+
 
         # Tell all objects (pop or proj) that they should use the SimulationInterface from now on.
+        for pop in self._populations:
+            pop._instantiated = True

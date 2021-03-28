@@ -98,7 +98,7 @@ class Equations(object):
                     self.symbols['d'+attr+'_dt'] = symbol
                     setattr(self, 'd'+attr+'_dt', symbol)
 
-            self._logger.info("Neuron symbols: " + str(self.symbols))
+            self._logger.debug("Neuron symbols: " + str(self.symbols))
 
         elif self._synapse is not None:
 
@@ -129,7 +129,7 @@ class Equations(object):
                 self.symbols["post."+attr] = symbol
                 setattr(self.post, attr, symbol)
 
-            self._logger.info("Synapse symbols: " + str(self.symbols))
+            self._logger.debug("Synapse symbols: " + str(self.symbols))
 
         else: # Custom set of variables
             for attr in self._custom_symbols:
@@ -149,7 +149,6 @@ class Equations(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         
-        self._logger.info("Equations:")
         self._logger.info(str(self))
 
     def __str__(self):

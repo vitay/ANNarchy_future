@@ -1,24 +1,26 @@
 import sys
 import logging
+import imp
 
 import numpy as np
 
-from .SimulationInterface import SimulationInterface
+import ANNarchy_future.api as api
+import ANNarchy_future.communicator as communicator
 
-class CythonInterface(SimulationInterface):
+class CythonInterface(communicator.SimulationInterface):
 
     """Class managing communication with the kernel through a simple cython wrapper.
 
     """
 
-    def __init__(self, library:str):
+    def __init__(self, net:'api.Network', library:str):
         
         """
         Args:
-
+            net: Python network.
             library: path to the .so library.
         """
-
+        self.net = net
         self.library:str = library
 
         # Logger
@@ -30,32 +32,49 @@ class CythonInterface(SimulationInterface):
         
         """Creates the C++ simulation core instance.
         """
+        self.cython_module = imp.load_dynamic(
+                self.library, # Name of the network
+                "./annarchy/"+self.library+".so" # Path to the library
+        )
+        self._instance = self.cython_module.Network()
 
-        pass
+    def add_population(self, pop:'api.Population'):
+        """Instantiates a C++ Population.
 
-    def get(self, name:str, attribute:str) -> np.ndarray:
+        """
+        # Create population
+        getattr(self._instance, "_add_"+ pop.neuron_class)(pop.size, self.net.dt)
+        
 
-        """Returns the value of the `attribute` for the object 
-        (Population or Projection) specified by `name`.
+    def get_population(self, id_pop:int, attribute:str) -> np.ndarray:
+
+        """Returns the value of the `attribute` for the population of ID `id_pop`.
 
         Args:
 
-            name: unique name of the object.
+            id_pop: ID of the population.
             attribute: unique name of the attribute.
         """
 
-        raise NotImplementedError
+        return getattr(self._instance.population(id_pop), attribute)
 
-    def set(self, name:str, attribute:str, value:np.ndarray):
+    def set_population(self, id_pop:int, attribute:str, value:np.ndarray):
 
-        """Sets the value of the `attribute` to `value` for the object 
-        (Population or Projection) specified by `name`.
+        """Sets the value of the `attribute` to `value` for the population `id_pop`.
         
         Args:
 
-            name: unique name of the object.
+            id_pop: ID of the population.
             attribute: unique name of the attribute.
-            value: value to be set o the attribute.
+            value: value to be set to the attribute.
         """
 
-        raise NotImplementedError
+        setattr(self._instance.population(id_pop), attribute, value)
+
+    def step(self):
+
+        """Single step.
+
+        """
+
+        self._instance.step()

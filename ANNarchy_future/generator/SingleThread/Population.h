@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ANNarchy.h"
+
 class $class_name {
     public:
 

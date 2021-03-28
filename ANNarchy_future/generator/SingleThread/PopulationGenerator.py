@@ -108,11 +108,11 @@ class PopulationGenerator(object):
             # Declare spike arrays
             declared_spiking = """
     // Spiking neuron
-    std::vector<int> spike;"""
+    std::vector<int> spikes;"""
 
             initialize_spiking = """
         // Spiking neuron
-        this->spike = std::vector<int>(0)"""
+        this->spikes = std::vector<int>(0);"""
 
             # Spike method
             spike_method = self.spike()
@@ -148,7 +148,7 @@ class PopulationGenerator(object):
 
         # Block template
         tlp_block = Template("""
-        for(unsigned int i = 0; i< this->size(); i++){
+        for(unsigned int i = 0; i< this->size; i++){
 $update
         }""")
 
@@ -196,7 +196,7 @@ $update
     void spike(){
         for(unsigned int i = 0; i< this->size; i++){
             if ($condition){
-                this->spike.push_back(i);
+                this->spikes.push_back(i);
             }
         }
     }
@@ -219,8 +219,8 @@ $update
         tpl_reset = Template("""
     // Reset
     void reset(){
-        for(unsigned int idx = 0; idx< this->spike.size(); idx++){
-            int i = this->spike[idx];
+        for(unsigned int idx = 0; idx< this->spikes.size(); idx++){
+            int i = this->spikes[idx];
 $reset
         }
     }
@@ -244,3 +244,115 @@ $reset
                 )
 
         return tpl_reset.substitute(reset=code)
+
+
+    def cython_export(self):
+        """Generates declaration of the C++ class for Cython.
+
+        """
+        
+        # Parameters
+        parameters = ""
+        for attr in self.parser.parameters:
+            if attr in self.parser.shared:
+                parameters += Template(
+                    "        double $attr\n").substitute(attr=attr)
+            else:
+                parameters += Template(
+                    "        vector[double] $attr\n").substitute(attr=attr)
+
+        # Variables
+        variables = ""
+        for attr in self.parser.variables:
+            if attr in self.parser.shared:
+                variables += Template(
+                    "        double $attr\n").substitute(attr=attr)
+            else:
+                variables += Template(
+                    "        vector[double] $attr\n").substitute(attr=attr)
+
+
+        code = Template("""
+    # $name
+    cdef cppclass $name :
+        # Constructor
+        $name(int, double) except +
+        # Number of neurons
+        int size
+        # Neural equations
+        void update()
+        # Reset the population
+        void reset()
+        # Parameters
+$parameters
+        # Variables
+$variables
+""").substitute(
+        name=self.name,
+        parameters=parameters,
+        variables=variables,
+        )
+
+        return code
+
+    def cython_wrapper(self):
+
+        tpl = Template("""
+    property $attr:
+        def __get__(self):
+            return self.instance.$attr
+        def __set__(self, vector[double] value): 
+            self.instance.$attr = value
+""")
+       
+        tpl_shared = Template("""
+    property $attr:
+        def __get__(self):
+            return self.instance.$attr
+        def __set__(self, double value): 
+            self.instance.$attr = value
+""")
+        
+        # Parameters
+        parameters = ""
+        for attr in self.parser.parameters:
+            if attr in self.parser.shared:
+                parameters += tpl_shared.substitute(attr=attr)
+            else:
+                parameters += tpl.substitute(attr=attr)
+
+        # Variables
+        variables = ""
+        for attr in self.parser.variables:
+            if attr in self.parser.shared:
+                variables += tpl_shared.substitute(attr=attr)
+            else:
+                variables += tpl.substitute(attr=attr)
+
+
+
+        code = Template("""
+cdef class py$name(object):
+
+    cdef $name* instance
+
+    def __cinit__(self, int size, double dt):
+        self.instance = new $name(size, dt)
+
+    def update(self):
+        self.instance.update()
+
+    property size:
+        def __get__(self):
+            return self.instance.size
+        def __set__(self, int value): 
+            self.instance.size = value
+            
+$parameters
+$variables
+""")
+        return code.substitute(
+            name=self.name,
+            parameters=parameters,
+            variables=variables,
+        )
