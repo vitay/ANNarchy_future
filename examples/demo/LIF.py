@@ -14,6 +14,7 @@ class LIF(ann.Neuron):
 
         self.tau = self.Parameter(params['tau'])
         self.V_th = self.Parameter(params['V_th'])
+        self.I = self.Parameter(2.0)
 
         self.ge = self.Variable(init=0.0, input=True)
         self.v = self.Variable(init=0.0)
@@ -23,7 +24,7 @@ class LIF(ann.Neuron):
 
         with self.Equations(method='midpoint') as n:
 
-            n.dv_dt = (n.ge - n.u - n.v) / n.tau
+            n.dv_dt = (n.ge + n.I - n.u - n.v) / n.tau
             n.du_dt = (n.v - n.u) / n.tau
 
             n.dge_dt = (-n.ge) / n.tau
@@ -42,8 +43,15 @@ class LIF(ann.Neuron):
 
 net = ann.Network(verbose=1)
 #net = ann.Network(verbose=3, logfile="test.log") # for debugging
-pop = net.add(100, LIF({'tau': 20., 'V_th': 1.0}))
+pop = net.add(1, LIF({'tau': 20., 'V_th': 1.0}))
 
 net.compile()
 
-print(pop.v)
+vs = [pop.v[0]]
+
+for t in range(200):
+    net.step()
+    vs.append(pop.v[0])
+
+plt.plot(vs)
+plt.show()

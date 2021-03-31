@@ -2,6 +2,8 @@ import sys
 import logging
 import textwrap
 
+import numpy as np
+
 import ANNarchy_future.api as api
 from ..parser.NeuronParser import NeuronParser
 
@@ -113,12 +115,13 @@ class Population(object):
         if name in ['attributes', '_instantiated']:
             return object.__getattribute__(self, name)
         else:
-            # After compile()
-            if self._instantiated and name in self.attributes:
-                return self._net._interface.get_population(self._id_pop, name)
-            # Before compile()
-            elif hasattr(self, 'attributes') and name in self.attributes:
-                return self._attributes[name].get_value()
+            if hasattr(self, 'attributes') and name in self.attributes:
+                # After compile()
+                if self._instantiated:
+                    return self._reshape(self._net._interface.population_get(self._id_pop, name))
+                # Before compile()
+                else:
+                    return self._attributes[name].get_value()
         return object.__getattribute__(self, name)
 
     def __setattr__(self, name, value):
@@ -127,6 +130,29 @@ class Population(object):
             self._attributes[name].set_value(value)
         else:
             object.__setattr__(self, name, value)
+
+    def _reshape(self, array:np.ndarray) -> np.ndarray:
+        "Reshapes the parameter/variable to match the shape of the population"
+        if isinstance(array, np.ndarray):
+            try:
+                new_array = array.reshape(self.shape)
+            except:
+                self._logger.exception(
+                    "The provided array of shape {} does not match the shape {} of the population."
+                    .format(str(array.shape), str(self.shape)))
+                sys.exit(1)
+            return new_array
+        elif isinstance(array, list):
+            try:
+                new_array = np.array(array).reshape(self.shape)
+            except:
+                self._logger.exception(
+                    "The provided list of shape {} does not match the shape {} of the population."
+                    .format(len(array), str(self.shape)))
+                sys.exit(1)
+            return new_array
+        else: # shared variable
+            return array
 
     def __str__(self):
         s = str("Population at " + hex(id(self))) + "\n"

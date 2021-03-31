@@ -217,7 +217,10 @@ $neuron_export
 from ANNarchyBindings cimport $name""").substitute(name=name)
 
         self.cython_network = Template("""# distutils: language = c++
+cimport cython
 from libcpp.vector cimport vector
+cimport numpy as np
+import numpy as np
 
 $neuron_imports
 
@@ -237,10 +240,18 @@ cdef class Network(object):
     def population(self, int idx):
         return self.populations[idx]
 
+    @cython.boundscheck(False) # turn off bounds-checking for entire function
+    @cython.wraparound(False)  # turn off negative index wrapping for entire function
     def step(self):
         # Neural updates
         for pop in self.populations:
             pop.update()
+        # Spike emission
+        for pop in self.populations:
+            pop.spike()
+        # Reset
+        for pop in self.populations:
+            pop.reset()
 
 $population_creator
 

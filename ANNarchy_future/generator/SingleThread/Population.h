@@ -32,7 +32,15 @@ $declared_spiking
 $update_method
     };
 
+
+    // Spike emission
+    void spike(){
 $spike_method
+    };
+
+    // Reset after spike
+    void reset(){
 $reset_method
+    };
 
 };

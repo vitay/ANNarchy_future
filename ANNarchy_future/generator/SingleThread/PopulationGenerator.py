@@ -187,19 +187,17 @@ $update
         
         Returns:
 
-            the whole `spike()` C++ method.
+            the content of the `spike()` C++ method.
 
         """
 
         tpl_spike = Template("""
-    // Spike emission
-    void spike(){
+        this->spikes.clear();
         for(unsigned int i = 0; i< this->size; i++){
             if ($condition){
                 this->spikes.push_back(i);
             }
         }
-    }
         """)
 
         cond = parser.code_generation(self.parser.spike_condition.equation['eq'], self.correspondences)
@@ -212,18 +210,15 @@ $update
         
         Returns:
 
-            the whole `reset()` C++ method.
+            the content of the `reset()` C++ method.
 
         """
 
         tpl_reset = Template("""
-    // Reset
-    void reset(){
         for(unsigned int idx = 0; idx< this->spikes.size(); idx++){
             int i = this->spikes[idx];
 $reset
         }
-    }
         """)
 
         # Equation template
@@ -281,6 +276,8 @@ $reset
         int size
         # Neural equations
         void update()
+        # Spike emission
+        void spike()
         # Reset the population
         void reset()
         # Parameters
@@ -341,6 +338,14 @@ cdef class py$name(object):
 
     def update(self):
         self.instance.update()
+
+
+    def spike(self):
+        self.instance.spike()
+
+
+    def reset(self):
+        self.instance.reset()
 
     property size:
         def __get__(self):

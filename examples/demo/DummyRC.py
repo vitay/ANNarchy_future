@@ -24,17 +24,17 @@ class RC(ann.Neuron):
             n.du_dt = (1.0 + n.r - n.u) / n.tau
 
 net = ann.Network()
-pop = net.add(1, RC({'tau': 20.0}))
+pop = net.add((2, 2), RC({'tau': 20.0}))
 
 net.compile()
 
 print(pop.tau)
 
-vs = [pop.r[0]]
+vs = [pop.r[1,1]]
 
 for t in range(200):
     net.step()
-    vs.append(pop.r[0])
+    vs.append(pop.r[1,1])
 
 plt.plot(vs)
 plt.show()

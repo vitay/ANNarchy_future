@@ -221,7 +221,7 @@ class Network(object):
         for pop in self._populations:
             self._interface.add_population(pop)
             for attribute in pop.attributes:
-                self._interface.set_population(pop._id_pop, attribute, getattr(pop, attribute))
+                self._interface.population_set(pop._id_pop, attribute, getattr(pop, attribute))
 
 
 

@@ -46,7 +46,7 @@ class CythonInterface(communicator.SimulationInterface):
         getattr(self._instance, "_add_"+ pop.neuron_class)(pop.size, self.net.dt)
         
 
-    def get_population(self, id_pop:int, attribute:str) -> np.ndarray:
+    def population_get(self, id_pop:int, attribute:str) -> np.ndarray:
 
         """Returns the value of the `attribute` for the population of ID `id_pop`.
 
@@ -58,7 +58,7 @@ class CythonInterface(communicator.SimulationInterface):
 
         return getattr(self._instance.population(id_pop), attribute)
 
-    def set_population(self, id_pop:int, attribute:str, value:np.ndarray):
+    def population_set(self, id_pop:int, attribute:str, value:np.ndarray):
 
         """Sets the value of the `attribute` to `value` for the population `id_pop`.
         
