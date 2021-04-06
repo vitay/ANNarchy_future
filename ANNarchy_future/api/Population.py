@@ -127,7 +127,12 @@ class Population(object):
     def __setattr__(self, name, value):
 
         if hasattr(self, 'attributes') and name in self.attributes:
-            self._attributes[name].set_value(value)
+            # After compile()
+            if self._instantiated:
+                self._net._interface.population_set(self._id_pop, name, self._to_numpy(name, value))
+            # Before compile()
+            else:
+                self._attributes[name].set_value(value)
         else:
             object.__setattr__(self, name, value)
 
@@ -153,6 +158,43 @@ class Population(object):
             return new_array
         else: # shared variable
             return array
+
+    def _flatten(self, attribute:str) -> np.ndarray:
+        "Transforms an attribute array into a 1D list. Does nothing for shared variables."
+        value = self._attributes[attribute].get_value()
+        if isinstance(value, np.ndarray):
+            return value.flatten()
+        elif isinstance(value, (float, int, bool)):
+            return value
+        return value
+
+    def _to_numpy(self, name, value):
+        "Processes a new value of an attribute to make sure it is shared or 1D."
+        # 
+        if name in self._parser.shared:
+            if not isinstance(value, (float, int, bool)):
+                self._logger.error("Shared attributes expect a single value.")
+                sys.exit(1)
+
+            return value
+
+        if isinstance(value, np.ndarray):
+            if not value.shape == self.shape and not value.size == self.size:
+                self._logger.error("Shapes do not match.")
+                sys.exit(1)
+            return value.flatten()
+
+        elif isinstance(value, list):
+            value = np.array(value)
+            if not value.shape == self.shape and not value.size == self.size:
+                self._logger.error("Shapes do not match.")
+                sys.exit(1)
+            return value.flatten()
+            
+        elif isinstance(value, (float, int, bool)):
+            return np.full(self.size, value)
+
+            
 
     def __str__(self):
         s = str("Population at " + hex(id(self))) + "\n"

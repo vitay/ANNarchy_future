@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import sympy as sp
 
+import ANNarchy_future.api as api
 import ANNarchy_future.parser as parser
 
 class PreNeuron(object):
@@ -17,6 +18,13 @@ class PostNeuron(object):
     Placeholder for postsynaptic attributes.
     """
     pass
+
+class StandaloneObject(object):
+    """
+    Mimicks a Neuron or Synapse in standalone mode.
+    """
+    def __init__(self, attributes):
+        self.attributes = attributes
 
 class Equations(object):
 
@@ -57,9 +65,23 @@ class Equations(object):
         self._logger = logging.getLogger(__name__)
         self._logger.debug("Equations() created.")
 
-        # Objects
-        self._neuron = neuron
-        self._synapse = synapse
+        
+        # Standalone mode
+        if neuron is None and synapse is None and symbols is not None:
+            self.object = StandaloneObject(symbols)
+            self.object.random_variables = {}
+            self._logger.info("Custom symbols: " + str(symbols))
+        elif neuron is not None:
+            self.object = neuron
+            if not hasattr(neuron, 'random_variables'):
+                self.object.random_variables = {}
+        elif synapse is not None:
+            self.object = synapse
+            if not hasattr(synapse, 'random_variables'):
+                self.object.random_variables = {}
+        else:
+            self._logger.error("Equations() except one argument among `symbols`, `neuron` and `synapse`.")
+            sys.exit(1)
 
         # Numerical method
         self.method = method
@@ -67,13 +89,11 @@ class Equations(object):
         # Built-in symbols
         self.symbols = parser.symbols_dict.copy()
         
-        # Standalone mode
-        if self._neuron is None and self._synapse is None:
-            self._custom_symbols = symbols
-            self._logger.info("Custom symbols: " + str(symbols))
-        
         # List of tuples (name, Equation)
         self.equations = []
+
+        # List of random variables
+        self.random_variables = {}
 
         # Start recording assignments
         self._started = False
@@ -84,15 +104,15 @@ class Equations(object):
 
     def __enter__(self):
 
-        if self._neuron is not None:
+        if isinstance(self.object, api.Neuron):
 
-            for attr in self._neuron.attributes:
+            for attr in self.object.attributes:
                 # Symbol
                 symbol = sp.Symbol(attr)
                 self.symbols[attr] = symbol
                 setattr(self, attr, symbol)
 
-                if attr in self._neuron._parser.variables:
+                if attr in self.object._parser.variables:
                     # Add derivative
                     symbol = sp.Symbol("d" + attr + "/dt")
                     self.symbols['d'+attr+'_dt'] = symbol
@@ -100,15 +120,15 @@ class Equations(object):
 
             self._logger.debug("Neuron symbols: " + str(self.symbols))
 
-        elif self._synapse is not None:
+        elif isinstance(self.object, api.Synapse):
 
-            for attr in self._synapse.attributes:
+            for attr in self.object.attributes:
                 # Symbol
                 symbol = sp.Symbol(attr)
                 self.symbols[attr] = symbol
                 setattr(self, attr, symbol)
 
-                if attr in self._synapse._parser.variables:
+                if attr in self.object._parser.variables:
                     # Add derivative
                     symbol = sp.Symbol("d" + attr + "/dt")
                     self.symbols['d'+attr+'_dt'] = symbol
@@ -117,13 +137,13 @@ class Equations(object):
             self.pre = PreNeuron()
             self.post = PostNeuron()
 
-            for attr in self._synapse.pre_attributes:
+            for attr in self.object.pre_attributes:
                 # Symbol
                 symbol = sp.Symbol("pre."+attr)
                 self.symbols["pre."+attr] = symbol
                 setattr(self.pre, attr, symbol)
 
-            for attr in self._synapse.post_attributes:
+            for attr in self.object.post_attributes:
                 # Symbol
                 symbol = sp.Symbol("post."+attr)
                 self.symbols["post."+attr] = symbol
@@ -132,7 +152,7 @@ class Equations(object):
             self._logger.debug("Synapse symbols: " + str(self.symbols))
 
         else: # Custom set of variables
-            for attr in self._custom_symbols:
+            for attr in self.object.attributes:
                 # Symbol
                 symbol = sp.Symbol(attr)
                 self.symbols[attr] = symbol
@@ -153,6 +173,8 @@ class Equations(object):
 
     def __str__(self):
         string = ""
+        for name, dist in self.random_variables.items():
+            string += name + " = " + dist.human_readable() + "\n"
         for var, eq in self.equations:
             string += sp.ccode(self.symbols[var]) + " = " + sp.ccode(eq) + "\n"
         return string
@@ -176,6 +198,15 @@ class Equations(object):
     ###########################################################################
     # Built-in vocabulary
     ###########################################################################
+    @property
+    def t(self):
+        "Current time in ms."
+        return self.symbols['t']
+
+    @property
+    def dt(self):
+        "Step size in ms."
+        return self.symbols['dt']
 
     def ite(self, cond, then, els):
         """If-then-else ternary operator.
@@ -238,3 +269,41 @@ class Equations(object):
         """
 
         return sp.Symbol(str(float(val)))
+
+
+    ###########################################################################
+    # Random distributions
+    ###########################################################################
+    def Uniform(self, min:float, max:float):
+        """
+        Uniform distribution between `min` and `max`.
+
+        Args:
+            min: lower bound.
+            max: upper bound.
+        """
+        name = "__rand__" + str(len(self.object.random_variables))
+
+        obj = parser.RandomDistributions.Uniform(name, min, max)
+
+        self.random_variables[name] = obj
+        self.object.random_variables[name] = obj
+        
+        return sp.Symbol(name)
+
+    def Normal(self, mu:float, sigma:float):
+        """
+        Normal distribution with mean `mu` and standard deviation `sigma`.
+
+        Args:
+            mu: mean.
+            sigma: standard deviation.
+        """
+        name = "__rand__" + str(len(self.object.random_variables))
+
+        obj = parser.RandomDistributions.Normal(name, mu, sigma)
+
+        self.random_variables[name] = obj
+        self.object.random_variables[name] = obj
+        
+        return sp.Symbol(name)

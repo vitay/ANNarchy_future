@@ -51,7 +51,9 @@ def ccode(eq) -> str:
     eq = pow3(eq)
     
     # Get the equivalent C code
-    eq = sp.ccode(eq)
+    eq = sp.ccode(
+        eq, 
+    )
     
     # Remove the extralines of Piecewise
     return " ".join(eq.replace('\n', ' ').split())

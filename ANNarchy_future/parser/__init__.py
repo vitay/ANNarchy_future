@@ -4,3 +4,4 @@ from .EquationParser import Condition, AssignmentBlock, ODEBlock, get_blocks
 from .NeuronParser import NeuronParser
 from .SynapseParser import SynapseParser
 import ANNarchy_future.parser.NumericalMethods as NM
+from .RandomDistributions import Normal

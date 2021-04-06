@@ -34,16 +34,16 @@ class CythonInterface(communicator.SimulationInterface):
         """
         self.cython_module = imp.load_dynamic(
                 self.library, # Name of the network
-                "./annarchy/"+self.library+".so" # Path to the library
+                self.net._annarchy_dir + self.library+".so" # Path to the library
         )
-        self._instance = self.cython_module.Network()
+        self._instance = self.cython_module.pyNetwork(self.net.dt, self.net.seed)
 
     def add_population(self, pop:'api.Population'):
         """Instantiates a C++ Population.
 
         """
         # Create population
-        getattr(self._instance, "_add_"+ pop.neuron_class)(pop.size, self.net.dt)
+        getattr(self._instance, "_add_"+ pop.neuron_class)(pop.size)
         
 
     def population_get(self, id_pop:int, attribute:str) -> np.ndarray:

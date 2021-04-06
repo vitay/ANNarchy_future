@@ -168,6 +168,9 @@ class NeuronParser(object):
             self.reset_equations = self.process_equations(self.neuron._current_eq)
             self.neuron._current_eq = []
 
+        # Collect random variables
+        self.random_variables = self.neuron.random_variables
+
     def process_condition(self, equations) -> 'parser.Condition':
 
         if len(equations) > 1:

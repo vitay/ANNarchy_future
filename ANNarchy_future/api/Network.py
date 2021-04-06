@@ -23,6 +23,8 @@ class Network(object):
 
     def __init__(self, 
         dt : float =1.0, 
+        seed : int = -1,
+        compile_dir : str ="./annarchy/",
         verbose : int =1, 
         logfile : str =None):
 
@@ -42,11 +44,18 @@ class Network(object):
 
         Args:
             dt: simulation step size in ms. 
+            seed: seed for the random number generators.
+            compile_dir: directory where the source code will be compiled.
             verbose: logging level. ERROR=0, WARNING=1, INFO=2, DEBUG=3
             logfile: file to save the logs. stdout if left empty.
         """
 
         self.dt:float = dt
+        self.seed: int = seed
+
+        self._annarchy_dir:str = compile_dir
+        if not self._annarchy_dir.endswith('/'):
+            self._annarchy_dir += "/"
 
         # Logging module: https://docs.python.org/3/howto/logging.html
         if logfile is not None:
@@ -221,10 +230,11 @@ class Network(object):
         for pop in self._populations:
             self._interface.add_population(pop)
             for attribute in pop.attributes:
-                self._interface.population_set(pop._id_pop, attribute, getattr(pop, attribute))
+                self._interface.population_set(pop._id_pop, attribute, pop._flatten(attribute))
 
 
 
         # Tell all objects (pop or proj) that they should use the SimulationInterface from now on.
         for pop in self._populations:
             pop._instantiated = True
+            del pop._attributes

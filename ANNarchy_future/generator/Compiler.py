@@ -17,7 +17,7 @@ class Compiler(object):
     def __init__(self, 
         net: 'api.Network',
         backend:str,
-        annarchy_dir:str = './annarchy/'):
+        ):
         
         """
         Initializes the code generators.
@@ -25,11 +25,10 @@ class Compiler(object):
         Args:
             net: Python Network instance.
             backend: 'single', 'openmp', 'cuda' or 'mpi'.
-            annarchy_dir: path to the compilation directory.
         """
         self.net = net
         self.backend:str = backend
-        self.annarchy_dir = annarchy_dir
+        self.annarchy_dir = self.net._annarchy_dir
 
         # Logging
         self._logger = logging.getLogger(__name__)
@@ -74,7 +73,7 @@ class Compiler(object):
         self._compilation_folder()
 
         # Generate files
-        self._copy_files()
+        self._generator.copy_files(self.annarchy_dir)
 
         # Compile the code
         self._compile()
@@ -102,32 +101,6 @@ class Compiler(object):
 
         sys.path.append(self.annarchy_dir)
 
-
-    def _copy_files(self):
-        """Puts the files in the compilation folder.
-        """
-
-        # Makefile
-        with open(self.annarchy_dir +"Makefile", 'w') as f:
-            f.write(self._generator.makefile)
-
-        # ANNarchy.h
-        with open(self.annarchy_dir +"ANNarchy.h", 'w') as f:
-            f.write(self._generator.annarchy_h)
-
-        # ANNarchyBindings.pxd
-        with open(self.annarchy_dir +"ANNarchyBindings.pxd", 'w') as f:
-            f.write(self._generator.cython_bindings)
-
-        # ANNarchyCore.pyx
-        with open(self.annarchy_dir +"ANNarchyCore.pyx", 'w') as f:
-            f.write(self._generator.cython_network)
-
-
-        # Neuron classes
-        for name, code in  self._generator.neuron_classes.items():
-            with open(self.annarchy_dir + name+".h", 'w') as f:
-                f.write(code)
 
     def _compile(self):
         """Compiles the source code to produce the shared library.

@@ -35,14 +35,17 @@ class PopulationGenerator(object):
 
         # Build a correspondance dictionary
         self.correspondences = {
-            't': 'this->t',
-            'dt': 'this->dt',
+            't': 'this->net->t',
+            'dt': 'this->net->dt',
         }
         for attr in self.parser.attributes:
             if attr in self.parser.shared:
                 self.correspondences[attr] = "this->" + attr
             else:
                 self.correspondences[attr] = "this->" + attr + "[i]"
+        
+        for name, var in self.parser.random_variables.items():
+            self.correspondences[name] = "this->" + name + "[i]"
 
     def generate(self) -> str:
         
@@ -50,6 +53,7 @@ class PopulationGenerator(object):
 
         Calls:
 
+            `self.rng()`
             `self.update()`
             `self.spike()`
             `self.reset()`
@@ -59,40 +63,36 @@ class PopulationGenerator(object):
             a multiline string for the .h header file.
         """
 
-        # Get the template
+        # Get the Population.h template
         tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Population.h'
-
-        # Open the template
         with open(tpl, 'r') as f:
             template = f.readlines()
-        template = Template("".join(template))
+        template_h = Template("".join(template))
+
+        # Get the Population.cpp template
+        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Population.cpp'
+        with open(tpl, 'r') as f:
+            template = f.readlines()
+        template_cpp = Template("".join(template))
 
         # Initialize arrays
         initialize_arrays = ""
 
-        # Parameters
-        declared_parameters = ""
-        for attr in self.parser.parameters:
+        # Attributes
+        declared_attributes = ""
+        for attr in self.parser.attributes:
             if attr in self.parser.shared:
-                declared_parameters += Template(
+                declared_attributes += Template(
                     "    double $attr;\n").substitute(attr=attr)
             else:
-                declared_parameters += Template(
+                declared_attributes += Template(
                     "    std::vector<double> $attr;\n").substitute(attr=attr)
                 initialize_arrays += Template(
-                    "        this->$attr = std::vector<double>(size, 0.0);\n").substitute(attr=attr)
+                    "    this->$attr = std::vector<double>(size, 0.0);\n").substitute(attr=attr)
 
-        # Variables
-        declared_variables = ""
-        for attr in self.parser.variables:
-            if attr in self.parser.shared:
-                declared_variables += Template(
-                    "    double $attr;\n").substitute(attr=attr)
-            else:
-                declared_variables += Template(
-                    "    std::vector<double> $attr;\n").substitute(attr=attr)
-                initialize_arrays += Template(
-                    "        this->$attr = std::vector<double>(size, 0.0);\n").substitute(attr=attr)
+        # RNG
+        declared_rng, initialize_rng, rng_method = self.rng()
+
 
         # Update method
         update_method = self.update()
@@ -121,20 +121,86 @@ class PopulationGenerator(object):
             reset_method = self.reset()
 
 
+
         # Generate code
-        code = template.substitute(
+        code_h = template_h.substitute(
+            class_name = self.name,
+            declared_attributes = declared_attributes,
+            declared_spiking = declared_spiking,
+            declared_rng = declared_rng,
+        )
+
+        # .cpp
+        code_cpp = template_cpp.substitute(
             class_name = self.name,
             initialize_arrays = initialize_arrays,
             initialize_spiking = initialize_spiking,
-            declared_parameters = declared_parameters,
-            declared_variables = declared_variables,
-            declared_spiking = declared_spiking,
+            initialize_rng = initialize_rng,
             update_method = update_method,
             spike_method = spike_method,  
             reset_method = reset_method,  
+            rng_method = rng_method,  
         )
         
-        return code
+        return {'h': code_h, 'cpp': code_cpp}
+
+    def rng(self) -> tuple:
+        """Gathers all random variables.
+
+        Returns:
+            declared_rng, initialize_rng, rng_method
+        """
+        declared_rng = """    // Random variables"""
+        initialize_rng = """    // Random Variables"""
+        
+        rng_tpl = Template("""
+$init
+    for(unsigned int i = 0; i < this->size; i++) {
+$draw
+    }
+        """)
+        rng_init = ""
+        rng_update = ""
+
+        for name, var in self.parser.random_variables.items():
+
+            if isinstance(var, parser.RandomDistributions.Uniform):
+                dist = "uniform_real_distribution< double >"
+                # If the arguments are fixed throughout the simulation, no need to redraw 
+                fixed = isinstance(var.min, (float, int)) and isinstance(var.max, (float, int))
+                arg1 = parser.code_generation(var.min, self.correspondences)
+                arg2 = parser.code_generation(var.max, self.correspondences)
+
+            if isinstance(var, parser.RandomDistributions.Normal):
+                dist = "normal_distribution< double >"
+                # If the arguments are fixed throughout the simulation, no need to redraw 
+                fixed = isinstance(var.mu, (float, int)) and isinstance(var.sigma, (float, int))
+                arg1 = parser.code_generation(var.mu, self.correspondences)
+                arg2 = parser.code_generation(var.sigma, self.correspondences)
+
+            declared_rng += Template("""
+    std::vector<double> $name;
+    std::$dist dist$name;
+            """).substitute(name=name, dist=dist)
+
+            initialize_rng += Template("""
+    this->$name = std::vector<double>(size, 0.0);
+    this->dist$name = std::$dist($arg1, $arg2);
+            """).substitute(name=name, dist=dist, arg1=arg1, arg2=arg2)
+
+            if not fixed:
+                rng_init += Template("""
+    this->dist$name = std::$dist($arg1, $arg2);
+            """).substitute(name=name, dist=dist, arg1=arg1, arg2=arg2)
+
+            rng_update += Template("""
+        this->$name[i] = this->dist$name(this->net->rng);
+            """).substitute(name=name, dist=dist)
+
+        rng_method = rng_tpl.substitute(init=rng_init, draw=rng_update)
+
+        return declared_rng, initialize_rng, rng_method
+
 
     def update(self) -> str:
 
@@ -148,14 +214,14 @@ class PopulationGenerator(object):
 
         # Block template
         tlp_block = Template("""
-        for(unsigned int i = 0; i< this->size; i++){
+    for(unsigned int i = 0; i< this->size; i++){
 $update
-        }""")
+    }""")
 
         # Equation template
         tpl_eq = Template("""
-            // $hr
-            $lhs $op $rhs;
+        // $hr
+        $lhs $op $rhs;
         """)
 
         # Iterate over all blocks of equations
@@ -192,12 +258,12 @@ $update
         """
 
         tpl_spike = Template("""
-        this->spikes.clear();
-        for(unsigned int i = 0; i< this->size; i++){
-            if ($condition){
-                this->spikes.push_back(i);
-            }
+    this->spikes.clear();
+    for(unsigned int i = 0; i< this->size; i++){
+        if ($condition){
+            this->spikes.push_back(i);
         }
+    }
         """)
 
         cond = parser.code_generation(self.parser.spike_condition.equation['eq'], self.correspondences)
@@ -215,16 +281,16 @@ $update
         """
 
         tpl_reset = Template("""
-        for(unsigned int idx = 0; idx< this->spikes.size(); idx++){
+    for(unsigned int idx = 0; idx< this->spikes.size(); idx++){
             int i = this->spikes[idx];
 $reset
-        }
+    }
         """)
 
         # Equation template
         tpl_eq = Template("""
-            // $hr
-            $lhs $op $rhs;
+        // $hr
+        $lhs $op $rhs;
         """)
 
         # Iterate over all blocks of equations
@@ -271,9 +337,11 @@ $reset
     # $name
     cdef cppclass $name :
         # Constructor
-        $name(int, double) except +
+        $name(Network*, int) except +
         # Number of neurons
         int size
+        # RNG
+        void rng()
         # Neural equations
         void update()
         # Spike emission
@@ -333,16 +401,17 @@ cdef class py$name(object):
 
     cdef $name* instance
 
-    def __cinit__(self, int size, double dt):
-        self.instance = new $name(size, dt)
+    def __cinit__(self, pyNetwork net, int size):
+        self.instance = new $name(net.instance, size)
+
+    def rng(self):
+        self.instance.rng()
 
     def update(self):
         self.instance.update()
 
-
     def spike(self):
         self.instance.spike()
-
 
     def reset(self):
         self.instance.reset()
