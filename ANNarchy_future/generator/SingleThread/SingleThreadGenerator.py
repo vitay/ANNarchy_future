@@ -30,6 +30,8 @@ class SingleThreadGenerator(object):
         self.neuron_wrappers:dict = {}
 
         self.synapse_classes:dict = {}
+        self.synapse_exports:dict = {}
+        self.synapse_wrappers:dict = {}
 
     def generate(self):
         """Generates the necessary C++ classes.
@@ -70,16 +72,12 @@ class SingleThreadGenerator(object):
             f.write(self.makefile)
 
         # ANNarchy.h
-        with open(annarchy_dir +"ANNarchy.h", 'w') as f:
+        with open(annarchy_dir +"ANNarchy.hpp", 'w') as f:
             f.write(self.annarchy_h)
 
         # Network.h
-        with open(annarchy_dir +"Network.h", 'w') as f:
+        with open(annarchy_dir +"Network.hpp", 'w') as f:
             f.write(self.network_h)
-
-        # Network.cpp
-        with open(annarchy_dir +"Network.cpp", 'w') as f:
-            f.write(self.network_cpp)
 
         # ANNarchyBindings.pxd
         with open(annarchy_dir +"ANNarchyBindings.pxd", 'w') as f:
@@ -91,10 +89,13 @@ class SingleThreadGenerator(object):
 
         # Neuron classes
         for name, code in  self.neuron_classes.items():
-            with open(annarchy_dir + name+".h", 'w') as f:
-                f.write(code['h'])
-            with open(annarchy_dir + name+".cpp", 'w') as f:
-                f.write(code['cpp'])
+            with open(annarchy_dir + name+".hpp", 'w') as f:
+                f.write(code)
+
+        # Synapse classes
+        for name, code in  self.synapse_classes.items():
+            with open(annarchy_dir + name+".hpp", 'w') as f:
+                f.write(code)
 
     def generate_neurons(self):
         """Generates one C++ class per neuron definition by calling `SingleThread.PopulationGenerator`.
@@ -139,12 +140,21 @@ class SingleThreadGenerator(object):
         for name, parser in synapses.items():
 
             parser = generator.SingleThread.ProjectionGenerator(name, parser)
+            
+            # C++ code
             code = parser.generate()
-
             self.synapse_classes[name] = code
 
+            # Cython export
+            code = parser.cython_export()
+            self.synapse_exports[name] = code
+
+            # Cython wrapper
+            code = parser.cython_wrapper()
+            self.synapse_wrappers[name] = code
+
     def generate_header(self):
-        """Generates ANNarchy.h
+        """Generates ANNarchy.hpp
 
         Sets:
 
@@ -154,11 +164,11 @@ class SingleThreadGenerator(object):
 
         neuron_includes = ""
         for name in self.neuron_classes.keys():
-            neuron_includes += Template('#include "$name.h"\n').substitute(name=name)
+            neuron_includes += Template('#include "$name.hpp"\n').substitute(name=name)
 
         synapse_includes = ""
-        #for name in self.synapse_classes.keys():
-        #    synapse_includes += Template('#include "$name.h"\n').substitute(name=name)
+        for name in self.synapse_classes.keys():
+            synapse_includes += Template('#include "$name.hpp"\n').substitute(name=name)
 
 
         # Generate ANNarchy.h
@@ -180,7 +190,7 @@ class SingleThreadGenerator(object):
 #include <random>
 
 // Network
-#include "Network.h"
+#include "Network.hpp"
 
 // Neuron definitions
 $neuron_includes
@@ -199,40 +209,35 @@ $synapse_includes
 
         self.network_h = """#pragma once
 
-#include "ANNarchy.h"
+#include "ANNarchy.hpp"
 
 class Network {
     public:
 
-    Network(double dt, long int seed);
+    Network(double dt, long int seed){
+        this->dt = dt;
+        this->t = 0.0;
+        this->seed = seed;
 
-    void setSeed(long int seed);
+        this->setSeed(this->seed);
+    };
 
+    // Sets the seed for the rng
+    void setSeed(long int seed){
+        if(seed==-1){
+            this->rng = std::mt19937(time(NULL));
+        }
+        else{
+            this->rng = std::mt19937(seed);
+        }
+    };
+
+    // Attributes
     double t;
     double dt;
     long int seed;
     std::mt19937 rng;
 };
-"""
-
-        self.network_cpp = """#include "Network.h"
-
-Network::Network(double dt, long int seed){
-    this->dt = dt;
-    this->t = 0.0;
-    this->seed = seed;
-
-    this->setSeed(this->seed);
-}
-
-void Network::setSeed(long int seed){
-    if(seed==-1){
-        this->rng = std::mt19937(time(NULL));
-    }
-    else{
-        this->rng = std::mt19937(seed);
-    }
-}
 """
 
     def generate_makefile(self):
@@ -275,39 +280,43 @@ clean:
         for _, code in self.neuron_exports.items():
             neuron_export += code
 
+        # Export from C++ : Synapse
+        synapse_export = ""
+        for _, code in self.synapse_exports.items():
+            synapse_export += code
+
         self.cython_bindings = Template("""# distutils: language = c++
 from libcpp.vector cimport vector
 
-cdef extern from "ANNarchy.h":
-
+cdef extern from "ANNarchy.hpp":
 
     # Network
     cdef cppclass Network :
         # Constructor
-        Network(double, long) except +
-        
+        Network(double, long) except +        
         # t
         double t
-
         # dt
         double dt
 
-
 $neuron_export
+$synapse_export
 
 """).substitute(
             neuron_export=neuron_export,
+            synapse_export=synapse_export,
         )
 
-        # Cython wrapper
+        # Neurons
         neuron_wrapper = ""
         population_creator = ""
         neuron_imports = ""
 
         for name, code in self.neuron_wrappers.items():
-            
+            # Wrapper
             neuron_wrapper += code
             
+            # Population creator
             population_creator += Template("""
     def _add_$name(self, int size):
 
@@ -315,26 +324,54 @@ $neuron_export
         self.populations.append(pop)""").substitute(
             name=name,
         )
-
-
+            # Imports
             neuron_imports += Template("""
 from ANNarchyBindings cimport $name""").substitute(name=name)
 
+        # Synapses
+        synapse_wrapper = ""
+        projection_creator = ""
+        synapse_imports = ""
+
+        for name, code in self.synapse_wrappers.items():
+            # Wrapper
+            synapse_wrapper += code
+            
+            # Projection creator
+            projection_creator += Template("""
+    def _add_$name(self):
+
+        proj = Init_$name(self.instance, self.populations[0], self.populations[0])
+        self.projections.append(proj)
+        """).substitute(
+            name=name,
+        )
+            # Imports
+            synapse_imports += Template("""
+from ANNarchyBindings cimport $name""").substitute(name=name)
+
+
+        # Main template
         self.cython_network = Template("""# distutils: language = c++
 cimport cython
 from libcpp.vector cimport vector
 cimport numpy as np
 import numpy as np
 
+# Imports
 from ANNarchyBindings cimport Network
-
 $neuron_imports
+$synapse_imports
 
+# Wrappers
 $neuron_wrapper
+$synapse_wrapper
 
+# Main Python network
 cdef class pyNetwork(object):
 
     cdef list populations
+    cdef list projections
 
     cdef Network* instance
 
@@ -343,9 +380,12 @@ cdef class pyNetwork(object):
         self.instance = new Network(dt, seed)
 
         self.populations = []
+        self.projections = []
 
     def __dealloc__(self):
+        # TODO
         del self.populations[0]
+        del self.projections[0]
 
     property t:
         "Current time (ms)."
@@ -381,9 +421,13 @@ cdef class pyNetwork(object):
             pop.reset()
 
 $population_creator
+$projection_creator
 
 """).substitute(
     neuron_wrapper = neuron_wrapper,
     population_creator = population_creator,
     neuron_imports = neuron_imports,
+    synapse_wrapper = synapse_wrapper,
+    projection_creator = projection_creator,
+    synapse_imports = synapse_imports,
 )

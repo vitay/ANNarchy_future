@@ -233,6 +233,13 @@ class Network(object):
                 self._interface.population_set(pop._id_pop, attribute, pop._flatten(attribute))
 
 
+        # Create C++ projections and initialize attributes
+        for proj in self._projections:
+            self._interface.add_projection(proj)
+            #for attribute in pop.attributes:
+            #    self._interface.population_set(pop._id_pop, attribute, pop._flatten(attribute))
+
+
 
         # Tell all objects (pop or proj) that they should use the SimulationInterface from now on.
         for pop in self._populations:

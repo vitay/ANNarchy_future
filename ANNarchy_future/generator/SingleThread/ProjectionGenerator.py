@@ -35,29 +35,36 @@ class ProjectionGenerator(object):
         self.name:str = name
         self.parser:'parser.SynapseParser' = parser
 
+        self.correspondences = self.get_correspondences()
+
+    def get_correspondences(self):
+
         # Build a correspondance dictionary
-        self.correspondences = {
+        correspondences = {
             't': 'this->t',
             'dt': 'this->dt',
         }
 
         for attr in self.parser.attributes:
             if attr in self.parser.shared:
-                self.correspondences[attr] = "this->" + attr
+                correspondences[attr] = "this->" + attr
             else:
-                self.correspondences[attr] = "this->" + attr + "[i][j]"
+                correspondences[attr] = "this->" + attr + "[i][j]"
 
         for attr in self.parser.synapse.pre_attributes:
             if attr in self.parser.pre._parser.shared:
-                self.correspondences["pre."+attr] = "this->pre->" + attr
+                correspondences["pre."+attr] = "this->pre->" + attr
             else:
-                self.correspondences["pre."+attr] = "this->pre->" + attr + "[i]"
+                correspondences["pre."+attr] = "this->pre->" + attr + "[i]"
 
         for attr in self.parser.synapse.post_attributes:
             if attr in self.parser.post._parser.shared:
-                self.correspondences["post."+attr] = "this->post->" + attr
+                correspondences["post."+attr] = "this->post->" + attr
             else:
-                self.correspondences["post."+attr] = "this->post->" + attr + "[j]"
+                correspondences["post."+attr] = "this->post->" + attr + "[j]"
+
+        return correspondences
+
 
     def generate(self) -> str:
 
@@ -69,54 +76,40 @@ class ProjectionGenerator(object):
         
         Returns:
         
-            a multiline string for the .h header file.
+            a multiline string for the .h header file and .cpp body file.
         """
 
-        # Get the template
-        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Projection.h'
-
-        # Open the template
+        # Get the Projection.h template
+        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Projection.hpp'
         with open(tpl, 'r') as f:
             template = f.readlines()
-        template = Template("".join(template))
+        template_h = Template("".join(template))
 
         # Initialize arrays
         initialize_arrays = ""
 
-        # Parameters
-        declared_parameters = ""
-        for attr in self.parser.parameters:
+        # Attributes
+        declared_attributes = ""
+        for attr in self.parser.attributes:
             if attr in self.parser.shared:
-                declared_parameters += Template(
+                declared_attributes += Template(
                     "    double $attr;\n").substitute(attr=attr)
             else:
-                declared_parameters += Template(
-                    "    std::vector<double> $attr;\n").substitute(attr=attr)
-                initialize_arrays += Template(
-                    "        this->$attr = std::vector<double>(size, 0.0);\n").substitute(attr=attr)
-
-        # Variables
-        declared_variables = ""
-        for attr in self.parser.variables:
-            if attr in self.parser.shared:
-                declared_variables += Template(
-                    "    double $attr;\n").substitute(attr=attr)
-            else:
-                declared_variables += Template(
-                    "    std::vector<double> $attr;\n").substitute(attr=attr)
-                initialize_arrays += Template(
-                    "        this->$attr = std::vector<double>(size, 0.0);\n").substitute(attr=attr)
+                declared_attributes += Template(
+                    "    std::vector< std::vector<double> > $attr;\n").substitute(attr=attr)
+                initialize_arrays += Template("""
+        this->$attr = std::vector< std::vector<double> >(this->post->size, std::vector<double>(this->pre->size, 0.0));
+                """).substitute(attr=attr) # TODO
 
         # Update method
         update_method = self.update()
 
 
         # Generate code
-        code = template.substitute(
+        code = template_h.substitute(
             class_name = self.name,
+            declared_attributes = declared_attributes,
             initialize_arrays = initialize_arrays,
-            declared_parameters = declared_parameters,
-            declared_variables = declared_variables,
             update_method = update_method,
         )
         
@@ -131,17 +124,18 @@ class ProjectionGenerator(object):
             the content of the `update()` C++ method.
 
         """
-
         # Block template
         tlp_block = Template("""
-        for(unsigned int i = 0; i< this->size; i++){
+    for(unsigned int i = 0; i< this->post->size; i++){
+        for(unsigned int j = 0; i< this->pre->size; i++){
 $update
-        }""")
+        }
+    }""")
 
         # Equation template
         tpl_eq = Template("""
-            // $hr
-            $lhs $op $rhs;
+        // $hr
+        $lhs $op $rhs;
         """)
 
         # Iterate over all blocks of equations
@@ -159,7 +153,8 @@ $update
                     )
                 else:
                     code += tpl_eq.substitute(
-                        lhs = eq['name'] if eq['name'] in self.parser.shared else eq['name'] + "[i]",
+                        lhs = "this->"+eq['name'] if eq['name'] in self.parser.shared 
+                                else "this->"+eq['name'] + "[i][j]",
                         op = eq['op'],
                         rhs = parser.code_generation(eq['rhs'], self.correspondences),
                         hr = eq['human-readable']
@@ -167,3 +162,91 @@ $update
 
         return tlp_block.substitute(update=code)
 
+
+
+    def cython_export(self):
+        """Generates declaration of the C++ class for Cython.
+
+        """
+        
+        # Parameters
+        attributes = ""
+        for attr in self.parser.attributes:
+            if attr in self.parser.shared:
+                attributes += Template(
+                    "        double $attr\n").substitute(attr=attr)
+            else:
+                attributes += Template(
+                    "        vector[vector[double]] $attr\n").substitute(attr=attr)
+
+
+        code = Template("""
+    # $name synapse
+    cdef cppclass $name[PrePopulation, PostPopulation] :
+        # Constructor
+        $name(Network*, PrePopulation*, PostPopulation*) except +
+
+        # Methods
+        void update()
+
+        # Attributes
+$attributes
+""").substitute(
+        name=self.name,
+        attributes=attributes,
+        )
+
+        return code
+
+    def cython_wrapper(self):
+
+        tpl = Template("""
+    property $attr:
+        def __get__(self):
+            return self.instance.$attr
+        def __set__(self, vector[vector[double]] value): 
+            self.instance.$attr = value
+""")
+       
+        tpl_shared = Template("""
+    property $attr:
+        def __get__(self):
+            return self.instance.$attr
+        def __set__(self, double value): 
+            self.instance.$attr = value
+""")
+        
+        # Attributes
+        attributes = ""
+        for attr in self.parser.attributes:
+            if attr in self.parser.shared:
+                attributes += tpl_shared.substitute(attr=attr)
+            else:
+                attributes += tpl.substitute(attr=attr)
+
+        code = Template("""
+# $name synapse
+cdef class py$name(object):
+
+    cdef $name[RateCoded, RateCoded] *instance
+    
+    def __dealloc__(self):
+        del self.instance    
+
+    # Methods
+    def update(self):
+        self.instance.update()
+
+    # Attributes      
+$attributes
+
+cdef object Init_$name(Network* net, pyRateCoded pre, pyRateCoded post):
+    proj = py$name()
+    proj.instance = new $name[RateCoded, RateCoded](net, pre.instance, post.instance)
+    return proj
+
+""")
+        return code.substitute(
+            name=self.name,
+            attributes=attributes,
+        )

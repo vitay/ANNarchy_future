@@ -46,6 +46,14 @@ class CythonInterface(communicator.SimulationInterface):
         getattr(self._instance, "_add_"+ pop.neuron_class)(pop.size)
         
 
+    def add_projection(self, proj:'api.Projection'):
+        """Instantiates a C++ Projection.
+
+        """
+        # Create projection
+        getattr(self._instance, "_add_"+ proj.synapse_class)()
+        
+
     def population_get(self, id_pop:int, attribute:str) -> np.ndarray:
 
         """Returns the value of the `attribute` for the population of ID `id_pop`.

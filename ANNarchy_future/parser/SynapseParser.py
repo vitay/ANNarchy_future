@@ -131,7 +131,7 @@ class SynapseParser(object):
                 self._logger.exception("Error when parsing " + self.name + ".update().")
                 sys.exit(1)
             else:
-                self.update_equations =  self.process_equations(self.synapse._current_eq)
+                self.update_equations, self.update_dependencies =  self.process_equations(self.synapse._current_eq)
                 self.synapse._current_eq = []
 
     def process_equations(self, equations) -> list:
@@ -179,11 +179,17 @@ class SynapseParser(object):
             if _current_ODE_block is not None:
                 blocks.append(_current_ODE_block)
 
+        dependencies = []
+
         for block in blocks:
             block.dependencies()
+            for dep in block._dependencies:
+                dependencies.append(dep)
             block.parse()
 
-        return blocks
+        dependencies = list(set(dependencies))
+
+        return blocks, dependencies
 
     def __str__(self):
 
