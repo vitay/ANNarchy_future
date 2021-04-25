@@ -51,7 +51,8 @@ class CythonInterface(communicator.SimulationInterface):
 
         """
         # Create projection
-        getattr(self._instance, "_add_"+ proj.synapse_class)()
+        getattr(self._instance, "_add_"+ proj.synapse_class + 
+            "_" + proj.pre.neuron_class + "_" + proj.post.neuron_class)(proj.pre._id_pop, proj.post._id_pop)
         
 
     def population_get(self, id_pop:int, attribute:str) -> np.ndarray:

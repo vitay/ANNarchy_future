@@ -126,16 +126,16 @@ class ProjectionGenerator(object):
         """
         # Block template
         tlp_block = Template("""
-    for(unsigned int i = 0; i< this->post->size; i++){
-        for(unsigned int j = 0; i< this->pre->size; i++){
+        for(unsigned int i = 0; i< this->post->size; i++){
+            for(unsigned int j = 0; i< this->pre->size; i++){
 $update
-        }
-    }""")
+            }
+        }""")
 
         # Equation template
         tpl_eq = Template("""
-        // $hr
-        $lhs $op $rhs;
+            // $hr
+            $lhs $op $rhs;
         """)
 
         # Iterate over all blocks of equations
@@ -225,13 +225,18 @@ $attributes
                 attributes += tpl.substitute(attr=attr)
 
         code = Template("""
-# $name synapse
-cdef class py$name(object):
 
-    cdef $name[RateCoded, RateCoded] *instance
-    
+# $name synapse, pre = $pre, post = $post
+cdef class py${name}_${pre}_${post}(object):
+
+    cdef ${name}[${pre}, ${post}] *instance
+
+    def __cinit__(self, pyNetwork net, py$pre pre, py$post post):
+        
+        self.instance = new $name[${pre}, ${post}](net.instance, pre.instance, post.instance)
+
     def __dealloc__(self):
-        del self.instance    
+        del self.instance  
 
     # Methods
     def update(self):
@@ -240,13 +245,10 @@ cdef class py$name(object):
     # Attributes      
 $attributes
 
-cdef object Init_$name(Network* net, pyRateCoded pre, pyRateCoded post):
-    proj = py$name()
-    proj.instance = new $name[RateCoded, RateCoded](net, pre.instance, post.instance)
-    return proj
-
 """)
         return code.substitute(
             name=self.name,
             attributes=attributes,
+            pre="${pre}",
+            post="${post}",
         )

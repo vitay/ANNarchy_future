@@ -2,3 +2,6 @@
 */__pycache__
 ANNarchy_future.egg-info/
 site/
+build/
+internal/
+examples/*/annarchy/

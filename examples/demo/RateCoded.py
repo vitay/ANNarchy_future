@@ -81,6 +81,8 @@ pop = net.add(10, neur)
 
 proj = net.connect(pop, pop, 'ge', Hebb(eta=0.01))
 
+proj = net.connect(pop, pop, 'gi', Hebb(eta=0.01))
+
 # proj.dense(w=1.0)
 
 net.compile()

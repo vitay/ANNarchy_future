@@ -214,9 +214,16 @@ class Network(object):
 
         description = {}
 
+        # All declared neuron types and their parser
         description['neurons'] = self._neuron_types
 
+        # All declared synapse types and their parser
         description['synapses'] = self._synapse_types
+
+        # All unique tuples (synpase, pre neuron, post neuron)
+        description['projection_types'] = list(set([
+            (proj.synapse_class, proj.pre.neuron_class, proj.post.neuron_class) for proj in self._projections
+        ]))
 
         return description
 

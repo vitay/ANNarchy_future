@@ -54,8 +54,11 @@ class SingleThreadGenerator(object):
         # Generate Network.h and Network.cpp
         self.generate_network()
 
+        # Generate ANNarchyBindings.pxd
+        self.generate_cython_bindings()
+
         # Generate ANNarchyCore.pyx
-        self.generate_cython()
+        self.generate_cython_wrapper()
 
         # Generate Makefile
         self.generate_makefile()
@@ -270,8 +273,9 @@ clean:
             python_version = python_version,
         )
 
-    def generate_cython(self):
-        """Generates Cython bindings.
+    def generate_cython_bindings(self):
+        """
+        Generates Cython bindings to be put in ANNarchyBindings.pxd
 
         """
 
@@ -307,7 +311,14 @@ $synapse_export
             synapse_export=synapse_export,
         )
 
+    def generate_cython_wrapper(self):
+        """
+        Generates Cython wrappers to be put in ANNarchyCore.pyx
+
+        """
+        #######################
         # Neurons
+        #######################
         neuron_wrapper = ""
         population_creator = ""
         neuron_imports = ""
@@ -328,46 +339,72 @@ $synapse_export
             neuron_imports += Template("""
 from ANNarchyBindings cimport $name""").substitute(name=name)
 
+        #######################
         # Synapses
-        synapse_wrapper = ""
-        projection_creator = ""
+        #######################
         synapse_imports = ""
 
-        for name, code in self.synapse_wrappers.items():
-            # Wrapper
-            synapse_wrapper += code
-            
-            # Projection creator
-            projection_creator += Template("""
-    def _add_$name(self):
 
-        proj = Init_$name(self.instance, self.populations[0], self.populations[0])
-        self.projections.append(proj)
-        """).substitute(
-            name=name,
-        )
+        for name, code in self.synapse_wrappers.items():
             # Imports
             synapse_imports += Template("""
 from ANNarchyBindings cimport $name""").substitute(name=name)
 
 
+        #######################
+        # Projections
+        #######################
+        projection_wrapper = ""
+        projection_creator = ""
+        for name, pre, post in self.description['projection_types']:
+            # Wrapper
+            projection_wrapper += Template(code).substitute(
+                pre = pre,
+                post = post,
+            )
+            
+            # Projection creator
+            projection_creator += Template("""
+    def _add_${name}_${pre}_${post}(self, id_pre, id_post):
+
+        proj = py${name}_${pre}_${post}(self, self.populations[id_pre], self.populations[id_post])
+
+        self.projections.append(proj)
+        """).substitute(
+            name = name,
+            pre = pre,
+            post = post,
+        )
+
+        #######################
         # Main template
+        #######################
         self.cython_network = Template("""# distutils: language = c++
 cimport cython
 from libcpp.vector cimport vector
 cimport numpy as np
 import numpy as np
 
+###########################################
 # Imports
+###########################################
 from ANNarchyBindings cimport Network
 $neuron_imports
 $synapse_imports
 
-# Wrappers
+###########################################
+# Population wrappers
+###########################################
 $neuron_wrapper
-$synapse_wrapper
 
+###########################################
+# Projection wrappers
+###########################################
+$projection_wrapper
+
+###########################################
 # Main Python network
+###########################################
 cdef class pyNetwork(object):
 
     cdef list populations
@@ -404,6 +441,9 @@ cdef class pyNetwork(object):
     def population(self, int idx):
         return self.populations[idx]
 
+    def projection(self, int idx):
+        return self.projections[idx]
+
     @cython.boundscheck(False) # turn off bounds-checking for entire function
     @cython.wraparound(False)  # turn off negative index wrapping for entire function
     def step(self):
@@ -419,6 +459,9 @@ cdef class pyNetwork(object):
         # Reset
         for pop in self.populations:
             pop.reset()
+        # Synaptic updates
+        for proj in self.projections:
+            proj.update()
 
 $population_creator
 $projection_creator
@@ -427,7 +470,7 @@ $projection_creator
     neuron_wrapper = neuron_wrapper,
     population_creator = population_creator,
     neuron_imports = neuron_imports,
-    synapse_wrapper = synapse_wrapper,
-    projection_creator = projection_creator,
     synapse_imports = synapse_imports,
+    projection_wrapper = projection_wrapper,
+    projection_creator = projection_creator,
 )
