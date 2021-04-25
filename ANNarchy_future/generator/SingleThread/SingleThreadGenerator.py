@@ -421,8 +421,10 @@ cdef class pyNetwork(object):
 
     def __dealloc__(self):
         # TODO
-        del self.populations[0]
-        del self.projections[0]
+        for pop in self.populations:
+            del pop
+        for proj in self.projections:
+            del proj
 
     property t:
         "Current time (ms)."
