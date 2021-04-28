@@ -22,6 +22,7 @@ class Compiler(object):
     def __init__(self, 
         net: 'api.Network',
         backend:str,
+        clean:bool = False,
         ):
         
         """
@@ -30,19 +31,24 @@ class Compiler(object):
         Args:
             net: Python Network instance.
             backend: 'single', 'openmp', 'cuda' or 'mpi'.
+            clean: forces complete code generation.
         """
         self.net = net
         self.backend:str = backend
         self.annarchy_dir = self.net._annarchy_dir
         self.build_dir = self.annarchy_dir + "/build/"
+        self.clean = clean
 
         self.library = "ANNarchyCore"
         self.library_path = self.build_dir + self.library + ".so"
 
-        self._has_changed = False
+        self._has_changed = clean
 
         # Logging
         self._logger = logging.getLogger(__name__)
+
+        # Hardware check
+        self.hardware_check()
 
         if backend == "single":
             self._generator = generator.SingleThread.SingleThreadGenerator(
@@ -87,12 +93,15 @@ class Compiler(object):
         # Generate files
         self.generated_files = []
         self._generator.copy_files()
+
+        # Clean files from a previous compilation
         self.clean_generated_files()
 
         # Compile the code
         if self._has_changed:
             self.compile()
 
+        # Instantiate an interface (Cython or gRPC)
         if self.backend == "single":
             interface = communicator.CythonInterface(self.net, self.library, self.library_path)
         else:
@@ -106,7 +115,8 @@ class Compiler(object):
         TODO: completely erases the current directory for now.
 
         """
-        #shutil.rmtree(self.annarchy_dir, True)
+        if self.clean:
+            shutil.rmtree(self.annarchy_dir, True)
 
         if not os.path.exists(self.annarchy_dir):
             os.mkdir(self.annarchy_dir)

@@ -169,12 +169,14 @@ class Network(object):
         return proj
  
     def compile(self,
-        backend: str = 'single'):
+        backend: str = 'single',
+        clean:bool = False):
 
         """Compiles and instantiates the network.
 
         Args:
             backend: choose between `'single'`, `'openmp'`, `'cuda'` or `'mpi'`.
+            clean: forces recompilation.
         """
 
         self._backend = backend
@@ -185,11 +187,9 @@ class Network(object):
         # Create compiler
         self._compiler = generator.Compiler(
             self,
-            backend=backend
+            backend=backend,
+            clean=clean
         )
-
-        # Hardware check
-        self._compiler.hardware_check()
 
         # Code generation
         self._interface = self._compiler.build()
