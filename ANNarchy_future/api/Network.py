@@ -192,7 +192,7 @@ class Network(object):
         self._compiler.hardware_check()
 
         # Code generation
-        self._interface = self._compiler.compile()
+        self._interface = self._compiler.build()
 
         # Instantiate the network
         self._instantiate()

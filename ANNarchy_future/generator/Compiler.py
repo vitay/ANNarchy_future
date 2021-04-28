@@ -12,6 +12,11 @@ class Compiler(object):
 
     """Generates code, compiles it and instantiate the network.
 
+    The Network instance should call `Compiler.build()`.
+
+    The code generators should call `Compiler.write_file(filename, content)` to write a file.
+
+    Compiler manages everything related to the compilation folder.
     """
 
     def __init__(self, 
@@ -29,15 +34,22 @@ class Compiler(object):
         self.net = net
         self.backend:str = backend
         self.annarchy_dir = self.net._annarchy_dir
+        self.build_dir = self.annarchy_dir + "/build/"
+
+        self.library = "ANNarchyCore"
+        self.library_path = self.build_dir + self.library + ".so"
+
+        self._has_changed = False
 
         # Logging
         self._logger = logging.getLogger(__name__)
-        self._logger.info("Compiling.")
 
         if backend == "single":
             self._generator = generator.SingleThread.SingleThreadGenerator(
-                self.net._description,
-                backend
+                compiler=self,
+                description=self.net._description,
+                backend=self.backend,
+                library=self.library,
             )
         else:
             raise NotImplementedError
@@ -57,7 +69,7 @@ class Compiler(object):
 
         pass
 
-    def compile(self) -> 'communicator.SimulationInterface':
+    def build(self) -> 'communicator.SimulationInterface':
         """
         Compiles the generated code.
 
@@ -70,48 +82,98 @@ class Compiler(object):
         self._generator.generate()
 
         # Create the compilation folder
-        self._compilation_folder()
+        self.compilation_folder()
 
         # Generate files
-        self._generator.copy_files(self.annarchy_dir)
+        self.generated_files = []
+        self._generator.copy_files()
+        self.clean_generated_files()
 
         # Compile the code
-        self._compile()
-
-        # Import shared library
-        library = "ANNarchyCore"
+        if self._has_changed:
+            self.compile()
 
         if self.backend == "single":
-            interface = communicator.CythonInterface(self.net, library)
+            interface = communicator.CythonInterface(self.net, self.library, self.library_path)
         else:
             raise NotImplementedError
 
         return interface
 
-    def _compilation_folder(self):
+    def compilation_folder(self):
         """Creates the compilation folder.
 
         TODO: completely erases the current directory for now.
 
         """
+        #shutil.rmtree(self.annarchy_dir, True)
 
-        shutil.rmtree(self.annarchy_dir, True)
+        if not os.path.exists(self.annarchy_dir):
+            os.mkdir(self.annarchy_dir)
+            self._has_changed = True
 
-        os.mkdir(self.annarchy_dir)
+        if not os.path.exists(self.build_dir):
+            os.mkdir(self.build_dir)
+            self._has_changed = True
 
-        sys.path.append(self.annarchy_dir)
+    def write_file(self, filename:str, content:str):
+        """Writes the file in the compilation folder if needed.
+
+        Called by `self._generator.copy_files()` for each file.
+
+        Args:
+            filename: filename.
+            content: content of the file.
+        """
+        self.generated_files.append(filename)
+
+        complete_path = self.build_dir + filename
+
+        # If it does not exist, write and exit
+        if not os.path.exists(complete_path):
+            self._has_changed = True
+            with open(complete_path, 'w') as f:
+                f.write(content)
+            return
+
+        # If it exists, load its content
+        old_content = ""
+        with open(complete_path, 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            old_content += line
+
+        if old_content != content:
+            self._logger.info(filename + " has changed.")
+            self._has_changed = True
+            # Write the content
+            with open(complete_path, 'w') as f:
+                f.write(content)
+
+    def clean_generated_files(self):
+        """Removes generated files in the generated folder that were not recently written.
+        """
+
+        current_files = os.listdir(self.build_dir)
+        diff = list(set(current_files) - set(self.generated_files))
+        for f in diff:
+            if f.endswith(".hpp"):
+                os.remove(self.build_dir + f)
+                self._has_changed = True
 
 
-    def _compile(self):
+    def compile(self):
         """Compiles the source code to produce the shared library.
 
         Calls `make -j4` in a subprocess.
         """
+        self._logger.info("Compiling.")
+
         # Current directory
         cwd = os.getcwd()
 
         # Switch to the build directory
-        os.chdir(self.annarchy_dir)
+        os.chdir(self.build_dir)
 
         # Start the compilation process
         make_process = subprocess.Popen("make all -j4 > compile_stdout.log 2> compile_stderr.log", shell=True)

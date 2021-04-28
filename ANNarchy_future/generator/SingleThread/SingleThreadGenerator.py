@@ -13,17 +13,21 @@ class SingleThreadGenerator(object):
 
     """
 
-    def __init__(self, description:dict, backend:str):
+    def __init__(self, compiler:'generator.Compiler', description:dict, backend:str, library:str):
 
         """
         Args:
 
+            compiler: Compiler instance.
             description: dictionary passed by `Network`.
             backend: 'single', 'openmp', 'cuda' or 'mpi'.
+            library: name of .so library.
         """
         
+        self.compiler = compiler
         self.description:dict = description
         self.backend = backend
+        self.library = library
 
         self.neuron_classes:dict = {}
         self.neuron_exports:dict = {}
@@ -51,7 +55,7 @@ class SingleThreadGenerator(object):
         # Generate ANNarchy.h
         self.generate_header()
 
-        # Generate Network.h and Network.cpp
+        # Generate Network.hpp and Network.cpp
         self.generate_network()
 
         # Generate ANNarchyBindings.pxd
@@ -65,40 +69,33 @@ class SingleThreadGenerator(object):
 
 
 
-    def copy_files(self, annarchy_dir):
+    def copy_files(self):
         """
         Puts the files in the compilation folder.
         """
 
         # Makefile
-        with open(annarchy_dir +"Makefile", 'w') as f:
-            f.write(self.makefile)
+        self.compiler.write_file("Makefile", self.makefile)
 
         # ANNarchy.h
-        with open(annarchy_dir +"ANNarchy.hpp", 'w') as f:
-            f.write(self.annarchy_h)
+        self.compiler.write_file("ANNarchy.hpp", self.annarchy_h)
 
         # Network.h
-        with open(annarchy_dir +"Network.hpp", 'w') as f:
-            f.write(self.network_h)
+        self.compiler.write_file("Network.hpp", self.network_h)
 
         # ANNarchyBindings.pxd
-        with open(annarchy_dir +"ANNarchyBindings.pxd", 'w') as f:
-            f.write(self.cython_bindings)
+        self.compiler.write_file("ANNarchyBindings.pxd", self.cython_bindings)
 
         # ANNarchyCore.pyx
-        with open(annarchy_dir +"ANNarchyCore.pyx", 'w') as f:
-            f.write(self.cython_network)
+        self.compiler.write_file("ANNarchyCore.pyx", self.cython_network)
 
         # Neuron classes
         for name, code in  self.neuron_classes.items():
-            with open(annarchy_dir + name+".hpp", 'w') as f:
-                f.write(code)
+            self.compiler.write_file(name+".hpp", code)
 
         # Synapse classes
         for name, code in  self.synapse_classes.items():
-            with open(annarchy_dir + name+".hpp", 'w') as f:
-                f.write(code)
+            self.compiler.write_file(name+".hpp", code)
 
     def generate_neurons(self):
         """Generates one C++ class per neuron definition by calling `SingleThread.PopulationGenerator`.

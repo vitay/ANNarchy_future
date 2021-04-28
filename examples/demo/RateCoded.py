@@ -62,7 +62,7 @@ class Hebb(ann.Synapse):
 
         with self.Equations() as s:
 
-            s.w += s.eta * s.pre.r * s.post.r 
+            s.w += s.eta * s.pre.r * s.post.r
 
             s.mw += s.alpha * s.mw + (1 - s.alpha)*s.w
 
@@ -88,3 +88,5 @@ proj = net.connect(pop, pop, 'gi', Hebb(eta=0.01))
 net.compile()
 
 net.step()
+
+print('Done')

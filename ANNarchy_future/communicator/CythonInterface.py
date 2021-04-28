@@ -13,15 +13,17 @@ class CythonInterface(communicator.SimulationInterface):
 
     """
 
-    def __init__(self, net:'api.Network', library:str):
+    def __init__(self, net:'api.Network', library:str, library_path:str):
         
         """
         Args:
             net: Python network.
-            library: path to the .so library.
+            library: name of the .so library (e.g. "ANNarchyCore").
+            library_path: path to the .so library (e.g. "./annarchy/build/ANNarchyCore.so")
         """
         self.net = net
         self.library:str = library
+        self.library_path:str = library_path
 
         # Logger
         self._logger = logging.getLogger(__name__)
@@ -34,7 +36,7 @@ class CythonInterface(communicator.SimulationInterface):
         """
         self.cython_module = imp.load_dynamic(
                 self.library, # Name of the network
-                self.net._annarchy_dir + self.library+".so" # Path to the library
+                self.library_path # Path to the library
         )
         self._instance = self.cython_module.pyNetwork(self.net.dt, self.net.seed)
 
@@ -82,7 +84,9 @@ class CythonInterface(communicator.SimulationInterface):
 
     def step(self):
 
-        """Single step.
+        """Single simulation step.
+
+        Calls the Cython instance `step()` method.
 
         """
 
