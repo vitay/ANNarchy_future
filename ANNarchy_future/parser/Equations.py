@@ -7,6 +7,18 @@ import sympy as sp
 import ANNarchy_future.api as api
 import ANNarchy_future.parser as parser
 
+class Symbol(sp.core.Symbol):
+    """Subclass of sp.core.Symbol allowing to store additional attributes.
+
+    """
+    def __new__(self, name, method='euler'):
+
+        obj = sp.core.Symbol.__new__(self, name)
+        self.method = method
+        
+        return obj
+
+
 class PreNeuron(object):
     """
     Placeholder for presynaptic attributes.
@@ -80,7 +92,7 @@ class Equations(object):
             if not hasattr(synapse, 'random_variables'):
                 self.object.random_variables = {}
         else:
-            self._logger.error("Equations() except one argument among `symbols`, `neuron` and `synapse`.")
+            self._logger.error("Equations() requires one argument among `symbols`, `neuron` or `synapse`.")
             sys.exit(1)
 
         # Numerical method
@@ -117,6 +129,7 @@ class Equations(object):
                     symbol = sp.Symbol("d" + attr + "/dt")
                     self.symbols['d'+attr+'_dt'] = symbol
                     setattr(self, 'd'+attr+'_dt', symbol)
+
 
             self._logger.debug("Neuron symbols: " + str(self.symbols))
 
@@ -160,23 +173,22 @@ class Equations(object):
 
                 # Derivative if needed
                 symbol = sp.Symbol("d" + attr + "/dt")
-                self.symbols["d"+attr+"_dt"] = symbol
-                setattr(self, "d"+attr+"_dt", symbol)
+                self.symbols['d'+attr+'_dt'] = symbol
+                setattr(self, 'd'+attr+'_dt', symbol)
 
         self._started = True
 
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        
         self._logger.info(str(self))
 
     def __str__(self):
         string = ""
         for name, dist in self.random_variables.items():
             string += name + " = " + dist.human_readable() + "\n"
-        for var, eq in self.equations:
-            string += sp.ccode(self.symbols[var]) + " = " + sp.ccode(eq) + "\n"
+        for name, eq in self.equations:
+            string += sp.ccode(self.symbols[name]) + " = " + sp.ccode(eq) + "\n"
         return string
 
     def __getattribute__(self, name):

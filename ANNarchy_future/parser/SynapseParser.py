@@ -1,9 +1,9 @@
 import sys
 import logging
+import inspect
 
 import numpy as np
 import sympy as sp
-
 
 import ANNarchy_future.api as api
 import ANNarchy_future.parser as parser
@@ -58,6 +58,7 @@ class SynapseParser(object):
 
         # Equations to retrieve
         self.update_equations = []
+        self.update_dependencies = []
 
     def is_spiking(self) -> bool:
         "Returns True if the Neuron class is spiking."
@@ -125,8 +126,19 @@ class SynapseParser(object):
 
         if 'update' in callables:
             self._logger.info("Calling Synapse.update().")
+            
+            signature = inspect.signature(self.synapse.update)
+            if 'method' in signature.parameters.keys():
+                method = signature.parameters['method'].default
+                if not method in parser.Config.numerical_methods:
+                    self._logger.error(self.name+".update(): "+ method + " is not available.")
+                    sys.exit(1)
+            else:
+                method = 'euler'
+
             try:
-                self.synapse.update()
+                with self.synapse.Equations(method=method) as s:
+                    self.synapse.update(s)
             except Exception:
                 self._logger.exception("Error when parsing " + self.name + ".update().")
                 sys.exit(1)
@@ -145,41 +157,8 @@ class SynapseParser(object):
             a list of blocks, which are lists of equations of three types: assignments, ODEs and conditions.
         
         """
-        blocks = []
-
-        # Iterate over the equations to group them into blocks
-        for context in equations:
-
-            _current_assignment_block = None
-            _current_ODE_block = None
-            
-            for name, eq in context.equations:
-                
-                # ODE block
-                if name.startswith("d") and name.endswith('_dt'):
-                    if _current_assignment_block is not None:
-                        blocks.append(_current_assignment_block)
-                        _current_assignment_block = None
-                    if _current_ODE_block is None:
-                        _current_ODE_block = parser.ODEBlock(self, context.method)
-                    _current_ODE_block.add(name[1:-3], eq)
-
-                # Assignment block
-                else:
-                    if _current_ODE_block is not None:
-                        blocks.append(_current_ODE_block)
-                        _current_ODE_block = None
-                    if _current_assignment_block is None:
-                        _current_assignment_block = parser.AssignmentBlock(self)
-                    _current_assignment_block.add(name, eq)
-
-            # Append the last block
-            if _current_assignment_block is not None:
-                blocks.append(_current_assignment_block)
-            if _current_ODE_block is not None:
-                blocks.append(_current_ODE_block)
-
         dependencies = []
+        blocks = parser.get_blocks(self, equations)
 
         for block in blocks:
             block.dependencies()

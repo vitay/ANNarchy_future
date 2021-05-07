@@ -20,26 +20,22 @@ class LIF(ann.Neuron):
         self.v = self.Variable(init=0.0)
         self.u = self.Variable(init=0.0)
 
-    def update(self):
+    def update(self, n, method='rk4'):   
 
-        with self.Equations(method='midpoint') as n:
+        n.dv_dt = (n.ge + n.I - n.u - n.v) / n.tau
+        
+        n.du_dt = (n.v - n.u) / n.tau
 
-            n.dv_dt = (n.ge + n.I - n.u - n.v) / n.tau
-            n.du_dt = (n.v - n.u) / n.tau
+        n.dge_dt = (-n.ge) / n.tau
+        #n.dge_dt.method = "exponential"
 
-            n.dge_dt = (-n.ge) / n.tau
+    def spike(self, n):
 
-    def spike(self):
+        n.spike = n.v >= n.V_th
 
-        with self.Equations() as n:
+    def reset(self, n):
 
-            n.spike = n.v >= n.V_th
-
-    def reset(self):
-
-        with self.Equations() as n:
-
-            n.v = 0
+        n.v = 0
 
 net = ann.Network(verbose=1)
 pop = net.add(1, LIF({'tau': 20., 'V_th': 1.0}))

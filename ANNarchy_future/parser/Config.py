@@ -18,3 +18,11 @@ reserved_attributes = [
     'pre',
     'post',
 ]
+
+# Numerical methods
+numerical_methods = [
+    'euler',
+    'midpoint',
+    'exponential',
+    'rk4'
+]

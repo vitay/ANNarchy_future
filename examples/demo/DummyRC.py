@@ -19,12 +19,11 @@ class RC(ann.Neuron):
         self.r = self.Variable(init=0.0)
         self.u = self.Variable(init=0.0)
 
-    def update(self):
+    def update(self, n, method='rk4'):
 
-        with self.Equations(method='rk4') as n:
-
-            n.dr_dt = (n.cast(1.0) - n.u + n.Uniform(0.0, 1.0) - n.r) / n.tau
-            n.du_dt = (1.0 + n.r + n.Normal(n.mu + 0.01, n.sigma) - n.u) / n.tau
+        n.dr_dt = (n.cast(1.0) - n.u + n.Uniform(0.0, 1.0) - n.r) / n.tau
+        
+        n.du_dt = (1.0 + n.r + n.Normal(n.mu + 0.01, n.sigma) - n.u) / n.tau
 
 net = ann.Network(verbose=2)
 pop = net.add((2, 2), RC({'tau': 20.0}))

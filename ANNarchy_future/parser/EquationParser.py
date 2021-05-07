@@ -68,6 +68,7 @@ class Condition(object):
 
         self.parser = parser
         self.name = name
+        self._dependencies = []
         self._equation = equation
 
     def parse(self):
@@ -80,6 +81,23 @@ class Condition(object):
             'eq': self._equation,
             'human-readable': hr ,
         }
+
+    def dependencies(self):
+        """
+        Sets all dependencies in the condition in `self.dependencies`:
+        """
+        try: 
+            symbols = list(self._equation)
+        except: # e.g. v = 0 would return an int, so free_symbols is not set
+            symbols = []
+
+        for symbol in symbols:
+
+            if symbol in self.parser.attributes:
+
+                self._dependencies.append(symbol)
+
+        self._dependencies = list(set(self._dependencies))
 
     def raw(self):
         "Raw representation of the equation."
@@ -127,6 +145,7 @@ class Block(object):
             try: 
                 symbols = list(eq.free_symbols)
             except: # e.g. v = 0 would return an int, so free_symbols is not set
+                symbols = []
                 continue
 
             for symbol in symbols:

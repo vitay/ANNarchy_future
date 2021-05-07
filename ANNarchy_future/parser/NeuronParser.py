@@ -1,5 +1,6 @@
 import sys
 import logging
+import inspect
 
 import numpy as np
 import sympy as sp
@@ -52,8 +53,11 @@ class NeuronParser(object):
 
         # Equations to retrieve
         self.update_equations = []
+        self.update_dependencies = []
         self.spike_condition = []
+        self.spike_dependencies = []
         self.reset_equations = []
+        self.reset_dependencies = []
 
     def is_spiking(self) -> bool:
         "Returns True if the Neuron class is spiking."
@@ -130,13 +134,22 @@ class NeuronParser(object):
 
             self._logger.info("Calling Neuron.update().")
 
+            signature = inspect.signature(self.neuron.update)
+            if 'method' in signature.parameters.keys():
+                method = signature.parameters['method'].default
+                if not method in parser.Config.numerical_methods:
+                    self._logger.error(self.name+".update(): "+ method + " is not available.")
+                    sys.exit(1)
+            else:
+                method = 'euler'
             try:
-                self.neuron.update()
+                with self.neuron.Equations(method=method) as n:
+                    self.neuron.update(n)
             except Exception:
                 self._logger.exception("Unable to analyse " + self.name + ".update()")
                 sys.exit(1)
 
-            self.update_equations =  self.process_equations(self.neuron._current_eq)
+            self.update_equations, self.update_dependencies =  self.process_equations(self.neuron._current_eq)
             self.neuron._current_eq = []
 
         # For spiking neurons only
@@ -149,23 +162,25 @@ class NeuronParser(object):
             
             # Analyse spike()
             try:
-                self.neuron.spike()
+                with self.neuron.Equations() as n:
+                    self.neuron.spike(n)
             except Exception:
                 self._logger.exception("Unable to analyse spike().")
                 sys.exit(1)
 
-            self.spike_condition = self.process_condition(self.neuron._current_eq)
+            self.spike_condition, self.spike_dependencies = self.process_condition(self.neuron._current_eq)
             self.neuron._current_eq = []
             
             # Analyse reset()
             self._logger.info("Calling Neuron.reset().")
             try:
-                self.neuron.reset()
+                with self.neuron.Equations() as n:
+                    self.neuron.reset(n)
             except Exception:
                 self._logger.exception("Unable to analyse reset().")
                 sys.exit(1)
 
-            self.reset_equations = self.process_equations(self.neuron._current_eq)
+            self.reset_equations, self.reset_dependencies = self.process_equations(self.neuron._current_eq)
             self.neuron._current_eq = []
 
         # Collect random variables
@@ -182,7 +197,7 @@ class NeuronParser(object):
         condition = parser.Condition(self.neuron, name, eq)
         condition.parse()
 
-        return condition
+        return condition, condition._dependencies
 
     def process_equations(self, equations) -> list:
         
@@ -195,13 +210,18 @@ class NeuronParser(object):
             a list of blocks, which are lists of equations of three types: assignments, ODEs and conditions.
         
         """
+        dependencies = []
         blocks = parser.get_blocks(self, equations)
 
         for block in blocks:
             block.dependencies()
+            for dep in block._dependencies:
+                dependencies.append(dep)
             block.parse()
 
-        return blocks
+        dependencies = list(set(dependencies))
+
+        return blocks, dependencies
 
     def __str__(self):
 
