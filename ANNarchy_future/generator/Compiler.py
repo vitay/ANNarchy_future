@@ -3,6 +3,7 @@ import logging
 import subprocess
 import shutil
 import imp
+from string import Template
 
 import ANNarchy_future.api as api
 import ANNarchy_future.generator as generator
@@ -205,3 +206,27 @@ class Compiler(object):
 
         # Return to the current directory
         os.chdir(cwd)
+
+
+def fetch_template(filename:str) -> Template:
+    """Retrieves a template file.
+
+    Args: 
+
+        filename: relative to ANNarchy/future (e.g. '/generator/SingleThread/templates/Population.hpp')
+
+    Returns:
+
+        a `string.Template` object.
+    """
+
+    import ANNarchy_future
+
+    file_path = str(ANNarchy_future.__path__[0]) +  filename
+
+    with open(file_path, 'r') as f:
+        template = f.readlines()
+    
+    template = Template("".join(template))
+
+    return template

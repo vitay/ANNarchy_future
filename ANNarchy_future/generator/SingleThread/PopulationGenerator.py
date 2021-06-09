@@ -5,8 +5,8 @@ from string import Template
 
 import sympy as sp
 
-import ANNarchy_future
 import ANNarchy_future.parser as parser
+import ANNarchy_future.generator as generator
 
 
 class PopulationGenerator(object):
@@ -63,11 +63,8 @@ class PopulationGenerator(object):
             a multiline string for the .h header file.
         """
 
-        # Get the Population.h template
-        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Population.hpp'
-        with open(tpl, 'r') as f:
-            template = f.readlines()
-        template_h = Template("".join(template))
+        # Get the Population.hpp template
+        template_h = generator.fetch_template('/generator/SingleThread/templates/Population.hpp')
 
         # Initialize arrays
         initialize_arrays = ""
@@ -87,6 +84,8 @@ class PopulationGenerator(object):
         # RNG
         declared_rng, initialize_rng, rng_method = self.rng()
 
+        # Inputs
+        reset_inputs = self.reset_inputs()
 
         # Update method
         update_method = self.update()
@@ -125,6 +124,7 @@ class PopulationGenerator(object):
             initialize_arrays = initialize_arrays,
             initialize_spiking = initialize_spiking,
             initialize_rng = initialize_rng,
+            reset_inputs = reset_inputs,
             update_method = update_method,
             spike_method = spike_method,  
             reset_method = reset_method,  
@@ -192,6 +192,27 @@ $draw
 
         return declared_rng, initialize_rng, rng_method
 
+    def reset_inputs(self) -> str:
+
+        """ Sets the conductances to 0 at the beginning of a step if required.
+        
+        Returns:
+
+            the content of the `reset_inputs` C++ method.
+        """
+
+        code = ""
+
+        for var in self.parser.inputs:
+
+            # TODO: unless it has an ODE!
+
+            code += Template("""
+        std::fill(this->$g.begin(), this->$g.end(), 0.0);
+            """).substitute(g=var)
+
+
+        return code
 
     def update(self) -> str:
 
@@ -317,16 +338,21 @@ $reset
 
         code = Template("""
     # $name
-    cdef cppclass $name :
+    cdef cppclass cppNeuron_$name :
+        
         # Constructor
-        $name(Network*, int) except +
+        cppNeuron_$name(Network*, int) except +
+        
         # Number of neurons
         int size
+        
         # Methods
+        void reset_inputs()
         void update()
         void spike()
         void reset()
         void rng()
+        
         # Attributes
 $attributes
 """).substitute(
@@ -363,12 +389,12 @@ $attributes
                 attributes += tpl.substitute(attr=attr)
 
         code = Template("""
-cdef class py$name(object):
+cdef class pyNeuron_$name(object):
 
-    cdef $name* instance
+    cdef cppNeuron_$name* instance
 
     def __cinit__(self, pyNetwork net, int size):
-        self.instance = new $name(net.instance, size)
+        self.instance = new cppNeuron_$name(net.instance, size)
     
     def __dealloc__(self):
         del self.instance
@@ -380,6 +406,8 @@ cdef class py$name(object):
             self.instance.size = value
 
     # Methods
+    def reset_inputs(self):
+        self.instance.reset_inputs()
     def update(self):
         self.instance.update()
     def reset(self):
@@ -392,6 +420,7 @@ cdef class py$name(object):
     # Attributes
 $attributes
 """)
+        
         return code.substitute(
             name=self.name,
             attributes=attributes,

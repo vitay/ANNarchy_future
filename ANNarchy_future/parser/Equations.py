@@ -81,16 +81,16 @@ class Equations(object):
         # Standalone mode
         if neuron is None and synapse is None and symbols is not None:
             self.object = StandaloneObject(symbols)
-            self.object.random_variables = {}
+            self.object._random_variables = {}
             self._logger.info("Custom symbols: " + str(symbols))
         elif neuron is not None:
             self.object = neuron
-            if not hasattr(neuron, 'random_variables'):
-                self.object.random_variables = {}
+            if not hasattr(neuron, '_random_variables'):
+                self.object._random_variables = {}
         elif synapse is not None:
             self.object = synapse
-            if not hasattr(synapse, 'random_variables'):
-                self.object.random_variables = {}
+            if not hasattr(synapse, '_random_variables'):
+                self.object._random_variables = {}
         else:
             self._logger.error("Equations() requires one argument among `symbols`, `neuron` or `synapse`.")
             sys.exit(1)
@@ -294,12 +294,12 @@ class Equations(object):
             min: lower bound.
             max: upper bound.
         """
-        name = "__rand__" + str(len(self.object.random_variables))
+        name = "__rand__" + str(len(self.object._random_variables))
 
         obj = parser.RandomDistributions.Uniform(name, min, max)
 
         self.random_variables[name] = obj
-        self.object.random_variables[name] = obj
+        self.object._random_variables[name] = obj
         
         return sp.Symbol(name)
 
@@ -311,11 +311,11 @@ class Equations(object):
             mu: mean.
             sigma: standard deviation.
         """
-        name = "__rand__" + str(len(self.object.random_variables))
+        name = "__rand__" + str(len(self.object._random_variables))
 
         obj = parser.RandomDistributions.Normal(name, mu, sigma)
 
         self.random_variables[name] = obj
-        self.object.random_variables[name] = obj
+        self.object._random_variables[name] = obj
         
         return sp.Symbol(name)

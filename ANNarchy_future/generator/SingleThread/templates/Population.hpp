@@ -4,10 +4,10 @@
 
 class Network;
 
-class $class_name {
+class cppNeuron_$class_name {
     public:
 
-    $class_name(Network* net, int size){
+    cppNeuron_$class_name(Network* net, int size){
 
         this->net = net;
 
@@ -33,6 +33,11 @@ $declared_rng
     // Update RNG method
     void rng(){
 $rng_method
+    };
+
+    // Reset inputs method
+    void reset_inputs(){
+$reset_inputs
     };
 
     // Update method

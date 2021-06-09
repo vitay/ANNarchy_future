@@ -34,6 +34,8 @@ class Neuron(object):
             self._data = []
             self._inputs = []
             self._outputs = []
+
+            self.random_variables = {}
             
         val = api.Parameter(init=value, shared=shared, dtype=dtype)
         self._data.append(val)
@@ -71,6 +73,8 @@ class Neuron(object):
             self._data = []
             self._inputs = []
             self._outputs = []
+
+            self.random_variables = {}
 
         val = api.Variable(init=init, shared=shared, dtype=dtype)
         

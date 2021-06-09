@@ -5,10 +5,10 @@
 class Network;
 
 template<typename PrePopulation, typename PostPopulation>
-class $class_name {
+class cppSynapse_$class_name {
     public:
 
-    $class_name(Network* net, PrePopulation* pre, PostPopulation* post){
+    cppSynapse_$class_name(Network* net, PrePopulation* pre, PostPopulation* post){
 
         this->net = net;
 
@@ -28,6 +28,11 @@ $initialize_arrays
 
     // Attributes
 $declared_attributes
+
+    // Collect inputs (weighted sum or spike transmission)
+    void collect_inputs(){
+$collect_inputs_method
+    };
 
     // Update method
     void update(){

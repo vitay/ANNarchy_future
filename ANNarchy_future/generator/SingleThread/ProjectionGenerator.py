@@ -4,8 +4,8 @@ from string import Template
 
 import sympy as sp
 
-import ANNarchy_future
 import ANNarchy_future.parser as parser
+import ANNarchy_future.generator as generator
 
 
 class ProjectionGenerator(object):
@@ -79,11 +79,8 @@ class ProjectionGenerator(object):
             a multiline string for the .h header file and .cpp body file.
         """
 
-        # Get the Projection.h template
-        tpl = str(ANNarchy_future.__path__[0]) +  '/generator/SingleThread/Projection.hpp'
-        with open(tpl, 'r') as f:
-            template = f.readlines()
-        template_h = Template("".join(template))
+        # Get the Projection.hpp template
+        template_h = generator.fetch_template('/generator/SingleThread/templates/Projection.hpp')
 
         # Initialize arrays
         initialize_arrays = ""
@@ -104,6 +101,9 @@ class ProjectionGenerator(object):
         # Update method
         update_method = self.update()
 
+        # Weighted sum or spike transmission
+        collect_inputs_method = self.collect_inputs()
+
 
         # Generate code
         code = template_h.substitute(
@@ -111,6 +111,7 @@ class ProjectionGenerator(object):
             declared_attributes = declared_attributes,
             initialize_arrays = initialize_arrays,
             update_method = update_method,
+            collect_inputs_method = collect_inputs_method,
         )
         
         return code
@@ -162,7 +163,19 @@ $update
 
         return tlp_block.substitute(update=code)
 
+    def collect_inputs(self) -> str:
 
+        code = """
+        std::vector<double> res = std::vector<double>(this->post->size, 0.0);
+
+        for(unsigned int i=0; i<this->post->size; i++){
+            res[i] = this->pre->r[i];
+        }
+
+        this->post->ge = res; 
+        """
+
+        return code
 
     def cython_export(self):
         """Generates declaration of the C++ class for Cython.
@@ -182,11 +195,12 @@ $update
 
         code = Template("""
     # $name synapse
-    cdef cppclass $name[PrePopulation, PostPopulation] :
+    cdef cppclass cppSynapse_$name[PrePopulation, PostPopulation] :
         # Constructor
-        $name(Network*, PrePopulation*, PostPopulation*) except +
+        cppSynapse_$name(Network*, PrePopulation*, PostPopulation*) except +
 
         # Methods
+        void collect_inputs()
         void update()
 
         # Attributes
@@ -227,13 +241,13 @@ $attributes
         code = Template("""
 
 # $name synapse, pre = $pre, post = $post
-cdef class py${name}_${pre}_${post}(object):
+cdef class pySynapse_${name}_${pre}_${post}(object):
 
-    cdef ${name}[${pre}, ${post}] *instance
+    cdef cppSynapse_${name}[cppNeuron_${pre}, cppNeuron_${post}] *instance
 
-    def __cinit__(self, pyNetwork net, py$pre pre, py$post post):
+    def __cinit__(self, pyNetwork net, pyNeuron_$pre pre, pyNeuron_$post post):
         
-        self.instance = new $name[${pre}, ${post}](net.instance, pre.instance, post.instance)
+        self.instance = new cppSynapse_$name[cppNeuron_${pre}, cppNeuron_${post}](net.instance, pre.instance, post.instance)
 
     def __dealloc__(self):
         del self.instance  
@@ -241,6 +255,9 @@ cdef class py${name}_${pre}_${post}(object):
     # Methods
     def update(self):
         self.instance.update()
+
+    def collect_inputs(self):
+        self.instance.collect_inputs()
 
     # Attributes      
 $attributes

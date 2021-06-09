@@ -21,10 +21,28 @@ except:
     print('Error : Python package "setuptools" is required.')
     print('You can install it from pip or: http://pypi.python.org/pypi/setuptools')
     exit(0)
+    
+# numpy
+try:
+    import numpy as np
+    print('Checking for numpy... OK')
+except:
+    print('Checking for numpy... NO')
+    print('Error : Python package "numpy" is required.')
+    print('You can install it from pip or: http://www.numpy.org')
+    exit(0)
 
-# Additional files
-package_data = [
-]
+# cython
+try:
+    import cython
+    from Cython.Build import cythonize
+    print('Checking for cython... OK')
+
+except:
+    print('Checking for cython... NO')
+    print('Error : Python package "cython" is required.')
+    print('You can install it from pip or: http://www.cython.org')
+    exit(0)
 
 # Dependencies
 dependencies = [
@@ -35,6 +53,25 @@ dependencies = [
     'sympy'
 ]
 
+package_data = [
+    'modules/*.pxd',
+    'modules/*.pyx',
+    'modules/*.hpp',
+]
+
+extra_compile_args  = ['-fopenmp', '-O3', '-ffast-math', '-std=c++17']
+extra_link_args = ['-fopenmp']
+
+extensions = [
+    Extension("ANNarchy_future.modules.LIL",
+            ["ANNarchy_future/modules/LIL.pyx"],
+            include_dirs=[np.get_include()],
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
+            language="c++"),
+]
+
+# Release
 release = '5.0.0b0'
 print("Installing ANNarchy", release)
 
@@ -68,7 +105,6 @@ setup(  name='ANNarchy_future',
         packages=find_packages(),
         package_data={'ANNarchy_future': package_data},
         install_requires=dependencies,
-        #ext_modules = cythonize(extensions, language_level=3),
-        #include_dirs = [np.get_include()],
-        #zip_safe = False
+        ext_modules = cythonize(extensions, language_level=3),
+        include_dirs = [np.get_include()],
 )

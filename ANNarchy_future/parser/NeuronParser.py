@@ -184,7 +184,10 @@ class NeuronParser(object):
             self.neuron._current_eq = []
 
         # Collect random variables
-        self.random_variables = self.neuron.random_variables
+        if hasattr(self.neuron, '_random_variables'):
+            self.random_variables = self.neuron._random_variables
+        else:
+            self.random_variables = {}
 
     def process_condition(self, equations) -> 'parser.Condition':
 

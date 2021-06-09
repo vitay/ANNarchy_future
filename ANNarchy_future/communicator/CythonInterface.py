@@ -91,3 +91,33 @@ class CythonInterface(communicator.SimulationInterface):
         """
 
         self._instance.step()
+
+    def simulate(self, duration:int):
+
+        """Simulates for the specified duration in steps..
+
+        Calls the Cython instance `simulate()` method.
+
+        """
+
+        self._instance.simulate(duration)
+
+    def monitor(self, variables: dict):
+
+        """Monitors the provided variables.
+
+        TODO
+
+        """
+
+        self._instance.monitor(variables)
+
+    def get_monitored(self):
+
+        """Returns the monitored variables.
+
+        TODO
+
+        """
+
+        return self._instance.get_monitored()

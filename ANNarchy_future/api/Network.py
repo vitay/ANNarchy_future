@@ -197,14 +197,55 @@ class Network(object):
         # Instantiate the network
         self._instantiate()
 
+    ###########################################################################
+    # Simulation
+    ###########################################################################
+
     def step(self):
-        """Single simulation step.
+        """
+        Single simulation step (duration: dt).
         """
         if self._interface is None:
             self._logger.error("step(): the network is not compiled yet.")
             sys.exit(1)
 
         self._interface.step()
+
+    def simulate(self, duration:float):
+        """Simulates for the specified duration in ms.
+
+        Args:
+
+            duration: duration of the simulation ms.
+
+        """
+        if self._interface is None:
+            self._logger.error("step(): the network is not compiled yet.")
+            sys.exit(1)
+
+        self._interface.simulate(int(duration/self.dt))
+
+    ###########################################################################
+    # Monitor
+    ###########################################################################
+
+    def monitor(self, variables:dict):
+
+        if self._interface is None:
+            self._logger.error("monitor(): the network is not compiled yet.")
+            sys.exit(1)
+
+        self._monitored = variables
+
+        self._interface.monitor(self._monitored)
+
+    def get_monitored(self):
+
+        if self._interface is None:
+            self._logger.error("monitor(): the network is not compiled yet.")
+            sys.exit(1)
+
+        return self._interface.get_monitored()
 
     ###########################################################################
     # Internals
